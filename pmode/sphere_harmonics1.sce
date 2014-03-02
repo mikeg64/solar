@@ -1,12 +1,10 @@
-//
-// Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) INRIA
-//
-// This file is distributed under the same license as the Scilab package.
-//
+//Spherical harmonics
+//solution for perturbed pressure for a spherical hydrodynamical system
 
-
-
+//Using scilab
+//http://www.scilab.org/
+//Scilab is free and open source software for numerical computation providing a powerful computing environment 
+//for engineering and scientific applications. 
 
 
 
@@ -98,18 +96,61 @@ deff("[x,y,amp]=harmonic(alp,tet)",["x=r*cos(alp).*cos(tet)+orig(1)*ones(tet)";.
      "y=r*cos(alp).*sin(tet)+orig(2)*ones(tet)";..
      "amp=(-1)^m.*cos(m.*tet).*legendre(l,m,cos(alp))"]); 
 
-mfreq(1,1)=200;  
-//l=10;
-//m=3; 
 
 
+//mfreq(1,1)=200; 
+//l=10; 
+//m=4; 
+//shift=10;  //adjust zero of the colour scale
+//scale=1.5*10^(-2); //adjust the range of the scale
 
-//l=5;
-//m=3; 
+//mfreq(1,1)=200; 
+//l=1; 
+//m=0; 
+//shift=45;  //adjust zero of the colour scale
+//scale=20; //adjust the range of the scale
 
-l=10;
-m=4; 
+//mfreq(1,1)=200; 
+//l=2; 
+//m=0; 
+//shift=45;  //adjust zero of the colour scale
+//scale=20; //adjust the range of the scale
 
+//mfreq(1,1)=200; 
+//l=2; 
+//m=2; 
+//shift=45;  //adjust zero of the colour scale
+//scale=20; //adjust the range of the scale
+
+//mfreq(1,1)=200; 
+//l=4; 
+//m=2; 
+//shift=45;  //adjust zero of the colour scale
+//scale=20; //adjust the range of the scale
+
+//mfreq(1,1)=200; 
+//l=4; 
+//m=4; 
+//shift=45;  //adjust zero of the colour scale
+//scale=1; //adjust the range of the scale
+
+//mfreq(1,1)=200; 
+//l=10; 
+//m=4; 
+//shift=45;  //adjust zero of the colour scale
+//scale=1*10^(-2); //adjust the range of the scale
+
+//mfreq(1,1)=200; 
+//l=20; 
+//m=0; 
+//shift=40;  //adjust zero of the colour scale
+//scale=1*10^(2); //adjust the range of the scale
+
+mfreq(1,1)=200; 
+l=20; 
+m=2; 
+shift=5;  //adjust zero of the colour scale
+scale=0.015*10^(2); //adjust the range of the scale
 
  ampones=ones(4,6241);  
 r=1; orig=[0 0 0]; 
@@ -120,8 +161,7 @@ clf(curFig,"reset");
 //curFig.color_map = hotcolormap(64);
 //curFig.color_map = autumncolormap(64);
 curFig.color_map = jetcolormap(64);
-shift=10;
-scale=1.5*10^(-2);
+
 //colorbar();
 [xx,yy,zz]=eval3dp(sph,linspace(-%pi/2,%pi/2,80),linspace(0,%pi*2,80));
 [xn,yn,amp]=eval3dp(harmonic,linspace(-%pi/2,%pi/2,80),linspace(0,%pi*2,80));
