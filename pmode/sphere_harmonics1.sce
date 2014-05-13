@@ -6,7 +6,7 @@
 //Scilab is free and open source software for numerical computation providing a powerful computing environment 
 //for engineering and scientific applications. 
 
-
+//http://solarwavetheory.blogspot.co.uk/2014/03/our-wobbling-star.html
 
 
 

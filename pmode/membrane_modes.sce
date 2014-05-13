@@ -3,6 +3,7 @@
 // Animation of a vibrating membrane
 // ============================================================================
 
+//http://solarwavetheory.blogspot.co.uk/2014/05/the-eigenmodes-of-oscillation.html
 
 //Using scilab
 //http://www.scilab.org/
@@ -21,18 +22,21 @@ cmap= curFig.color_map; //preserve old setting
 curFig.color_map = jetcolormap(64);
 
 
-cs=1343.5;
-a00=5;
-lx=2;
+cs=1343.5;  // wave speed
+a00=5;      //amplitude of fundamental mode
+lx=2;       //simulation box size
 ly=2;
 
+
+//compute amplitude for each of the modes 
+//use mode coordinates n1,n2 in terms of the amplitude of the fundamental mode a00
 n1=3;
 n2=3;
 n1o=n1;
 n2o=n2;
 anm=2*a00/(n1*n1+n2*n2+2*(n1+n2)+2);
 
-n1_1=0;
+n1_1=1;
 n2_1=1;
 n1=n1_1;
 n2=n2_1;
@@ -77,7 +81,9 @@ ommn4=%pi*cs*sqrt(((n1_4+1)/lx).^2+((n2_4+1)/ly).^2);
 nsize=100;
 x=linspace(-%pi,%pi,nsize);
 y=x;
-Z=15*sin(x)'*cos(y);
+
+maxplotheight=1.5; //alter this value to change maximum amplitude of a plot
+Z=maxplotheight*sin(x)'*cos(y);
 
 myones=ones(nsize,nsize);
 [mmx,mmy]=meshgrid(x,y);
@@ -107,3 +113,4 @@ for i=1:max(size(I))
     //xs2jpg(sf,imfile,1);
   
 end
+
