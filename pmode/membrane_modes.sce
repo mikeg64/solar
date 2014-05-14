@@ -3,7 +3,6 @@
 // Animation of a vibrating membrane
 // ============================================================================
 
-//http://solarwavetheory.blogspot.co.uk/2014/05/the-eigenmodes-of-oscillation.html
 
 //Using scilab
 //http://www.scilab.org/
@@ -36,8 +35,8 @@ n1o=n1;
 n2o=n2;
 anm=2*a00/(n1*n1+n2*n2+2*(n1+n2)+2);
 
-n1_1=1;
-n2_1=1;
+n1_1=0;
+n2_1=0;
 n1=n1_1;
 n2=n2_1;
 anm1=2*a00/(n1*n1+n2*n2+2*(n1+n2)+2);
@@ -79,10 +78,10 @@ ommn4=%pi*cs*sqrt(((n1_4+1)/lx).^2+((n2_4+1)/ly).^2);
 //The initial surface definition 
 //----------------------
 nsize=100;
-x=linspace(-%pi,%pi,nsize);
+x=linspace(0,2*%pi,nsize);
 y=x;
 
-maxplotheight=1.5; //alter this value to change maximum amplitude of a plot
+maxplotheight=5.0; //alter this value to change maximum amplitude of a plot
 Z=maxplotheight*sin(x)'*cos(y);
 
 myones=ones(nsize,nsize);
@@ -92,7 +91,7 @@ myones=ones(nsize,nsize);
 plot3d1(x,y,Z,35,45,"X@Y@Z",[-2,2,3]);
 s=gce(); //the handle on the surface
 s.color_flag=1 ; //assign facet color according to Z value
-title("evolution of a 3d surface","fontsize",3)
+title("Membrane Oscillation, (0,0) Mode","fontsize",3)
 
 I=4000:-0.1:1;
 realtimeinit(0.1);;//set time step (0.1 seconds)  and date reference
@@ -109,8 +108,7 @@ for i=1:max(size(I))
              anm4*sin((ommn4*i*myones/max(size(I)))).*(sin(((n1_4+1)*mmx/lx)).*sin(((n2_4+1)*mmy/ly)));
 
     //uncomment lines below to save images to jpg
-    //imfile=msprintf('images/im_%d.jpg',i);
-    //xs2jpg(sf,imfile,1);
+    imfile=msprintf('images/im_%d.jpg',i);
+    xs2jpg(curFig,imfile,1);
   
 end
-
