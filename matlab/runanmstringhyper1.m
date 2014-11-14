@@ -62,7 +62,7 @@ k=2.5;
 
 % Define the x domain
 ni = 1001;
-xmax = 10.0;
+xmax = 10;
 dx = xmax/(ni-1);
 x = 0:dx:xmax;
 
@@ -74,24 +74,27 @@ y = 0:dy:ymax;
 
 % Define the wavespeed
 wavespeed=0.01;
-
+courant=0.15;
 % Define time-domain
-dt = 50*(0.68*dx)/wavespeed;
+dt = (courant*dx)/wavespeed;
 tmax = 100;
 %t = [0:dt:tdomain];
 t = 1:dt:tmax;
-dt=0.5
-dt=0.001;
-dt=0.3;
-dx=10.0
+% dt=0.5
+% dt=0.001;
+% dt=0.3;
+%dx=10
 courant=0.15
+dt = 0.01*(courant*dx)/wavespeed;
+dtset=dt;
+dtset=0.001;
 wavespeed=courant*dx/dt
-wavespeed=10
+%wavespeed=10
 %courant = (wavespeed*dt)/dx;
-nt=10000;
+nt=1000000;
 hmax=3;
-chyp=0.00005;
-cshk=1;
+chyp=0.02;
+cshk=0.5;
 
 %parameters to define width of propagating shape
 n1=75;
@@ -109,23 +112,23 @@ vh = zeros(ni,1);
 visc = zeros(ni,1);
 
 %hyperviscosity
-nur = zeros(ni,1);
-nul = zeros(ni,1);
-nushk = zeros(ni,1);
+nur = zeros(ni+4,1);
+nul = zeros(ni+4,1);
+nushk = zeros(ni+4,1);
 
-d3l = zeros(ni,1);
-d3r = zeros(ni,1);
+d3l = zeros(ni+4,1);
+d3r = zeros(ni+4,1);
 
-d1l = zeros(ni,1);
-d1r = zeros(ni,1);
+d1l = zeros(ni+4,1);
+d1r = zeros(ni+4,1);
 
-md3l = zeros(ni,1);
-md3r = zeros(ni,1);
+md3l = zeros(ni+4,1);
+md3r = zeros(ni+4,1);
 
-md1l = zeros(ni,1);
-md1r = zeros(ni,1);
+md1l = zeros(ni+4,1);
+md1r = zeros(ni+4,1);
 
-dudx = zeros(ni,1);
+dudx = zeros(ni+4,1);
 
 
 %u((ni+1)/2)=b;
@@ -150,10 +153,10 @@ dudx = zeros(ni,1);
         ymax=1.2*hmax;
         ymin=-0.2*hmax;
       %remove comments below to set up a sine wave  
-        if (i>n1) && (i<n3)
-          u(i)=hmax*sin(2*pi*(i-n1)/((n3-n1)));
-           ymin=-1.2*hmax;
-        end
+      %  if (i>n1) && (i<n3)
+      %   u(i)=hmax*sin(2*pi*(i-n1)/((n3-n1)));
+      %     ymin=-1.2*hmax;
+      %  end
       
  
 
@@ -173,15 +176,15 @@ u(2)=oldu2;
 vw=0.1;
 
 uold=u;
-
+dtmin=0.00001;
 
 
 
 for n = 1:nt
-   %dt=0.001; 
+   %dt=0.0001; 
    t=n*dt;
    c=-wavespeed*dt/dx;
-    pause(0.001);
+    pause(0.00001);
     
     
     set(h,'YData',u);
@@ -206,11 +209,11 @@ for n = 1:nt
      
       %first order central differencing
       dudx(i)=(u(i+1)-u(i-1))/(2*dx);
-      v(i) = u(i)+c*(u(i+1)-u(i-1))/2;%+c*(uold(i+1)-uold(i-1))/2;
- 
-      hdx(i)=(c.^2)*(  (nur(i)+nushk(i))*(u(i+1)-u(i))     -nul(i)*(u(i)-u(i-1))  )/(2);
+      %v(i) = u(i)+c*(u(i+1)-u(i-1))/2;%+c*(uold(i+1)-uold(i-1))/2;
+      v(i) = u(i)-(dt/dx)*(u(i+1)-u(i-1))/2;
+      hdx(i)=(wavespeed.^2)*(  (nur(i+2)+nushk(i+2))*(u(i+1)-u(i))     -nul(i+2)*(u(i)-u(i-1))  )/(2);
            %correction with hyperdiffusion term
-      v(i)=v(i)+(c.^2)*(  (nur(i)+nushk(i))*(u(i+1)-u(i))     -nul(i)*(u(i)-u(i-1))  )/(2);
+      v(i)=v(i)+dt*(  (nur(i+2)+nushk(i+2))*(u(i+1)-u(i))     -(nul(i+2)+nushk(i+2))*(u(i)-u(i-1))  )/(2*dx*dx);
 
       
        %second order central differencing %includes Lax-Wedroff correction
@@ -237,41 +240,41 @@ for n = 1:nt
   %u(1)=u(ni-3);
       
          %second order %uncomment these to test second order differencing
-     starti=3;
-     finishi=ni-2;
+     starti=2;
+     finishi=ni-1;
      
       %Compute hyperdiffusion coefficients
       for i = starti:finishi
-         d3l(i)=abs(3*u(i)-u(i-1)-u(i+1));
-         d3r(i)=abs(3*u(i+1)-u(i)-u(i-1));
+         d3l(i+2)=abs(3*u(i)-u(i-1)-u(i+1));
+         d3r(i+2)=abs(3*u(i+1)-u(i)-u(i-1));
          
-         d1l(i)=abs(u(i)-u(i-1));
-         d1r(i)=abs(u(i+1)-u(i));
+         d1l(i+2)=abs(u(i)-u(i-1));
+         d1r(i+2)=abs(u(i+1)-u(i));
       end; 
  
         %2nd order periodic boundary condition
-        d3l(ni-1)=d3l(3);
-        d3l(2)=d3l(ni-2);
-        d3l(ni)=d3l(4);
-        d3l(1)=d3l(ni-3);
+        d3l(ni+4)=d3l(3);
+        d3l(2)=d3l(ni+2);
+        d3l(ni+3)=d3l(4);
+        d3l(1)=d3l(ni+1);
         
-        d3r(ni-1)=d3r(3);
-        d3r(2)=d3r(ni-2);
-        d3r(ni)=d3r(4);
-        d3r(1)=d3r(ni-3);
+        d3r(ni+4)=d3r(3);
+        d3r(2)=d3r(ni+2);
+        d3r(ni+3)=d3r(4);
+        d3r(1)=d3r(ni+1);
 
-        d1l(ni-1)=d1l(3);
-        d1l(2)=d1l(ni-2);
-        d1l(ni)=d1l(4);
-        d1l(1)=d1l(ni-3);
+        d1l(ni+4)=d1l(3);
+        d1l(2)=d1l(ni+2);
+        d1l(ni+3)=d1l(4);
+        d1l(1)=d1l(ni+1);
         
-        d1r(ni-1)=d1r(3);
-        d1r(2)=d1r(ni-2);
-        d1r(ni)=d1r(4);
-        d1r(1)=d1r(ni-3);      
+        d1r(ni+4)=d1r(3);
+        d1r(2)=d1r(ni+2);
+        d1r(ni+3)=d1r(4);
+        d1r(1)=d1r(ni+1);      
         
      starti=2;
-     finishi=ni-3;
+     finishi=ni+1;
       for i = starti:finishi
          md3l(i)=max(d3l(i:i+2));
          md1l(i)=max(d1l(i-1:i+3));
@@ -282,36 +285,69 @@ for n = 1:nt
       
          %first order 
      starti=2;
-     finishi=ni-1;  
+     finishi=ni+1;  
       for i = starti:finishi
          if md1r(i)>0
-             nur(i)=wavespeed*chyp*md3r(i)/(md1r(i)*dx);             
+             nur(i)=dx*wavespeed*chyp*md3r(i)/(md1r(i));             
          else
              nur(i)=0;
          end;
          
          if md1l(i)>0
-             nul(i)=wavespeed*chyp*md3l(i)/(md1l(i)*dx);
+             nul(i)=dx*wavespeed*chyp*md3l(i)/(md1l(i));
          else
              nul(i)=0;
          end;        
       end;     
   
        %1st order periodic boundary condition
-       nur(ni)=nur(2);
-       nur(1)=nur(ni-1);
-       nul(ni)=nul(2);
-       nul(1)=nul(ni-1);  
-  
+       nur(ni+4)=nur(3);
+       nur(2)=nur(ni+2);
+       nur(ni+3)=nur(4);
+       nur(1)=nur(ni+1);  
+ 
+        nul(ni+4)=nul(3);
+       nul(2)=nul(ni+2);
+       nul(ni+3)=nul(4);
+       nul(1)=nul(ni+1);  
+
+       
+       
+       
       for i = starti:finishi
-         
-             nushk(i)=abs(cshk*dudx(i)*(dx.^2));             
-               
+         %if dudx(i)<0
+         %   display(dudx(i)) 
+         %end    
+             %nushk(i)=abs(4*cshk*dudx(i)*(dx.^2));             
+              nushk(i)=abs(cshk*dudx(i)*(dx.^2));  
       end;        
        
-        nushk(ni)=nushk(2);
-       nushk(1)=nushk(ni-1);
-      
+        nushk(ni+4)=nushk(3);
+       nushk(2)=nushk(ni+2);
+         nushk(ni+3)=nushk(4);
+       nushk(1)=nushk(ni+1);
+       
+       maxviscoefl=max(nul);
+       maxviscoefr=max(nur);
+       
+       if maxviscoefr>maxviscoefl
+           maxviscoef=maxviscoefr;
+       else
+           maxviscoef=maxviscoefl;
+       end
+       
+       tmpdt=nushk+maxviscoef;
+       dtvisc=0.25/(max(tmpdt/dx));
+       dt=dtset;
+       if dtvisc<dt
+       %    dt=dtvisc/20;
+       end
+       
+       if dt<dtmin
+       %    dt=dtmin;
+       end
+           
+     
        
  
 drawnow;
