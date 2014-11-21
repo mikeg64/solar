@@ -15,17 +15,17 @@ simparams=sim_params;
 simgridinfo=sim_gridinfo;
 simdata=sim_data;
 
-t=simparams.read_params_h5(filename);
-simparams=t;
+simparams=simparams.read_params_h5(filename);
+%simparams=t;
 
-t=simgridinfo.read_gridinfo_h5(filename);
-simgridinfo=t;
+simgridinfo=simgridinfo.read_gridinfo_h5(filename);
+%simgridinfo=t;
 
-simdata.setsim_params(simparams);
-simdata.setsim_gridinfo(simgridinfo);
+%simdata.setsim_params(simparams);
+%simdata.setsim_gridinfo(simgridinfo);
 
 %data = h5read('spruit.gdf','/data/grid_0000000000/density_bg');
-t=simdata.read_data_h5(filename);
+simdata=simdata.read_data_h5(filename, simparams, simgridinfo);
 
    disp('writing h5 file');
    
@@ -52,16 +52,52 @@ H5D.close(dset_id);
 %h5disp('myfile.h5');
 
 
+
 gid = H5G.create(fid,'/particle_types',plist,plist,plist);
 H5G.close(gid);
 
 gid = H5G.create(fid,'/gridded_data_format',plist,plist,plist);
 H5G.close(gid);
    
-   
+  
+%data
+%create data group
+
+%i1= int32  simgridinfo.grid_dimensions(1);
+%i2=  (int32) (simgridinfo.grid_dimensions(2));
+%i3=  (int32) (simgridinfo.grid_dimensions(3));
+dim=simgridinfo.grid_dimensions;
+i1=double(dim(1));
+i2=double(dim(2));
+i3=double(dim(3));
+
+plist = 'H5P_DEFAULT';
+dgid = H5G.create(fid,'data',plist,plist,plist);
+gid = H5G.create(dgid,'grid_0000000000',plist,plist,plist);
+
+type_id = H5T.copy('H5T_NATIVE_DOUBLE');
+%dims = [simgridinfo.grid_dimensions(1) simgridinfo.grid_dimensions(2) simgridinfo.grid_dimensions(3)];
+dims = [i1 i2 i3]
+h5_dims = fliplr(dims);
+h5_maxdims = h5_dims;
+space_id = H5S.create_simple(3,h5_dims,h5_maxdims);
+dcpl = 'H5P_DEFAULT';
+dset_id = H5D.create(gid,'density_pert',type_id,space_id,dcpl);
+H5S.close(space_id);
+
+H5T.close(type_id);
+H5D.close(dset_id);
+
+
+
+H5G.close(gid);
+H5G.close(dgid);
+
  
+
 H5F.close(fid);
- simparams.write_params_h5('myfile.gdf');  
+simparams.write_params_h5('myfile.gdf');  
+%simdata.write_data_h5('myfile.gdf'); 
    %write hdf5 in gdf format
    %h5filename=[rootfile,'.gdf'];
    %h5create(h5filename, '/dataset1', size(testdata))

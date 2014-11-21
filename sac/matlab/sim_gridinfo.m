@@ -16,7 +16,9 @@ classdef sim_gridinfo
     end
     
     methods
-        
+        function  griddim=getgriddimensions(obj)
+           griddim=obj.grid_dimensions; 
+        end    
         function newobj=read_gridinfo_h5( obj, filename)
             
             newobj=sim_gridinfo;
