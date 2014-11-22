@@ -4,12 +4,15 @@ classdef sim_gridinfo
     
     properties
         ndimensions=3;
-        grid_dimensions=ones(3,1);
-        grid_left_index=0;
+        grid_dimensions=64*ones(3,1);
+        grid_left_index=ones(3,1);
         %grid_right_index=0;
         grid_level=0;
         grid_parent_id=0;
         grid_particle_count=0;
+        
+        data_software='';
+        data_software_version='';
         
         
         
@@ -30,21 +33,35 @@ classdef sim_gridinfo
             newobj.grid_parent_id=h5read(filename,'/grid_parent_id');
             newobj.grid_particle_count=h5read(filename,'/grid_particle_count');
             
+             newobj.data_software=h5readatt(filename,'/gridded_data_format','data_software');
+            newobj.data_software_version=h5readatt(filename,'/gridded_data_format','data_software_version');
+           
+            
         end  
         
         
-        function newobj=write_gridinfo_h5( obj, filename)
+        function write_gridinfo_h5( obj, filename)
             
-            newobj=sim_gridinfo;
             
-            newobj.grid_dimensions=h5read(filename,'/grid_dimensions');
-            newobj.grid_left_index=h5read(filename,'/grid_left_index');
-            %newobj.grid_right_index=h5read(filename,'/grid_right_index');
-            newobj.grid_level=h5read(filename,'/grid_level');
-            newobj.grid_parent_id=h5read(filename,'/grid_parent_id');
-            newobj.grid_particle_count=h5read(filename,'/grid_particle_count');
+            
+            h5write(filename,'/grid_dimensions',obj.grid_dimensions);
+            %h5write(filename,'/grid_left_index',obj.grid_left_index);
+            %newobj.grid_right_index=h5read(filename,'/grid_right_index',);
+            %h5write(filename,'/grid_level',obj.grid_level);
+            %h5write(filename,'/grid_parent_id',obj.grid_parent_id);
+            %h5write(filename,'/grid_particle_count',obj.grid_particle_count);
+            
+            h5writeatt(filename,'/gridded_data_format','data_software',obj.data_software);
+            h5writeatt(filename,'/gridded_data_format','data_software_version',obj.data_software_version);
+  
+            h5writeatt(filename,'/field_types/density_bg','field_name','BackgroundDensity');
+           
+
             
         end 
+        
+       
+        
     end
     
 end
