@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <ns1:Query xmlns:ns1="http://virtualsolar.org/VSO/VSOi">
+      <body>
+        <version>0.6</version>
+        <block>
+          <provider>jsoc</provider>
+          <instrument>aia</instrument>
+          <time>
+            <start>20100701000000</start>
+            <end>20100701000200</end>
+          </time>
+          <wave>
+            <wavemin>193</wavemin>
+            <wavemax>193</wavemax>
+            <waveunit>Angstrom</waveunit>
+          </wave>
+          <field>
+            <fielditem>thumbnail</fielditem>
+            <fielditem>detector</fielditem>
+          </field>
+          <pixels>1024</pixels>
+        </block>
+      </body>
+    </ns1:Query>
+  </soapenv:Body>
+</soapenv:Envelope>

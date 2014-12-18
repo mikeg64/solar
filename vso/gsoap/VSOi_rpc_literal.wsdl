@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:VSO="http://virtualsolar.org/VSO/VSOi" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	name="VSO"
+	targetNamespace="http://virtualsolar.org/VSO/VSOi">
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="unqualified"
+			targetNamespace="http://virtualsolar.org/VSO/VSOi">
+
+			<!-- for VSO "Query" function -->
+
+			<xsd:complexType name="QueryRequest">
+				<xsd:all>
+					<xsd:element name="version" type="xsd:float" minOccurs="0" />
+					<xsd:element name="block" type="VSO:QueryRequestBlock" 
+					minOccurs="1" maxOccurs="1" />
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="QueryRequestBlock">
+				<xsd:all>
+					<xsd:element name="time" type="VSO:Time" minOccurs="1" />
+					<xsd:element name="provider" type="xsd:string" minOccurs="0" />
+					<xsd:element name="source" type="xsd:string" minOccurs="0" />
+					<xsd:element name="instrument" type="xsd:string" minOccurs="0" />
+					<xsd:element name="physobs" type="xsd:string" minOccurs="0" />		
+					<xsd:element name="wave" type="VSO:Wave" minOccurs="0" />
+					<xsd:element name="extent" type="VSO:Extent" minOccurs="0" />
+					<xsd:element name="field" type="VSO:Field" minOccurs="0" />
+					<!-- VSO extended Query elements:
+					Please note that these elements might be handle differently
+					or might take different arguments depending on the provider.
+					In general we've made an effort to standarize as much as possible.
+					 -->
+					<xsd:element name="pixels" type="xsd:string" minOccurs="0" />
+					<xsd:element name="level" type="xsd:string" minOccurs="0" />
+					<xsd:element name="resolution" type="xsd:string" minOccurs="0" />
+					<xsd:element name="detector" type="xsd:string" minOccurs="0" />
+					<xsd:element name="filter" type="xsd:string" minOccurs="0" />
+					<xsd:element name="sample" type="xsd:string" minOccurs="0" />
+					<xsd:element name="quicklook" type="xsd:string" minOccurs="0" />
+					<xsd:element name="pscale" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Time">
+				<xsd:all>
+					<xsd:element name="start" type="xsd:string" />
+					<xsd:element name="end" type="xsd:string" />
+					<xsd:element name="near" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+
+			<!--  wavemin and wavemax are really type float. However sometimes
+			 providers can't handle the decimal point and throw and error.
+			 By leaving the field as string, we allow the developer some 
+			 flexibility. e.g. passing an integer as string -->
+			<xsd:complexType name="Wave">
+				<xsd:all>
+					<xsd:element name="wavemin" type="xsd:string" />
+					<xsd:element name="wavemax" type="xsd:string" />
+					<xsd:element name="waveunit" type="xsd:string" />
+					<xsd:element name="wavetype" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+
+			<!-- Currently not fully implemented. Only "type" is. -->     
+			<xsd:complexType name="Extent">
+				<xsd:all>
+					<xsd:element name="x" type="xsd:string" minOccurs="0" />
+					<xsd:element name="y" type="xsd:string" minOccurs="0" />
+					<xsd:element name="width" type="xsd:string" minOccurs="0" />
+					<xsd:element name="length" type="xsd:string" minOccurs="0" />
+					<xsd:element name="type" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Field">
+				<xsd:sequence>
+					<xsd:element name="fielditem" type="xsd:string" 
+					minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+
+			<!-- for VSO "Query" function Response -->
+			
+			<xsd:complexType name="QueryResponse">
+				<xsd:sequence>
+					<xsd:element name="provideritem" type="VSO:ProviderQueryResponse" 
+					minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- provider response block (a bit late to rename it now) -->
+			<xsd:complexType name="ProviderQueryResponse">
+				<xsd:all>
+					<xsd:element name="version" type="xsd:float" />
+					<xsd:element name="provider" type="xsd:string" minOccurs="0" />
+					<xsd:element name="no_of_records_found" type="xsd:int" minOccurs="0" />
+					<xsd:element name="no_of_records_returned" type="xsd:int" minOccurs="0" />
+					<xsd:element name="record" type="VSO:QueryResponseBlockArray" minOccurs="0" />
+					<xsd:element name="error" type="xsd:string" minOccurs="0" />
+					<xsd:element name="debug" type="xsd:string" minOccurs="0" />
+					<xsd:element name="status" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="QueryResponseBlockArray">
+				<xsd:sequence>
+					<xsd:element name="recorditem" type="VSO:QueryResponseBlock" 
+					minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="QueryResponseBlock">
+				<xsd:all>
+					<xsd:element name="provider" type="xsd:string" />
+					<xsd:element name="source" type="xsd:string" minOccurs="0" />
+					<xsd:element name="instrument" type="xsd:string" minOccurs="0" />
+					<xsd:element name="physobs" type="xsd:string" minOccurs="0" />
+					<xsd:element name="time" type="VSO:Time" />
+					<xsd:element name="wave" type="VSO:Wave" minOccurs="0" />
+					<xsd:element name="extent" type="VSO:Extent" minOccurs="0" />
+					<xsd:element name="size" type="xsd:float" minOccurs="0" />
+					<xsd:element name="extra" type="VSO:Extra" minOccurs="0" />
+					<xsd:element name="info" type="xsd:string" minOccurs="0" />
+					<xsd:element name="datatype" type="xsd:string" minOccurs="0" />
+					<xsd:element name="fileurl" type="xsd:string" minOccurs="0" />
+					<xsd:element name="fileid" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="Extra">
+				<xsd:all>
+					<xsd:element name="thumbnail" type="VSO:Thumbnail" minOccurs="0" />
+					<xsd:element name="flags" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Thumbnail">
+				<xsd:all>
+					<xsd:element name="hires" type="xsd:string" minOccurs="0" />
+					<xsd:element name="lowres" type="xsd:string" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+
+
+			<!-- for "GetData" function -->
+
+			<xsd:complexType name="VSOGetDataRequest">
+				<xsd:all>
+					<xsd:element name="version" type="xsd:string" minOccurs="0" />
+					<xsd:element name="request" type="VSO:GetDataRequest" />
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetDataRequest">
+				<xsd:all>
+					<xsd:element name="method" type="VSO:MethodItem" minOccurs="0" />
+					<xsd:element name="info" type="VSO:Info" minOccurs="0" />
+					<xsd:element name="datacontainer" type="VSO:DataContainer" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="MethodItem">
+				<xsd:sequence>
+					<xsd:element name="methodtype" type="xsd:string" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="Info">
+				<xsd:all>
+					<xsd:element name="email" type="xsd:string" />
+					<xsd:element name="host" type="xsd:string" minOccurs="0" />
+					<xsd:element name="user" type="xsd:string" minOccurs="0" />
+					<xsd:element name="directory" type="xsd:string" minOccurs="0" />
+					<xsd:element name="password" type="xsd:string" minOccurs="0" />
+					<xsd:element name="address" type="xsd:string" minOccurs="0" />
+					<xsd:element name="required" type="xsd:string" minOccurs="0" />
+					<xsd:element name="site" type="xsd:string" minOccurs="0"/>
+				</xsd:all>
+			</xsd:complexType>
+
+			<xsd:complexType name="DataContainer">
+				<xsd:sequence>
+					<xsd:element name="datarequestitem" type="VSO:DataRequestItem" 
+					minOccurs='0' maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="DataRequestItem">
+				<xsd:all>
+					<xsd:element name="provider" type="xsd:string" />
+					<xsd:element name="fileiditem" type="VSO:FileidItem" />
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="FileidItem">
+				<xsd:sequence>
+					<xsd:element name="fileid" type="xsd:string" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+
+		        <!-- for "GetData" function Response -->
+                        <xsd:complexType name="VSOGetDataResponse">
+				<xsd:sequence>
+					<xsd:element name="getdataresponseitem" type="VSO:GetDataResponseItem" 
+					minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetDataResponseItem">
+				<xsd:all>
+					<xsd:element name="version" type="xsd:string" />
+					<xsd:element name="info" minOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="infoitem" type="xsd:string"
+								 maxOccurs="unbounded" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="provider" type="xsd:string" minOccurs="0" />
+					<xsd:element name="getdataitem" type="VSO:GetDataItem" minOccurs="0" />
+					<xsd:element name="status" type="xsd:string" minOccurs="0" />
+					<xsd:element name="debug" type="xsd:string" minOccurs="0" />
+					<xsd:element name="details" type="xsd:string" minOccurs="0" />
+					<xsd:element name="method" type="VSO:MethodItem" minOccurs="0" />
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetDataItem">
+				<xsd:sequence>
+					<xsd:element name="dataitem" type="VSO:DataItem" minOccurs='0' 
+					maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>			
+			
+			<xsd:complexType name="DataItem">
+				<xsd:all>
+					<xsd:element name="provider" type="xsd:string" />
+					<xsd:element name="url" type="xsd:string" minOccurs="0" />
+					<xsd:element name="fileiditem" type="VSO:FileidItem" />
+					<!-- <xsd:element name="fileid" type="xsd:string" minOccurs="0" /> -->
+				</xsd:all>
+			</xsd:complexType>
+
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="QueryRequest">
+		<wsdl:part name="body" type="VSO:QueryRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="QueryResponse">
+		<wsdl:part name="body" type="VSO:QueryResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetDataInput">
+		<wsdl:part name="body" type="VSO:VSOGetDataRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetDataOutput">
+		<wsdl:part name="body" type="VSO:VSOGetDataResponse" />
+	</wsdl:message>
+
+	<wsdl:portType name="VSOiPort">
+		<wsdl:operation name="Query">
+			<wsdl:input message="VSO:QueryRequest" />
+			<wsdl:output message="VSO:QueryResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetData">
+			<wsdl:input message="VSO:GetDataInput" />
+			<wsdl:output message="VSO:GetDataOutput" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+	<wsdl:binding name="VSOiBinding" type="VSO:VSOiPort">
+		<soap:binding style="rpc"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="Query">
+			<soap:operation soapAction="http://virtualsolar.org/VSO/VSOi#Query" />
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://virtualsolar.org/VSO/VSOi"
+					parts="body" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://virtualsolar.org/VSO/VSOi"
+					parts="body" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetData">
+			<soap:operation soapAction="http://virtualsolar.org/VSO/VSOi#GetData" />
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://virtualsolar.org/VSO/VSOi"
+					parts="body" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" namespace="http://virtualsolar.org/VSO/VSOi"
+					parts="body" />
+			</wsdl:output>
+		</wsdl:operation>
+
+	</wsdl:binding>
+
+	<wsdl:service name="VSOiService">
+		<wsdl:port name="nsoTestVSOi" binding="VSO:VSOiBinding">
+			<soap:address
+				location="http://VSO.tuc.noao.edu/cgi-bin/VSO/DEV_SOAP/bin/vsoi_wsdl.cgi" />
+		</wsdl:port>
+		<wsdl:port name="nsoVSOi" binding="VSO:VSOiBinding">
+			<soap:address
+				location="http://vso.nso.edu/cgi-bin/VSO/PROD/vsoi_wsdl.cgi" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
