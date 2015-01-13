@@ -46,6 +46,51 @@ croploopsequence.m
 
 Step 3.
 Feature tracking and extraction
+using the detect features
+points1 = detectMinEigenFeatures(intensi1);
+points2 = detectBRISKFeatures(intensi1);
+points3 = detectFASTFeatures(intensi1);
+points4 = detectHarrisFeatures(intensi1);
+points5 = detectSURFFeatures(intensi1);
+points6 = extractHOGFeatures(intensi1);
+
+Step 4
+Most effective method is to click and select points from features, for example
+clicked points along a flux loop
+
+%line feature from from1 crop1img
+x=[848 865 888 913 947 984 1007 1005 1005 1005];
+y=[543 518 493 470 453 447 472 502 532 575];
+
+we plot these points on subsequent plots to detect changes
+e.g. see comparepairs script
+
+f1=['crop1img/',imnames{1}];
+f2=['crop1img/',imnames{5}];
+f3=['crop1img/',imnames{7}];
+f4=['crop1img/',imnames{15}];
+f5=['crop1img/',imnames{5}];
+
+li1=imread(f1);
+li2=imread(f2);
+li3=imread(f3);
+li4=imread(f4);
+li5=imread(f5);
+
+figure
+subplot(3,2,1);
+%imshowpair(li1,li2);
+imshow(li1);
+
+subplot(3,2,2);
+%imshowpair(li1,li3);
+imshow(li1);
+hold on
+line(x,y);
+
+subplot(3,2,3);
+%imshowpair(li1,li4);
+imshow(li2);
 
 
 
