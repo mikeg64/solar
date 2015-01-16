@@ -203,16 +203,18 @@ for n = 1:nt
     %comment the above     
     %for i = 3:ni-2
       %Lax-Wendroff   
-     %v(i) = u(i)+c*(u(i+1)-u(i-1))/2+c^2*(u(i+1)-2*u(i)+u(i-1))/2;
+    %v(i) = u(i)+c*(u(i+1)-u(i-1))/2+c^2*(u(i+1)-2*u(i)+u(i-1))/2;
       
       
      
       %first order central differencing
       dudx(i)=(u(i+1)-u(i-1))/(2*dx);
-      %v(i) = u(i)+c*(u(i+1)-u(i-1))/2;%+c*(uold(i+1)-uold(i-1))/2;
-      v(i) = u(i)-(dt/dx)*(u(i+1)-u(i-1))/2;
+      v(i) = u(i)+c*(u(i+1)-u(i-1))/2;%+c*(uold(i+1)-uold(i-1))/2;
+      %v(i) = u(i)-(dt/dx)*(u(i+1)-u(i-1))/2;
+      
+      %comment out two lines below to switch of hyperdiffusion
       hdx(i)=(wavespeed.^2)*(  (nur(i+2)+nushk(i+2))*(u(i+1)-u(i))     -nul(i+2)*(u(i)-u(i-1))  )/(2);
-           %correction with hyperdiffusion term
+      %correction with hyperdiffusion term
       v(i)=v(i)+dt*(  (nur(i+2)+nushk(i+2))*(u(i+1)-u(i))     -(nul(i+2)+nushk(i+2))*(u(i)-u(i-1))  )/(2*dx*dx);
 
       
@@ -240,8 +242,8 @@ for n = 1:nt
   %u(1)=u(ni-3);
       
          %second order %uncomment these to test second order differencing
-     starti=2;
-     finishi=ni-1;
+    % starti=2;
+    % finishi=ni-1;
      
       %Compute hyperdiffusion coefficients
       for i = starti:finishi
