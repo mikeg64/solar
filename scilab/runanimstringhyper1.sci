@@ -165,10 +165,10 @@ dudx = zeros(ni,1);
         ymax=1.2*hmax;
         ymin=-0.2*hmax;
       //remove comments below to set up a sine wave  
-        if (i>n1) & (i<n3)
-          u(i)=hmax*sin(2*%pi*(i-n1)/((n3-n1)));
-           ymin=-1.2*hmax;
-        end
+      //  if (i>n1) & (i<n3)
+      //    u(i)=hmax*sin(2*%pi*(i-n1)/((n3-n1)));
+      //     ymin=-1.2*hmax;
+      //  end
       
  
 
@@ -225,6 +225,7 @@ for n = 1:nt
       dudx(i)=(u(i+1)-u(i-1))/(2*dx);
       v(i) = u(i)+c*(u(i+1)-u(i-1))/2;//+c*(uold(i+1)-uold(i-1))/2;
  
+      //comment out the two statements below to remove the hyperdiffusion correction
       hdx(i)=(c.^2)*(  (nur(i)+nushk(i))*(u(i+1)-u(i))     -nul(i)*(u(i)-u(i-1))  )/(2);
            //correction with hyperdiffusion term
       v(i)=v(i)+(c.^2)*(  (nur(i)+nushk(i))*(u(i+1)-u(i))     -nul(i)*(u(i)-u(i-1))  )/(2);
