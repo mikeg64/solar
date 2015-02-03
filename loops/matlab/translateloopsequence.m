@@ -23,7 +23,7 @@ li1=imread(loopimfile);
 
 % tim=tim+1512;
 %for i=1:1
-for i=24:121 
+for i=1:121 
     var1=imnames{i};
     stim=var1(10:15);
     sdat=var1(1:8);
