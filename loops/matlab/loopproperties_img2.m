@@ -18,6 +18,9 @@ lybg193=zeros(nloops,2);
 lxbg171=zeros(nloops,2);
 lybg171=zeros(nloops,2);
 
+exptime171=zeros(1,5);
+exptime193=zeros(1,5);
+
 lheight193=zeros(nloops);
 lheight171=zeros(nloops);
 llength193=zeros(nloops);
@@ -26,8 +29,15 @@ lwidth193=zeros(nloops);
 lwidth171=zeros(nloops);
 lddomnode193=zeros(nloops);
 lddomnode171=zeros(nloops);
-lintensity193=zeros(nloops);
-lintensity171=zeros(nloops);
+lintensity193=zeros(1,nloops);
+lintensity171=zeros(1,nloops);
+
+lstd193=zeros(1,nloops);
+lstd171=zeros(1,nloops);
+
+%exposuretimes
+exptime171=[1.9995650 1.9995590  1.9995570 1.9995600 2.0001650];
+exptime193=[2.0000700 2.0000690 2.0000640 2.0000630 2.0000640];
 
 %two points forming a line to sample background intensity
 lxbg193(1,:)=[498 518];
