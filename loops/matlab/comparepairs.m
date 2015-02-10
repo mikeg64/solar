@@ -1,5 +1,9 @@
 %imnames=importdata('img.dat');
 
+%view of full solar disk
+%http://helioviewer.org/?date=2014-03-12T22:36:37.000Z&imageScale=2.4204409&centerX=30.25551125&centerY=-50.8292589&imageLayers=%5BSDO,AIA,AIA,171,1,49%5D,%5BSDO,AIA,AIA,193,1,52%5D&eventLayers=&eventLabels=true
+
+
 %line feature from from1 crop1img
 %x=[848 865 888 913 947 984 1007 1005 1005 1005];
 %y=[543 518 493 470 453 447 472 502 532 575];

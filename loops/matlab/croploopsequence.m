@@ -1,3 +1,6 @@
+%For each of the images select the region of interest
+
+
 %imnames=importdata('img2_2014_0312to_0313/img_193/img.dat');
 imnames=importdata('img2_2014_0312to_0313/img_171/img.dat');
 %loopimfile='20130105_000012_4096_0171.jpg';

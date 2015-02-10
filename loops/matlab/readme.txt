@@ -92,6 +92,7 @@ croploopsequence.m
 
 
 Step 4
+An initial examination of the loops was made we prepared the comparpairs script to compare 
 Most effective method is to click and select points from features, for example
 clicked points along a flux loop
 
@@ -129,14 +130,14 @@ subplot(3,2,3);
 %imshowpair(li1,li4);
 imshow(li2);
 
-step 4
+step 5
 
 we used the histeq to balance the histogram to make it easier to contrast the positions for the loops
 
 Measure the loop properties and co-ordinates along selected loops at the selected range of time steps
 
 
-step 5
+step 6
 
 Using the grayscale images measure the intensities of the loops using te 
 

@@ -1,3 +1,11 @@
+%Translate sequence of so that region of interest is fixed using solar
+%rotation and feature position on the solar disc
+
+%see also for solar rotation corrections
+%Solar Corona Loop Studies with AIA: I. Cross-Sectional Temperature Structure
+%Markus J. Aschwanden, Paul Boerner, arXiv.org > astro-ph > arXiv:1103.0228, 
+%(ADS 2011ApJ...732...81A)
+
 %imnames=importdata('img2_2014_0312to_0313/img_193/img.dat');
 imnames=importdata('img2_2014_0312to_0313/img_171/img.dat');
 %loopimfile='20130105_000012_4096_0171.jpg';
