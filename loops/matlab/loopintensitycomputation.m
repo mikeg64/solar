@@ -8,7 +8,7 @@ i=i2;
 i1=(2*i)-1;
 
 %read in the loop properties
-loopproperties_img2;
+loopproperties_partialloops_img2;
 
 istart1=83;
 istart2=50;
@@ -24,10 +24,11 @@ iia2=[83 85 87 88 89 90 91 92 93 95 96 97 99];
 % i1= 99;   %83,85,87,88,89,90,91,92,93,95,96,97,99
 % ii1= 13;
 
-for i=1:13
+for j=1:13
+%for i=1:1
 
-ii1=i;
-ii2=i;
+ii1=j;
+ii2=j;
 i1=iia1(ii1);
 i2=iia2(ii2);
 
@@ -50,8 +51,14 @@ ig2=rgb2gray(li2);
 
 bgprof1=improfile(ig1,lxbg193(ii1,:),lybg193(ii1,:));
 bgprof2=improfile(ig2,lxbg171(ii1,:),lybg171(ii1,:));
-prof1=improfile(ig1,lx193(ii1,:),ly193(ii1,:));
-prof2=improfile(ig2,lx171(ii1,:),ly171(ii1,:));
+
+lx=lx193{ii1};
+ly=ly193{ii1};
+prof1=improfile(ig1,lx(:),ly(:));
+
+lx=lx171{ii2};
+ly=ly171{ii2};
+prof2=improfile(ig2,lx(:),ly(:));
 
 sumbg1=sum(bgprof1);
 sumbg2=sum(bgprof2);
@@ -78,9 +85,13 @@ for i=1:np-1
 end
 bgll193=bgll;
 
-np=npos;
+sz=size(lx193{ii1});
+lx=lx193{ii1};
+ly=ly193{ii1};
+%np=npos;
+np=sz(2);
 for i=1:np-1
-   ll=(lx193(ii1,i+1)-lx193(ii1,i)).^2+(ly193(ii1,i+1)-ly193(ii1,i)).^2;
+   ll=(lx(i+1)-lx(i)).^2+(ly(i+1)-ly(i)).^2;
    ll=sqrt(ll); 
 end
 ll193=ll;
@@ -93,9 +104,14 @@ for i=1:np-1
 end
 bgll171=bgll;
 
-np=npos;
+sz=size(lx171{ii2});
+lx=lx171{ii2};
+ly=ly171{ii2};
+%np=npos;
+np=sz(2);
+
 for i=1:np-1
-   ll=(lx171(ii1,i+1)-lx171(ii1,i)).^2+(ly171(ii1,i+1)-ly171(ii1,i)).^2;
+   ll=(lx(i+1)-lx(i)).^2+(ly(i+1)-ly(i)).^2;
    ll=sqrt(ll); 
 end
 ll171=ll;
