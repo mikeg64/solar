@@ -7,6 +7,24 @@ i2=45;
 i=i2;
 i1=(2*i)-1;
 
+var1=imnames1{1};
+stim1=var1(10:15);
+sdat1=var1(1:8);
+htim1=str2double(stim1(1:2));
+mtim1=str2double(stim1(3:4));
+sectim1=str2double(stim1(5:6));
+daydat1=str2double(var1(7:8));
+startsectim1=(daydat1-12)*24*3600+(htim1*3600+mtim1*60+sectim1);
+
+var2=imnames2{1};
+stim2=var2(10:15);
+sdat2=var2(1:8);
+htim2=str2double(stim2(1:2));
+mtim2=str2double(stim2(3:4));
+sectim2=str2double(stim2(5:6));
+daydat2=str2double(var2(7:8));
+startsectim2=(daydat2-12)*24*3600+(htim2*3600+mtim2*60+sectim2);
+
 %read in the loop properties
 loopproperties_partialloops_img2;
 
@@ -154,4 +172,8 @@ lstd171(ii2)=abs(sqrt(((std2/ll171  ).^2+(stdbg2/bgll171).^2))/et171);
 
 
 end
+
+plot(startsectim1+tsec193 ,lintensity193, '*', startsectim2+tsec171  ,lintensity171, '+');
+% hold on
+% plot(startsectim1+tsec193 ,lintensity193)
 

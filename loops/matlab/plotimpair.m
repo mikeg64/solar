@@ -21,9 +21,9 @@ istart2=50;
 %list of corresponding times for each sequence of images
 %the index below corresponds to the index of the image in the above arrays
 
-i2= 53;   %50,51,52,53,54,55,56,57,58,59,60,61,62
-i1= 88;   %83,85,87,88,89,90,91,92,93,95,96,97,99
-ii1= 4;
+i2= 62;   %50,51,52,53,54,55,56,57,58,59,60,61,62
+i1= 99;   %83,85,87,88,89,90,91,92,93,95,96,97,99
+ii1= 13;
 impath1=['img2_2014_0312to_0313/crop2img_193/',imnames1{i1}];
 impath2=['img2_2014_0312to_0313/crop2img_171/',imnames2{i2}];
 
