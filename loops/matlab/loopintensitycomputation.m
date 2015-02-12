@@ -173,7 +173,84 @@ lstd171(ii2)=abs(sqrt(((std2/ll171  ).^2+(stdbg2/bgll171).^2))/et171);
 
 end
 
-plot(startsectim1+tsec193 ,lintensity193, '*', startsectim2+tsec171  ,lintensity171, '+');
+
+f171_193=lintensity171./lintensity193;
+figure;
+plot(startsectim1+tsec193 ,lintensity193, '-', startsectim2+tsec171  ,lintensity171, '--');
 % hold on
 % plot(startsectim1+tsec193 ,lintensity193)
+
+
+%flux_171/flux_193=resp_171/resp_193
+%use tabulated response functions to compute
+resp_171_193=zeros(30,1);
+temp_171_193=zeros(30,1);
+ for ii=1:30
+   logtemp= 5.55+2.25*(ii-1)/29; 
+   temp_171_193(ii)=logtemp;
+   
+   iiresp=1;
+   iresploop=1;
+   sz=size(respxlogt193);
+   while iresploop==1  && (iiresp+1)<=sz(2)
+       iiresp=iiresp+1;
+       if logtemp>=reslogt193(iiresp-1) && logtemp<reslogt193(iiresp)
+           iresploop=0;
+           xval=logtemp;
+           x=reslogt193;
+           %lagrange interpolate logDN
+%            t1=(xval-x(1,iiresp)).*(xval-x(1,iiresp+1))/((x(1,iiresp-1)-x(1,iiresp)).*(x(1,iiresp-1)-x(1,iiresp+1)));
+%            t2=(xval-x(1,iiresp-1)).*(xval-x(1,iiresp+1))/((x(1,iiresp)-x(1,iiresp-1)).*(x(1,iiresp)-x(1,iiresp+1)));
+%            t3=(xval-x(1,iiresp-1)).*(xval-x(1,iiresp))/((x(1,iiresp+1)-x(1,iiresp-1)).*(x(1,iiresp+1)-x(1,iiresp)));
+         
+           %logdn193=t1*reslogdn193(iiresp-1)+t2*reslogdn193(iiresp)+t3*reslogdn193(iiresp+1); 
+           
+           t1=(xval-x(1,iiresp))/(x(1,iiresp-1)-x(1,iiresp));
+           t2=(xval-x(1,iiresp-1))/(x(1,iiresp)-x(1,iiresp-1));
+           logdn193=t1*reslogdn193(iiresp-1)+t2*reslogdn193(iiresp);   
+       end    
+   end
+   
+   iresploop=1;
+   iiresp=1;
+   sz=size(respxlogt171);
+   logtemp= 5.55+2.25*(ii-1)/29;
+  
+    while iresploop==1  && (iiresp+1)<=sz(2)
+       iiresp=iiresp+1;
+       if logtemp>=reslogt171(iiresp-1) && logtemp<reslogt171(iiresp)
+           iresploop=0;
+           xval=logtemp;
+           x=reslogt171;
+           %lagrange interpolate logDN
+%            t1=(xval-x(1,iiresp)).*(xval-x(1,iiresp+1))/((x(1,iiresp-1)-x(1,iiresp)).*(x(1,iiresp-1)-x(1,iiresp+1)));
+%            t2=(xval-x(1,iiresp-1)).*(xval-x(1,iiresp+1))/((x(1,iiresp)-x(1,iiresp-1)).*(x(1,iiresp)-x(1,iiresp+1)));
+%            t3=(xval-x(1,iiresp-1)).*(xval-x(1,iiresp))/((x(1,iiresp+1)-x(1,iiresp-1)).*(x(1,iiresp+1)-x(1,iiresp)));
+         
+           %logdn171=t1*reslogdn171(iiresp-1)+t2*reslogdn171(iiresp)+t3*reslogdn171(iiresp+1); 
+           
+           t1=(xval-x(1,iiresp))/(x(1,iiresp-1)-x(1,iiresp));
+           t2=(xval-x(1,iiresp-1))/(x(1,iiresp)-x(1,iiresp-1));
+           logdn171=t1*reslogdn171(iiresp-1)+t2*reslogdn171(iiresp);   
+       end    
+   end  
+   
+   
+   
+   
+   
+   
+   resp_171_193(ii)=(10.^logdn171)/(10.^logdn193);
+   
+     
+ end
+ 
+ figure;
+ plot(temp_171_193 ,resp_171_193);
+ 
+ %read off where the 
+f171_193=lintensity171./lintensity193;
+
+finaltemp=[ 5.535 5.524 5.518 5.57 5.53 5.519 5.51 5.515 5.517 5.528 5.522 5.51 5.51  ];
+
 

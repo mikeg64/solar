@@ -66,6 +66,7 @@ respxlogt193=[  68  78  93  114 137 151 162 173 193 203 214 221 228 236 256 267 
 respylogdn193=[258 259 252  243 237 232 226 211 173 160 158 169 189 220 326 369 382 390 394 393 388 389 395 447 445 438 370 346 335 336 343 366 392 435 500 ];
 
 sz=size(respxlogt193);
+reslogdn193=zeros(sz(2),1);
 for ip=1:sz(2)
     
     reslogdn193(ip)=ypixresp193l-reslogdn193(ip);
@@ -75,6 +76,7 @@ end
 
 
 sz=size(respxlogt171);
+reslogdn171=zeros(sz(2),1);
 for ip=1:sz(2)
     reslogdn171(ip)=ypixresp171l-reslogdn171(ip);
     reslogt171(ip)=logt171l+((respxlogt171(ip)-xpixresp171l)*(logt171u-logt171l)/(xpixresp171u-xpixresp171l));
