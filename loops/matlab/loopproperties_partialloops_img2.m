@@ -46,6 +46,44 @@ lstd171=zeros(1,nloops);
 exptime171=[1.9995650 1.9995590  1.9995570 1.9995600 2.0001650];
 exptime193=[2.0000700 2.0000690 2.0000640 2.0000630 2.0000640];
 
+
+
+
+%pixel position for 171 response curve and corresponding measurement
+xpixresp171u=588;  ypixresp171u=7;  logt171u=8;  logdn171u=-23;
+xpixresp171l=67;  ypixresp171l=722;  logt171l=5.5;  logdn171l=-29;
+
+%pixel positions for points on response curves
+respxlogt171=[76 101 126 140 154 165 170 177 184 194 224 234 244 255 265 275 286 297 315 346 359 381 391 413 426 447 493 585];
+respylogdn171=[244 172 124 107 105 108 113 123 131 162 292 318 317 324 358 407 453 475 486 535 543 542 546 563 570 580 566 618];
+
+
+%pixel position for 193 response curve and corresponding measurement
+xpixresp193u=588;  ypixresp193u=7;  logt193u=8;  logdn193u=-23;
+xpixresp193l=67;  ypixresp193l=722;  logt193l=5.5;  logdn193l=-29;
+
+respxlogt193=[  68  78  93  114 137 151 162 173 193 203 214 221 228 236 256 267 275 285 298 307 318 329 337 369 379 383 401 414 427 440 457 485 513 547 587 ];
+respylogdn193=[258 259 252  243 237 232 226 211 173 160 158 169 189 220 326 369 382 390 394 393 388 389 395 447 445 438 370 346 335 336 343 366 392 435 500 ];
+
+sz=size(respxlogt193);
+for ip=1:sz(2)
+    
+    reslogdn193(ip)=ypixresp193l-reslogdn193(ip);
+    reslogt193(ip)=logt193l+((respxlogt193(ip)-xpixresp193l)*(logt193u-logt193l)/(xpixresp193u-xpixresp193l));
+    reslogdn193(ip)=(logdn193u-((respylogdn193(ip)-xpixresp193l)*(logdn193u-logdn193l)/(xpixresp193u-xpixresp193l)));
+end
+
+
+sz=size(respxlogt171);
+for ip=1:sz(2)
+    reslogdn171(ip)=ypixresp171l-reslogdn171(ip);
+    reslogt171(ip)=logt171l+((respxlogt171(ip)-xpixresp171l)*(logt171u-logt171l)/(xpixresp171u-xpixresp171l));
+    reslogdn171(ip)=(logdn171u-((respylogdn171(ip)-xpixresp171l)*(logdn171u-logdn171l)/(xpixresp171u-xpixresp171l)));
+end
+
+
+
+
 %two points forming a line to sample background intensity
 lxbg193(1,:)=[498 518];
 lybg193(1,:)=[198 189];
@@ -371,10 +409,10 @@ tsec171(11)=86256;
   lddomnode193(11)=114.28;
   lddomnode171(11)=156.77;
   
-  tstr193{12}='';
-tsec193(12)=0;
- tstr171{12}='';
-tsec171(12)=0;
+   tstr193{12}='13_004107';
+tsec193(12)=86460;
+ tstr171{12}='13_004223';
+tsec171(12)=87156;
 lheight193(12)=149.09;
 lheight171(12)=123.22;
 llength193(12)=127.19;
@@ -386,10 +424,10 @@ lwidth171(12)=3.58;
 % lddomnode193(12)=;
 % lddomnode171(12)=;
 
-tstr193{13}='';
-tsec193(13)=0;
-tstr171{13}='';
-tsec171(13)=0;
+tstr193{13}='13_011119';
+tsec193(13)=88272;
+tstr171{13}='13_011211';
+tsec171(13)=88944;
 lheight193(13)=114.33;
 lheight171(13)=116.74;
 llength193(13)=95.08;
