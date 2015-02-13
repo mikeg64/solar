@@ -66,14 +66,16 @@ ig2=rgb2gray(li2);
 %imhist; used to detemine intensity along the line
 
 
-
+%background profiles
 bgprof1=improfile(ig1,lxbg193(ii1,:),lybg193(ii1,:));
 bgprof2=improfile(ig2,lxbg171(ii1,:),lybg171(ii1,:));
 
+%profile for 193
 lx=lx193{ii1};
 ly=ly193{ii1};
 prof1=improfile(ig1,lx(:),ly(:));
 
+%pixel profile for 171
 lx=lx171{ii2};
 ly=ly171{ii2};
 prof2=improfile(ig2,lx(:),ly(:));
@@ -163,11 +165,11 @@ et171=mean(exptime171);
 et193=mean(exptime193);
 
 
-lintensity193(ii1)=((sum1/ll193  )-(sumbg1/bgll193))/et193;
+lintensity193(ii1)=((sum1/ll193  )-(sumbg1/bgll193))/(et193*ll193);
 lstd193(ii1)=abs(sqrt(((std1/ll193  ).^2+(stdbg1/bgll193).^2))/et193);
 
 
-lintensity171(ii2)=((sum2/ll171  )-(sumbg2/bgll171))/et171;
+lintensity171(ii2)=((sum2/ll171  )-(sumbg2/bgll171))/(et171*ll171);
 lstd171(ii2)=abs(sqrt(((std2/ll171  ).^2+(stdbg2/bgll171).^2))/et171);
 
 
@@ -240,7 +242,7 @@ temp_171_193=zeros(30,1);
    
    
    
-   resp_171_193(ii)=(10.^logdn171)/(10.^logdn193);
+   resp_171_193(ii)=(exp(logdn171))/(exp(logdn193));
    
      
  end
@@ -251,6 +253,15 @@ temp_171_193=zeros(30,1);
  %read off where the 
 f171_193=lintensity171./lintensity193;
 
-finaltemp=[ 5.535 5.524 5.518 5.57 5.53 5.519 5.51 5.515 5.517 5.528 5.522 5.51 5.51  ];
+%finaltemp=[ 5.535 5.524 5.518 5.57 5.53 5.519 5.51 5.515 5.517 5.528 5.522 5.51 5.51  ];
+finaltemp=[ 6.12 6.24 7.12 5.86 6.1 7.08 7.12 6.58 6.67 6.48 6.57 7.13 7.05 ];
+
+
+figure
+plot(((startsectim1+tsec193)/60)-1250 ,finaltemp);
+
+
+
+
 
 
