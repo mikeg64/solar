@@ -19,12 +19,12 @@ function [ d1c, d1p, d2c, d2p ] = dconsts( omega, consts, rho0c, rho0p, pres0c, 
     a2m=pres0p*rmp;
 
     al1=a1p-(a1m*exp(rpc/l2)/exp(rmc/l2));
-    al2=;
-    al3=;
-    al4=;
+    al2=a2p-(a2m*exp(-rpp/l1)/exp(-rmp/l1));
+    al3=1-(exp(rpc/l2)/exp(rmc/l2));
+    al4=-1+(exp(-rpp/l1)/exp(-rmp/l1));
 
-    be1=;
-    be2=;
+    be1=(a1p*epl1*exp(rmc*l2)+a1m*epl2*exp(-rmp*l1))/(exp(rmc*l2-rmp*l1));
+    be2=(epl1*exp(rmc*l2)+epl2*exp(-rmp*l1))/(exp(rmc*l2-rmp*l1));
 
     d1p=(al3*be1-al1*be2)/(al3*al2-al1*al4);
     d1c=(al4*be1-al2*be2)/(al4*al1-al2*al3);
