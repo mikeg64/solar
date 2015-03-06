@@ -1,0 +1,95 @@
+\begin{thebibliography}{}
+
+\bibitem{Brio & Wu 1988)}{Brio}, M., \& {Wu}, C.~C. 1988, Journal of Computational Physics,{\bf 75},400.
+
+\bibitem{Caunt & Korpi 2001)}{Caunt}, S.~E., \& {Korpi}, M.~J. 2001,\aap ,{\bf 369},706.
+
+\bibitem{Chmielewski et al. 2013)}{Chmielewski}, P., {Srivastava}, A.~K., {Murawski}, K., \& {Musielak},Z.~E. 2013, \mnras , {\bf 428},40.
+
+\bibitem{Chmielewski et al. 2014)}Chmielewski, P., Murawski, K., Musielak, Z.~E., \& Srivastava, A.~K. 2014, \apj , {\bf 793}(1),43.
+
+\bibitem{Cook 2012)}Cook, S. 2012,{CUDA} Programming: A Developer's Guide to Parallel Computing with {GPU}s (Applications of {GPU} Computing Series), Morgan Kaufmann.
+
+\bibitem{Farber 2011)}Farber, R. 2011,{CUDA} Application Design and Development, Morgan Kaufmann.
+
+\bibitem{Fedun et al. 2011c)}{Fedun}, V., {Erd{\'e}lyi}, R., \& {Shelyag}, S. 2009,\solphys,{\bf 258}, 219.
+
+\bibitem{Fedun et al. 2011)}{Fedun}, V., {Verth}, G., {Jess}, D.~B., \& {Erd{\'e}lyi}, R. 2011,\apjl ,{\bf 740}, L46.
+
+\bibitem{Fedun et al. 2011a)}Fedun, V., Shelyag, S., Verth, G., Mathioudakis, M., \& Erd\'elyi, R. 2011, Annales Geophysicae,{\bf 29}, 1029.
+
+\bibitem{Fedun et al. 2011b)}{Fedun}, V., {Shelyag}, S., \& {Erd{\'e}lyi}, R. 2011,\apj,{\bf 727}, 17.
+
+\bibitem{Govett 2009)}{Govett},M. 2009,The Fortran-to-{CUDA} compiler.
+
+\bibitem{Han & Abdelrahman 2011)}Han, T.D., \& Abdelrahman, T.S. 2011, Parallel and Distributed Systems, IEEE Transactions on, {\bf 22}, 78.
+
+\bibitem{Harvey & DeFabritiis 2011)}Harvey, M.J., \& DeFabritiis, G. 2011, Computer Physics Communications, {\bf 182}, 1093.
+
+\bibitem{Hasan et al.2005)}{Hasan}, S.~S., {van Ballegooijen}, A.~A., {Kalkofen}, W., \& {Steiner}, O. 2005, \apj, {\bf 631},1270.
+
+\bibitem{Kestener & Fromang 2012)}{Kestener}, P., \& {Fromang}, S. 2012, Numerical Modeling of Space Plasma Slows (ASTRONUM 2011), Astronomical Society of the Pacific Conference Series, {\bf 459}, 222.
+
+\bibitem{Kirk 2010b)}Kirk, D. 2010, Programming Massively Parallel Processors: A Hands-on Approach (Applications of GPU Computing Series), Morgan Kaufmann.
+
+\bibitem{Kirk & Hwu 2010)}{Kirk}, D, \& {Hwu}, W. 2010, Programming Massively Parallel Processors: A Hands-on Approach, Elsevier Direct.
+
+\bibitem{Lin & Bhattacharjee 2011)}{Lin}, L, {Ng} C.-S., \& {Bhattacharjee}, A. 2011, GPU Accelerated Reduced MHD Simulations of Coronal Loops, Twenty Second International Conference on Numerical Simulations of Plasmas.
+
+\bibitem{Lindholm et al. 2008)}Lindholm, E., Nickolls, J., Oberman, S., \& Montrym, J. 2008,{NVIDIA} Tesla: A Unified Graphics and Computing Architecture, IEEE}, {\bf 28}, 39.
+
+\bibitem{McLaughlin et al. 2009)}{McLaughlin}, J.~A., {De Moortel}, I., {Hood}, A.~W., \& {Brady}, C.~S. 2009, \aap ,{\bf 493}, 227.
+
+\bibitem{Mumford et al. 2014)}{Mumford}, S., {Fedun}, V., \& {Erd{\'e}lyi}, R. 2014, Generation of Magnetohydrodynamic Waves in Low Solar Atmospheric Flux Tubes by Photospheric Motions, ArXiv e-prints.
+
+\bibitem{Orszag & Tang1979)}Orszag, S~A, \& Tang, C~M. 1979, Journal of Fluid Mechanics,{\bf 90}, 129.
+
+\bibitem{Pang et al. 2010)} Pang, Bijia, li~Pen, Ue, \& Perrone, Michael. 2010, Magnetohydrodynamics on Heterogeneous architectures: a performance comparison.
+
+\bibitem{Pressman 1997)} Pressman, R~S. 1997, Software Engineering (A Practitioners Approach), McGraw Hill.
+
+\bibitem{Roe 1981)}{Roe}, P.~L. 1981, Journal of Computational Physics, {\bf 43}, 357.
+
+\bibitem{Schive et al. 2011)}{Schive}, H.-Y., {Zhang}, U.-H., \& {Chiueh}, T. 2011, Directionally Unsplit Hydrodynamic Schemes with Hybrid {MPI}/Open{MP/GPU} Parallelization in {AMR}, ArXiv e-prints.
+
+\bibitem{Scullion et al. 2011)}{Scullion}, E., {Erd{\'e}lyi}, R., {Fedun}, V., \& {Doyle}, J.~G. 2011 \apj , {\bf 743}, 14.
+
+\bibitem{Sedov 1946)} Sedov, Leonid~I. 1946, Journal of Applied Mathematics and Mechanics, {\bf 10}, 241.
+
+\bibitem{Selwa et al. 2007)}{Selwa}, M., {Ofman}, L., \& {Murawski}, K. 2007, \apjl , {\bf 668},L83.
+
+\bibitem{Shelyag et al. 2008)}{Shelyag}, S., {Fedun}, V., \& {Erd{\'e}lyi}, R. 2008, \aap , {\bf 486}, 655.
+
+\bibitem{Sondergaard \& Hansen 1999)}S$\o$ndergaard, Peter, \& Hansen, Jan~Vittrup. 1999, Numerical Computation with Shocks.
+
+\bibitem{Stein & Nordlund1998)}{Stein}, R.~F., \& {Nordlund}, A. 1998,\apj, {\bf 499}, 914.
+
+\bibitem{Taylor 1950)}Taylor, G. 1950, Proceedings of the Royal Society A Mathematical Physical and
+  Engineering Sciences {\bf 201}, 159.
+
+\bibitem{Toth 1996)}{T{\'o}th}, G. 1996,\apjl , {\bf 34}, 245.
+
+\bibitem{Toth 2000)}{T{\'o}th}, G. 2000, Journal of Computational Physics}, {\bf 161}, 605.
+
+\bibitem{Toth et al. 1998)}{Toth}, G., {Keppens}, R., \& {Botchev}, M.~A. 1998, \aap, {\bf 332}, 1159.
+
+\bibitem{Vigeesh et al. 2011)}{Vigeesh}, G., {Fedun}, V., {Hasan}, S.~S., \& {Erd{\'e}lyi}, R. 2011, 3D Simulations of Magnetohydrodynamic Waves in the Magnetized Solar Atmosphere, ArXiv e-prints.
+
+\bibitem{Wang et al. 2013)}{Wang}, T., {Ofman}, L., \& {Davila}, J.~M. 2013, \apjl , {\bf 775}, L23.
+
+\bibitem{Whitehead & Fit-florea 2011)}
+Whitehead, N, & Fit-florea, A. 2011, Precision and Performance : Floating Point and {IEEE} 754 Compliance for {NVIDIA} {GPU}s, {NVIDIA} white paper, {\bf 21}(10), 767.
+
+\bibitem{Wienke et al. 2012)} Wienke, S, Springer, P, Terboven, C, \& an~Mey, D. 2012, Lecture Notes in Computer Science, {\bf 7484}, 859.
+
+\bibitem{Wolfe 2008)}{Wolfe}, M. 2008, Compilers and More: A {GPU} and Accelerator Programming Model.
+
+\bibitem{Wong et al. 2011)}{Wong}, H~C, {Wong}, U~H, {Feng}, X, \& {Tang}, Z. 2011, Computer Physics Communications}, {\bf 182}, 2132.
+
+\bibitem{Wong et al. 2014a)}{Wong}, U~H, {Aoki}, T, \& {Wong}, H~C. 2014, Computer Physics Communications, {\bf 185}, 1901.
+
+\bibitem{Wong et al. 2014b)}{Wong}, U~H, {Wong}, H~C, \& {Ma}, Y. 2014, Computer Physics Communications, {\bf 185}, 144.
+
+\bibitem{Zink 2011)}{Zink}, B. 2011, HORIZON: Accelerated general relativistic magnetohydrodynamics, ArXiv e-prints.
+
+\end{thebibliography}

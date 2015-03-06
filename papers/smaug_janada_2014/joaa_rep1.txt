@@ -1,0 +1,42 @@
+Ref.:  Ms. No. JOAA-D-14-00093
+A Fast MHD Code for Gravitationally Stratified Media Using Graphical Processing Units: SMAUG
+Journal of Astrophysics and Astronomy
+
+Dear Dr Griffiths,
+
+I am glad to inform you that the referee has given a positive report regarding the paper mentioned above. However the referee has suggested certain revisions.
+
+Kindly revise your paper in the light of the referee's comments and I will be happy to consider it for publication in the Journal of Astrophysics and Astronomy.
+
+Your revision is due by 06-01-2015.
+
+
+Yours sincerely,
+
+Ram Sagar
+Editor-in-Chief
+Journal of Astrophysics and Astronomy
+
+Reviewers' comments:
+---------------------
+
+Reviewer #1: The paper deals with the development and application of the Fast MHD Code for Gravitationally Stratified Media Using Graphical Processing
+Units: SMAUG, which will have far reaching applicability in upcoming time in the field of solar and astrophysical research. The present
+paper can be considered as a main introductory paper (technical) related to discussed MHD code  and I recommend it for the publication in JAA.
+However, I have some minor suggestions to be implemented :
+
+[1] In the first paragraph of the introduction, authors too much devote for their own research to show the recent developments
+in the numerical modelling of waves in the complex and stratified solar atmosphere. I suggest that they should emphasize with few lines on some other
+significant contributions too related to the numerical modelling of waves. List is non-exhaustive, however, some are as follows :
+
+2005ApJ...631.1270H,  2009A&A...493..227M, 2013MNRAS.428...40C, 2014ApJ...793...43C   (2-d cases)
+2007ApJ...668L..83S, 2013ApJ...775L..23W    (3-d cases)
+
+[2] References are not formatted in the Introduction and throughout the manuscript. Please fix it.
+
+[3] The over-all technical descriptions are appropriate. However, I suggest that kindly extend section 5.1 and elaborate the scientific results of
+mhd wave modeling using this code and its comparison with other existing recent results. If you are even publishing the detailed scientific
+results related to this case somewhere else, you may mention slight detail by referring that paper in preparation/under review. This will
+add a worth example of science case to this technical paper, which is going to be a master paper.
+
+Paper can be accepted after these minor revisions. I do not wish to see it further on.
