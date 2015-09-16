@@ -37,6 +37,7 @@ function vcs=cs (vars,p,rho)
     vcs=sqrt(vars.fgamma*p/rho);
 endfunction
 
+//pressure scale height
 function vlambda=lambda (vars,p,rho)
     vlambda=-p/(vars.g*rho);
 endfunction
@@ -84,7 +85,8 @@ function [vomega,lam0,vcs]=omega(z,vars,p,rho)
  
     for i=1:nrows
 
-      vomega(i)=sqrt(1+2*vlam0dash(i))*(vcs(i)/(2*lam0(i)));
+     // vomega(i)=sqrt(1+2*vlam0dash(i))*(vcs(i)/(2*lam0(i)));
+     vomega(i)=(vars.fgamma*vars.g/(4*%pi*vcs(i)))*sqrt(1+2*vlam0dash(i));
     end    
 endfunction
 
@@ -157,13 +159,13 @@ endfunction
 
 function vbfreq=bfreq(z,vars,p,rho,bv,vcs)
 
-    for i=1:nrows
+    for i=3:nrows-2
       vbfreq(i)=0;
     end
 
-    for i=1:nrows
+    for i=3:nrows-2
         k0=vars.vomega/vcs(i);
-        vbfreq(i)=sqrt((k0^2/(k0^2+(1)^2))*(bv(i).*bv(i)));
+        vbfreq(i)=1.0/sqrt((k0^2/(k0^2+(1)^2))*(bv(i).*bv(i)));
     end
 
   

@@ -31,6 +31,8 @@ ly=2;
 //use mode coordinates n1,n2 in terms of the amplitude of the fundamental mode a00
 n1=3;
 n2=3;
+
+
 n1o=n1;
 n2o=n2;
 anm=2*a00/(n1*n1+n2*n2+2*(n1+n2)+2);
@@ -63,6 +65,7 @@ anm4=2*a00/(n1*n1+n2*n2+2*(n1+n2)+2);
 n1=n1o;
 n2=n2o;
 
+//anm1=0;
 anm2=0;
 anm3=0;
 anm4=0;

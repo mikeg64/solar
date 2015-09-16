@@ -1,3 +1,7 @@
+//see
+//Solar Phys (2007) 246: 41–52
+//DOI 10.1007/s11207-007-9073-8
+
 
 exec('cutofffuns.sce');
 
@@ -39,22 +43,22 @@ vcs=zeros(nrows,1);
     
     [vomega,lam0,vcs]=omega(value(:,1),vars,value(:,3),value(:,4));
     
-    ombv=brunt(value(:,1),vars,value(:,3),value(:,4));
-    vbfreq=bfreq(value(:,1),vars,value(:,3),value(:,4),ombv,vcs)
-//    for i=1:nrows
-//      vomega(i)=0;
-//      vomegadash(i)=0;
-//    end
-//    for i=3:nrows-2
-//      vomegadash(i)=diff5p(vomega,i,h);
-//    end
+  //  ombv=brunt(value(:,1),vars,value(:,3),value(:,4));
+  //  vbfreq=bfreq(value(:,1),vars,value(:,3),value(:,4),ombv,vcs)
+  //  for i=1:nrows
+  //    vomega(i)=0;
+  //    vomegadash(i)=0;
+  //  end
+ //   for i=3:nrows-2
+  //    vomegadash(i)=diff5p(vomega,i,h);
+  //  end
  
-//    for i=1:nrows
-//      vcs(i)=cs(vars,value(i,4),value(i,3));
-//      lam0=lambda(vars,value(i,4),value(i,3));
-//      vomega(i)=(1+2*vomegadash(i))*(vcs(i)/(2*lam0))^2;
-//      tperiod(i)=2*%pi*((2*lam0)/vcs(i))*sqrt( 1/(1+2*vomegadash(i)));
-//    end   
+  //  for i=1:nrows
+   //   vcs(i)=cs(vars,value(i,4),value(i,3));
+   //   lam0=lambda(vars,value(i,4),value(i,3));
+   //   vomega(i)=(1+2*vomegadash(i))*(vcs(i)/(2*lam0))^2;
+   //   tperiod(i)=2*%pi*((2*lam0)/vcs(i))*sqrt( 1/(1+2*vomegadash(i)));
+   // end   
     
     
 //    deltaom=sqrt((vomega0)^2-(vomega).^2);

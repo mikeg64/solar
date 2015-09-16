@@ -44,7 +44,7 @@ filename='zerospic1__711000.out';
    
    
  
-  % extract variables from w into variables named after the strings in wnames
+% extract variables from w into variables named after the strings in wnames
 wd=zeros(nw,nx1,nx2,nx3);
 for iw=1:nw
   

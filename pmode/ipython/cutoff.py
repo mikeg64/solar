@@ -3,6 +3,33 @@
 Created on Tue Sep 08 20:16:27 2015
 
 @author: mike
+
+# Cutoff for the solar atmosphere using the VALIIIc Model
+
+##Background - the problem
+
+
+
+	
+
+Compute the atmospheric cut-off frequenccy (From Roberts 2004)
+
+$$ \omega_{c}=\frac{\gamma g}{4\pi c_{s}}\sqrt{1+2\frac{d}{dz}\frac{P}{\rho g}}$$
+
+The atmospheric scale parameter 
+
+Read VAL IIc data from csv file
+
+column 1 height [m]
+Column 2 Temperature [K]
+Column 3 Density [kg/m^3]
+Column 4 Pressure [Pa]
+
+
+
+
+
+
 """
 
 import numpy
