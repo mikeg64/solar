@@ -13,3 +13,12 @@
  
  fortran(om1);    convert to fortran format
  
+ chromosphere
+ om1:subst([cp1=cp21,cp2=cp22,cp3=cp23,cp4=cp24,cp5=cp25,cp6=cp26,cp7=cp27,cp8=cp28,cp9=cp29],om1(z));
+ plot2d((2*%pi)/om1,['z,1000,1849000]);
+ 
+ transition zone
+ plot2d((2*%pi)/om1,['z,1.849e6,2.2168e6]);
+ 
+ 
+ omcor:subst([cp1=cp31,cp2=cp32,cp3=cp33,cp4=cp34,cp5=cp35,cp6=cp36,cp7=cp37,cp8=cp38,cp9=cp39],om1(z));
