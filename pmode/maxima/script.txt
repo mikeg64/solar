@@ -1,0 +1,15 @@
+ 
+ Restore maxima state for the following files
+ cs_poly_power_law_consts  constants for the fitted curves of cs versus height for VALIIIc
+ cutoff_consts              gamma, c0, g
+ cutoff_om_z_1
+ cutoff_cs_polylaw
+ 
+ om1:subst([cp1=cp11,cp2=cp12,cp3=cp13,cp4=cp14,cp5=cp15,cp6=cp16,cp7=cp17,cp8=cp18,cp9=cp19],om1(z));
+ om1:subst([ar=ra1,br=rb1,ap=pa1,bp=pb1,cp=pc1,cr=rc1],om1(z));
+ plot2d(om1,['z,1000,1849000]);
+ cs:subst([ar=ra1,br=rb1,ap=pa1,bp=pb1,cp=pc1,cr=rc1],cs(z));
+ plot2d(cs,['z,1000,1849000]);
+ 
+ fortran(om1);    convert to fortran format
+ 
