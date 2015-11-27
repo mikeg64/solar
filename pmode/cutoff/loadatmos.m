@@ -1,7 +1,24 @@
 
 
+
+%% Hold all the constants in consts structure
+
+consts.mu=0.6e0; %magnetic permeability
+consts.R=8.31e3
+consts.fgamma=1.66666667e0
+consts.ggg=274.0e0 % acceleration due to gravity on the sun
+consts.mu=4*pi/1.0e7
+
+
+
 %% Import the data
-data = xlsread('C:\Users\mike\proj\solar\trunk\pmode\cutoff\atmos.xls','VALMc_rho_2048_test');
+data = xlsread('atmos.xls','VALMc_rho_2048_test');
+
+
+
+
+
+
 
 %% Allocate imported array to column variable names
 height = data(:,1);
@@ -9,17 +26,17 @@ temp = data(:,2);
 dens = data(:,3);
 pres = data(:,4);
 
-fgamma=1.66666667;
+cs=sqrt(consts.fgamma.*pres./dens);
 
-cs=sqrt(fgamma.*pres./dens);
 
-data = xlsread('C:\Users\mike\proj\solar\trunk\pmode\cutoff\cutoff.xls','VALMc_rho_2048_test');
-hc = data(:,1);
-cutoff = data(:,2);
+
 
 
 %% Clear temporary variables
 clearvars data raw;
+
+
+
 
 %load('atmos.xls');
 h1=height(1420:2048);
@@ -44,6 +61,3 @@ pa1=7.515e5, pb1=-0.3386, pc1=-5681;
 rhofit1=ra1*(h1.^rb1)+rc1;
 pfit1=pa1*(h1.^pb1)+pc1;
 
-plot(height(1420:2048),pres(1420:2048),height(1420:2048),pfit1);
-plot(height(1420:2048)./1e6,cutoff_chromos(height(1420:2048)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)));
-plot(height(1420:2048)./1e6,cutoff_chromos(height(1420:2048)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)),height(1:1325)./1e6,cutoff_corona(height(1:1325)));
