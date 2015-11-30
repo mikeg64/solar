@@ -52,7 +52,7 @@ for i=1:nr
 end
 
 for i=1:nr
-    atc0(i)=1.0/((consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
+    atc0(i)=1.0/(2.*pi.*(consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
 end
 
 plot(height./1e6,atc0);
