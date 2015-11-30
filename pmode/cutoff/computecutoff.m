@@ -1,3 +1,13 @@
+%%
+% $\frac{\partial^2 Q}{\partial t^2} - c_t^2(z) \frac{\partial^2 Q}{\partial z^2} + \Omega^2(z)Q = 0$
+% 
+% $$\omega_{c}=\frac{\gamma g}{4\pi c_{s}}\sqrt{1+2\frac{d}{dz}\frac{P}{\rho g}}$$
+% 
+% $$\frac{d}{dz}\frac{P}{\rho g}$$
+% 
+% 
+
+
 loadatmos;
 nsmoothsteps=4;
 
@@ -16,40 +26,33 @@ csav=sqrt(consts.fgamma.*pressmooth./rhosmooth);
 plot(height./1e6,csav./1e3);
 
 lam0=pressmooth./(rhosmooth.*consts.ggg);
-
-%%
-% 
-% $$e^{\pi i} + 1 = 0$$
-% 
-
+lamdashs0=zeros(nr);
+lamdash0=zeros(nr);
+atc0=zeros(nr);
 
 dh=height(1)-height(2);    
 
 for j=1:nsmoothsteps
-   lamdash0(nr+j)=lamdash0(nr);   
+   lam0(nr+j)=lam0(nr);   
+end
+
+for i=3:nr
+    lamdash0(i)=-diff5(lam0,i,dh);
+    if lamdash0(i)<-200
+        lamdash0(i)=-200;
+    end
 end
 
 for i=1:nr
-    lamdash0(i)=-diff5p(lam0,i,h);
-    if lamdash0(i)<-200:
-        lamdash0(i)=-200
-    count=1
-    lamtot=0
+    sdashtot=0;
     for j=1:nsmoothsteps-1
         sdashtot=sdashtot+lamdash0(i+j);    
     end
-    sdash0(i)=sdashtot/nsmoothsteps;
-    
-    
-    
-    for j in range(i,i+30):
-        if j<=(asize/4)-30:
-            lamtot=lamtot+lamdash0[j]
-            count=count+1
-    lamtot=lamtot/count
-    lamdash0[i]=lamtot 
+    lamdashs0(i)=sdashtot/nsmoothsteps;
+end
 
+for i=1:nr
+    atc0(i)=1.0/((consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
+end
 
-
-
-cssmooth=cs(consts,pres,dens);
+plot(height./1e6,atc0);
