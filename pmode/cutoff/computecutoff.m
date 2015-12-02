@@ -16,6 +16,10 @@ loadcutoffdata;
 [nr,nc]=size(pres);
 
 plot(height(1420:nr),pres(1420:nr),height(1420:nr),pfit1);
+figure;
+%plot(height(1:nr),dens(1:nr),height(1420:nr),rhofit1,height(1324:1419),rhofit2,height(1:1325),rhofit3);
+
+figure;
 plot(height(1420:nr)./1e6,cutoff_chromos(height(1420:nr)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)));
 plot(height(1420:nr)./1e6,cutoff_chromos(height(1420:nr)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)),height(1:1325)./1e6,cutoff_corona(height(1:1325)));
 
@@ -29,6 +33,7 @@ lam0=pressmooth./(rhosmooth.*consts.ggg);
 lamdashs0=zeros(nr);
 lamdash0=zeros(nr);
 atc0=zeros(nr);
+atisoc0=zeros(nr);
 
 dh=height(1)-height(2);    
 
@@ -52,7 +57,18 @@ for i=1:nr
 end
 
 for i=1:nr
+<<<<<<< HEAD
+    atc0(i)=1.0/((consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
+    atisoc0(i)=1.0/((consts.fgamma.*consts.ggg/(4*pi.*csav(i))));
+=======
     atc0(i)=1.0/(2.*pi.*(consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
+>>>>>>> 836a07ebb402cd182deb5d8b75a7b9f0486036c1
 end
 
-plot(height./1e6,atc0);
+figure;
+title('Compare cutoff isothermal and stratified atmos');
+plot(height./1e6,atc0,height./1e6,atisoc0);
+
+figure;
+title('Compare cutoff for fitted model and computation from VALIIIc data');
+plot(height./1e6,atc0,hc./1e6,cutoff/(2*pi));
