@@ -1,0 +1,11 @@
+function cutoff=cutoff_poly_pres_rho(pc, x) 
+%polynomial fpr cutoff derived from polynomial expansions for speed of
+%sound
+omega=2.2833333378999998e+2/(pc.p1..*x.^9+pc.p2..*x.^8+pc.p3..*x.^7+pc.p4..*x.^6+pc.p5..*x.^5+pc.p6..*x.^4+pc.p7..*x.^3+pc.p8..*x.^2+pc.p9..*x+pc.p10);
+
+omega=sqrt((1.37e+2.*(pr1.*z.^9+pr2.*z.^8+pr3.*z.^7+pr4.*z.^6+pr5.*z.^5+pr6.*z.*.*4+pr7.*z.^3+pr8.*z.^2+pr9.*z+pr10).*((1.66666667e+0.*(9.*pp1.*z.^8+8.*pp2.*z.^7+7.*pp3.*z.^6+6.*pp4.*z.^5+5.*pp5.*z.^4+4.*pp6.*z.^3+3.*pp7.*z.^2+2.*pp8.*z+pp9))/(pr1.*z.^9+pr2.*z.^8+pr3.*z.^7+pr4.*z.^6+pr5.*z.^5+pr6.*z.^4+pr7.*z.^3+pr8.*z.^2+pr9.*z+pr10)-(1.66666667e+0.*(9.*pr1.*z.^8+8.*pr2.*z.^7+7.*pr3.*z.^6+6.*pr4.*z.^5+5.*pr5.*z.^4+4.*pr6.*z.^3+3.*pr7.*z.^2+2.*pr8.*z+pr9).*(pp1.*z.^9+pp2.*z.^8+pp3.*z.^7+pp4.*z.^6+pp5.*z.^5+pp6.*z.^4+pp7.*z.^3+pp8.*z.^2+pp9.*z+pp10))/(pr1.*z.^9+pr2.*z.^8+pr3.*z.^7+pr4.*z.^6+pr5.*z.^5+pr6.*z.^4+pr7.*z.^3+pr8.*z.^2+pr9.*z+pr10).^2))/(pp1.*z.^9+pp2.*z.^8+pp3.*z.^7+pp4.*z.^6+pp5.*z.^5+pp6.*z.^4+pp7.*z.^3+pp8.*z.^2+pp9.*z+pp10)+(3.128166672923e+4.*(pr1.*z.^9+pr2.*z.^8+pr3.*z.^7+pr4.*z.^6+pr5.*z.^5+pr6.*z.^4+pr7.*z.^3+pr8.*z.^2+pr9.*z+pr10))/(pp1.*z.^9+pp2.*z.^8+pp3.*z.^7+pp4.*z.^6+pp5.*z.^5+pp6.*z.^4+pp7.*z.^3+pp8.*z.^2+pp9.*z+pp10));
+
+
+
+
+    cutoff=2..*pi./omega;

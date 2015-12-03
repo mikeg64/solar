@@ -22,3 +22,9 @@
  
  
  omcor:subst([p1=fc11,p2=fc12,p3=fc13,p4=fc14,p5=fc15,p6=fc16,p7=fc17,p8=fc18,p9=fc19,p10=fc10],om1(z));
+
+rho(z):= pr1*z^9 + pr2*z^8 + pr3*z^7 + pr4*z^6 + 
+                    pr5*z^5 + pr6*z^4 + pr7*z^3 + pr8*z^2 + pr9*z + pr10;
+
+p(z):= pp1*z^9 + pp2*z^8 + pp3*z^7 + pp4*z^6 + 
+                    pp5*z^5 + pp6*z^4 + pp7*z^3 + pp8*z^2 + pp9*z + pp10;

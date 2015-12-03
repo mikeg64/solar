@@ -21,4 +21,4 @@
  plot2d((2*%pi)/om1,['z,1.849e6,2.2168e6]);
  
  
- omcor:subst([cp1=cp31,cp2=cp32,cp3=cp33,cp4=cp34,cp5=cp35,cp6=cp36,cp7=cp37,cp8=cp38,cp9=cp39],om1(z));
+ omcor:subst([p1=fc11,p2=fc12,p3=fc13,p4=fc14,p5=fc15,p6=fc16,p7=fc17,p8=fc18,p9=fc19,p10=fc10],om1(z));
