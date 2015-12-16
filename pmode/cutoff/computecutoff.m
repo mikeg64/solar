@@ -57,12 +57,12 @@ for i=1:nr
 end
 
 for i=1:nr
-<<<<<<< HEAD
+% <<<<<<< HEAD
     atc0(i)=1.0/((consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
     atisoc0(i)=1.0/((consts.fgamma.*consts.ggg/(4*pi.*csav(i))));
-=======
-    atc0(i)=1.0/(2.*pi.*(consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
->>>>>>> 836a07ebb402cd182deb5d8b75a7b9f0486036c1
+% =======
+%     atc0(i)=1.0/(2.*pi.*(consts.fgamma.*consts.ggg/(4*pi.*csav(i)))*sqrt(1+2*lamdashs0(i)));
+% >>>>>>> 836a07ebb402cd182deb5d8b75a7b9f0486036c1
 end
 
 figure;

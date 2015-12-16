@@ -28,3 +28,6 @@ rho(z):= pr1*z^9 + pr2*z^8 + pr3*z^7 + pr4*z^6 +
 
 p(z):= pp1*z^9 + pp2*z^8 + pp3*z^7 + pp4*z^6 + 
                     pp5*z^5 + pp6*z^4 + pp7*z^3 + pp8*z^2 + pp9*z + pp10;
+
+cs(z):= pc1*z^9 + pc2*z^8 + pc3*z^7 + pc4*z^6 + pc5*z^5 + pc6*z^4 + pc7*z^3 + pc8*z^2 + pc9*z + pc10;
+                    
