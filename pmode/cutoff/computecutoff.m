@@ -15,19 +15,19 @@ loadcutoffdata;
 
 [nr,nc]=size(pres);
 
-plot(height(1420:nr),pres(1420:nr),height(1420:nr),pfit1);
-figure;
-%plot(height(1:nr),dens(1:nr),height(1420:nr),rhofit1,height(1324:1419),rhofit2,height(1:1325),rhofit3);
-
-figure;
-plot(height(1420:nr)./1e6,cutoff_chromos(height(1420:nr)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)));
-plot(height(1420:nr)./1e6,cutoff_chromos(height(1420:nr)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)),height(1:1325)./1e6,cutoff_corona(height(1:1325)));
+% plot(height(1420:nr),pres(1420:nr),height(1420:nr),pfit1);
+% figure;
+% %plot(height(1:nr),dens(1:nr),height(1420:nr),rhofit1,height(1324:1419),rhofit2,height(1:1325),rhofit3);
+% 
+% figure;
+% plot(height(1420:nr)./1e6,cutoff_chromos(height(1420:nr)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)));
+% plot(height(1420:nr)./1e6,cutoff_chromos(height(1420:nr)),hc./1e6,cutoff,height(1324:1419)./1e6,cutoff_transition(height(1324:1419)),height(1:1325)./1e6,cutoff_corona(height(1:1325)));
 
 
 [pressmooth, rhosmooth]=smoothav(consts, pres, dens,nsmoothsteps);
 
 csav=sqrt(consts.fgamma.*pressmooth./rhosmooth);
-plot(height./1e6,csav./1e3);
+% plot(height./1e6,csav./1e3);
 
 lam0=pressmooth./(rhosmooth.*consts.ggg);
 lamdashs0=zeros(nr);
