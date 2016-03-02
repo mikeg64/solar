@@ -125,22 +125,205 @@ end
 end   %building fluxtube
 
 
-function [res]=par4(x,x0,A)
-    res=A.*exp(-1.0*x.^2./(x0.^2));
-
-%end
-
 
 %compute magnetostatics pressure correction
+dbzdz=zeros(nx1,nx2,nx3);
+dbxdz=zeros(nx1,nx2,nx3);
+dbydz=zeros(nx1,nx2,nx3);
+
+dbzdx=zeros(nx1,nx2,nx3);
+dbxdx=zeros(nx1,nx2,nx3);
+dbydx=zeros(nx1,nx2,nx3);
+
+dbzdy=zeros(nx1,nx2,nx3);
+dbxdy=zeros(nx1,nx2,nx3);
+dbydy=zeros(nx1,nx2,nx3);
+
+br=zeros(nx1,nx2,nx3);
+Bvarix=zeros(nx1,nx2,nx3);
+Bvariy=zeros(nx1,nx2,nx3);
+Bvar=zeros(nx1,nx2,nx3);
+dbvardz=zeros(nx1,nx2,nx3);
+
+for k=1:nx3
+for j=1:nx2
+ dbzdz(:,j,k)=deriv1(bz(:,j,k),z);
+ dbxdz(:,j,k)=deriv1(bx(:,j,k),z);
+ dbydz(:,j,k)=deriv1(by(:,j,k),z);
+end
+end
+
+
+for k=1:nx3
+for i=1:nx1
+ dbzdx(i,:,k)=deriv1(bz(i,:,k),x);
+ dbxdx(i,:,k)=deriv1(bx(i,:,k),x);
+ dbydx(i,:,k)=deriv1(by(i,:,k),x);
+end
+end
+
+
+for j=1:nx2
+for i=1:nx1
+ dbzdy(i,j,:)=deriv1(bz(i,j,:),y);
+ dbxdy(i,j,:)=deriv1(bx(i,j,:),y);
+ dbydy(i,j,:)=deriv1(by(i,j,:),y); 
+end
+end
 
 
 
 
+for i=1:nx1
+for j=1:nx2
+for k=1:nx3
+  br(i,j,k)=(bx(i,j,k)+bz(i,j,k)).*sqrt(x(j).^2+y(k).^2)/(x(j)+y(k));
+end
+end
+end
+
+
+
+for i=1:nx1
+for j=1:nx2
+for k=1:nx3
+  dbzdr(i,j,k)=dbzdx(i,j,k).*(x(j)./sqrt(x(j).^2+y(k).^2))+dbzdy(i,j,k).*(y(k)./sqrt(x(j).^2+y(k).^2))
+end
+end
+end
+
+
+% ***** dbrdz
+for k=1:nx3
+for j=1:nx2
+ dbrdz(:,j,k)=deriv1(br(:,j,k),z);
+end
+end
+
+
+
+F=bz.*(dbrdz-dbzdr)
+G=br.*(dbrdz-dbzdr)
+
+
+bvar=bz*br
+
+for k=1:nx3
+for j=1:nx2
+ dbvardz(:,j,k)=deriv1(bvar(:,j,k),z);
+end
+end
+
+
+
+%***** Bvar+br^2/r
+for i=1:nx1
+for j=1:nx2
+for k=1:nx3
+  Bvar(i,j,k)=dbvardz(i,j,k)+br(i,j,k).^2/sqrt(x(j).^2+y(k).^2);
+end
+end
+end
+
+for i=1,nx1
+for k=1,nx3
+  for j=1,nx2
+   sum=inte((Bvar(i,1:j,k).*x(j)./sqrt(x(j).^2+y(k).^2)),x(1)-x(0))
+   Bvarix(i,j,k)=sum
+  end
+end
+end
+
+for i=1,nx1
+for j=1,nx2
+  for k=1,nx3
+   sum=inte((Bvar(i,j,0:k).*y(k)./sqrt(x(j).^2+y(k).^2)),y(1)-y(0));
+  Bvariy(i,j,k)=sum
+  end
+end
+
+end
+
+
+Bvari=Bvarix+Bvariy-bz^2./2+br.^2./2;
+
+
+for i=1:n2 
+    bvaridz(:,i)=deriv1(bvari(:,i),z);
+end
+
+
+%intFdz=-bvaridz/ggg
+
+
+for j=1:n1
+  for i=1:n2
+  rho1(j,i)=(bvaridz(j,i)+G(j,i))./ggg;
+  end
+end
 %update the fields and save to output
 
 
 
 
+
+
+rho1=rho+rho1
+p=Bvari+simdata.w(:,:,:,5)*(consts.fgamma-1.0);
+
+%rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
+%set background density
+%set background energy
+
+
+%update the background energy and magnetic fields
+simdata.w(:,:,:,10)=rho1;
+simdata.w(:,:,:,9)=p./((consts.fgamma-1.0))+0.5*(bx.*bx+bz.*bz+by.*by)
+simdata.w(:,:,:,11)=bx;
+simdata.w(:,:,:,12)=by;
+simdata.w(:,:,:,13)=bz;
+
+
+
+
+
+
+%Functions used to compute tube 
+
+
+function [res]=inte(f,dx)
+
+nsiz=size(f);
+
+if nsiz(1)>nsiz(2)
+    nel=nsiz(1);
+else
+    nel=nsiz(2);
+end
+
+res=0.0;
+if (nel > 1) 
+    if (nel == 2) 
+        res=dx*0.5d0*(f(1)+f(0))
+    end
+
+    if (nel > 2)
+      for k=1:nel-1 
+          res=res+0.5*(f(k-1)+f(k))*(dx/1.0);
+      end
+    end
+end %outer
+
+%return,res
+%end
+
+
+
+
+function [res]=par4(x,x0,A)
+    res=A.*exp(-1.0*x.^2./(x0.^2));
+
+%end
 
 
 
@@ -163,7 +346,7 @@ end
 
 res=zeros(num);
 for i=2:num-3 
-    res(i)=(1./12.0./(x(i+1)-x(i)))*(8.d0*f(i+1)-8.d0*f(i-1)-f(i+2)+f(i-2));
+    res(i)=(1./12.0./(x(i+1)-x(i)))*(8.0*f(i+1)-8.0*f(i-1)-f(i+2)+f(i-2));
 end
 %for i=1,nel-2 do res(i)=(1.d0/2.d0/(x(i+1)-x(i)))*(f(i+1)-f(i-1))
 res(0)=res(2);
