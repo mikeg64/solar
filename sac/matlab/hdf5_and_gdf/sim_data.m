@@ -9,7 +9,7 @@ classdef sim_data
            simparams=sim_params;
            gridinfo=sim_gridinfo;
     
-            w=zeros(64,64,64,16);
+            w=zeros(256,128,128,16);
     end
     
     methods
@@ -19,7 +19,7 @@ classdef sim_data
              %newobj.gridinfo=obj.gridinfo;
              obj.setsim_params(simparams);
              obj.setsim_gridinfo(gridinfo);
-             obj.w=zeros(gridinfo.grid_dimensions(1),gridinfo.grid_dimensions(2),gridinfo.grid_dimensions(3),16);
+             %obj.w=zeros(gridinfo.grid_dimensions(1),gridinfo.grid_dimensions(2),gridinfo.grid_dimensions(3),16);
              obj.w(:,:,:,1) = h5read(filename,'/data/grid_0000000000/density_pert');             
              obj.w(:,:,:,2) = h5read(filename,'/data/grid_0000000000/velocity_x');
              obj.w(:,:,:,3) = h5read(filename,'/data/grid_0000000000/velocity_y');

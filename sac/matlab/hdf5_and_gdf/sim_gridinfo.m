@@ -4,7 +4,8 @@ classdef sim_gridinfo
     
     properties
         ndimensions=3;
-        grid_dimensions=64*ones(3,1);
+        %grid_dimensions=64*ones(3,1);
+        grid_dimensions=[256;128;128];
         grid_left_index=ones(3,1);
         %grid_right_index=0;
         grid_level=0;
