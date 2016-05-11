@@ -52,17 +52,24 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            varnames=char(zeros(1,79));
            varnames(1:sz(2))=tvarnames;
            fwrite(fid,varnames,'char*1');
-           
+  
+               is=1;
+    js=1;
+    ks=1;
+    iif=simparams.domain_dimensions(1);
+    jf=simparams.domain_dimensions(2);
+    kf=simparams.domain_dimensions(3);
+    
            for k1=ks:kf
                for j1=js:jf
                      for i1=is:iif
                              for idim=1:ndim
                                  if idim==1
-                                    X(i1,j1,k1,idim)=simparams.domain_left_edge(idim)+i1*p.dx(idim);
+                                    X(i1,j1,k1,idim)=simparams.domain_left_edge(idim)+(i1-1)*p.dx(idim);
                                  elseif idim==2
-                                    X(i1,j1,k1,idim)=simparams.domain_left_edge(idim)+j1*p.dx(idim);     
+                                    X(i1,j1,k1,idim)=simparams.domain_left_edge(idim)+(j1-1)*p.dx(idim);     
                                  elseif idim==3
-                                    X(i1,j1,k1,idim)=simparams.domain_left_edge(idim)+k1*p.dx(idim);         
+                                    X(i1,j1,k1,idim)=simparams.domain_left_edge(idim)+(k1-1)*p.dx(idim);         
                                  end
                                end %loop over idim      
                        end %i1
@@ -102,9 +109,9 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
    %jf=4;
    %kf=4;
     
-    p.dx(1)=(simparams.domain_right_edge(1)-simparams.domain_left_edge(1))/(simparams.domain_dimensions(1));
-    p.dx(2)=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/(simparams.domain_dimensions(2));
-    p.dx(3)=(simparams.domain_right_edge(3)-simparams.domain_left_edge(3))/(simparams.domain_dimensions(3));
+    p.dx(1)=(simparams.domain_right_edge(1)-simparams.domain_left_edge(1))/(simparams.domain_dimensions(1)-1);
+    p.dx(2)=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/(simparams.domain_dimensions(2)-1);
+    p.dx(3)=(simparams.domain_right_edge(3)-simparams.domain_left_edge(3))/(simparams.domain_dimensions(3)-1);
  
        
        
@@ -125,9 +132,9 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            for j1=js:jf
                  for i1=is:iif
 
-                    x=(1+i1)*(p.dx(1));
-                    y=(1+j1)*(p.dx(2));
-                    z=(1+k1)*(p.dx(2));
+                    x=simparams.domain_left_edge(1)+(i1-1)*p.dx(1);
+                    y=simparams.domain_left_edge(2)+(j1-1)*p.dx(2);
+                    z=simparams.domain_left_edge(3)+(k1-1)*p.dx(3);
 
                     rho=simdata.w(i1,j1,k1,1);
                     mx=simdata.w(i1,j1,k1,2);
