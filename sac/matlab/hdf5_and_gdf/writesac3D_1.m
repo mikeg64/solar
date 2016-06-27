@@ -121,7 +121,7 @@ if mode='ascii'
 
                     x=(1+i1)*(p.dx(1));
                     y=(1+j1)*(p.dx(2));
-                    z=(1+k1)*(p.dx(2));
+                    z=(1+k1)*(p.dx(3));
 
                     rho=simdata.w(i1,j1,k1,1);
                     mx=simdata.w(i1,j1,k1,2);

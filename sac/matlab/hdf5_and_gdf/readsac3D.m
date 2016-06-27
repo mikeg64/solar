@@ -98,9 +98,13 @@ function [simparams, simgridinfo, simdata]=readsac3D(filename, simparams, simgri
        time=int32(varbuf(2));
        ndim=int32(varbuf(3));
        neqpar=int32(varbuf(4));
-       nw=int32(varbuf(5));
+       %nw=int32(varbuf(5));
        
-       
+       if ndim == 3
+           nw=13;
+       else
+           nw=10;
+       end
        buf2=fgets(fid);
        varbuf=sscanf(buf2,'%f');
        nx1=int32(varbuf(1));
