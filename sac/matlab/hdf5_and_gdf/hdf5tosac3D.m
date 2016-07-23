@@ -1,3 +1,5 @@
+path(path, './hdf5_and_gdf/')
+
 %h5filename='/data/cs1mkg/smaug_spicule1/spicule4b1_3_3d/zerospic1__711000.out';
 gdffilename='spruit.gdf';
 sac3dfilename='spruittest1.out'
@@ -42,3 +44,4 @@ simgridinfo=simgridinfo.read_gridinfo_h5(gdffilename);
 simdata=simdata.read_data_h5(gdffilename, simparams, simgridinfo);
 
 writesac3D(sac3dfilename,simparams,simgridinfo,simdata,'binary');
+

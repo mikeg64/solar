@@ -9,7 +9,7 @@ classdef sim_data
            simparams=sim_params;
            gridinfo=sim_gridinfo;
     
-            w=zeros(256,128,128,16);
+            w=zeros(256,256,256,16);
     end
     
     methods
