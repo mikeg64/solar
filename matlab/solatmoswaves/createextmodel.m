@@ -34,8 +34,8 @@ consts.mu=4*pi/1.0e7
        xmax=12.8496e6;
        %ymax=4.0e6;
        %zmax=4.0e6;
-       ymax=2.59984e6;
-       zmax=2.59984e6;
+       ymax=2.559984e6;
+       zmax=2.559984e6;
        
        dx=(xmax-xmin)/(nx1-1);
        dy=(ymax-ymin)/(nx2-1);
@@ -135,13 +135,29 @@ ndens(3614:4392,1)=dens(1270:2048);
 ntemp(3614:4392,1)=temp(1270:2048);
 npres(3614:4392,1)=pres(1270:2048);
 
+
+%load the results from the fitting
+load('dens_corona_fittedmodel.mat');
+load('temp_corona_fittedmodel.mat');
+load('pres_corona_fittedmodel.mat');
+dens_corona=cfit(dens_corona_fittedmodel);
+temp_corona=cfit(temp_corona_fittedmodel);
+pres_corona=cfit(pres_corona_fittedmodel);
+
+
 %compute values beyound transition region between 6.5Mm and 25Mm
 %using data fitted with power law
 for i=1:3613
     newh=nheight(i,1);
-    ndens(i,1)=1.817e-7*newh.^(-0.667);
-    npres(i,1)=6.717e-10*newh.^(1.219);
-    ntemp(i,1)=2.669e-7*newh.^(1.886);
+%using matlab fitting functions
+     ndens(i,1)=dens_corona(newh);
+     npres(i,1)=pres_corona(newh);
+     ntemp(i,1)=temp_corona(newh);
+
+%old power law    
+%     ndens(i,1)=1.817e-7*newh.^(-0.667);
+%     npres(i,1)=6.717e-10*newh.^(1.219);
+%     ntemp(i,1)=2.669e-7*newh.^(1.886);
 end
 
 
