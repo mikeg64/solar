@@ -165,20 +165,20 @@ end
 
 
 
-
+energg=interp1(nvals,nenerg,xmine:dxe:xmaxe);
 tempg=interp1(nheight,ntemp,xmin:dx:xmax);
 presg=interp1(nheight,npres,xmin:dx:xmax);
 densg=interp1(nheight,ndens,xmin:dx:xmax);
-
+energ=zeros(1,nx1);
 
 
 %rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
 %set background density
 %set background energy
-mu=0.6d0
-R=8.31e3
+mu=0.6d0;
+R=8.31e3;
 
-parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
+%parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
 
 % p[*,*,*]=w[*,*,*,4]+w[*,*,*,8]
 % p[*,*,*]=p[*,*,*]-(w[*,*,*,1]^2.0+w[*,*,*,2]^2.0+w[*,*,*,3]^2.0)/ $
@@ -188,15 +188,22 @@ parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
 % p[*,*,*]=(gamma-1.d0)*p[*,*,*]
 
 
+%iniene=6840.d0*8.31e3*(2.3409724e-09)/0.6d0/(eqpar(gamma_)-1.0)
 
 
 %e=p/(rho*(gamma-1.d0))+0.5d0*(bx*bx+bz*bz)
+for i=4:nx1-3   
+    tempg(i)=(tempg(i-3)+tempg(i-2)+tempg(i-1)+tempg(i+1)+tempg(i+2)+tempg(i+3))/6;
+end
+
 
       for i=1:nx1
            for j=1:nx2
                for k=1:nx3
                    simdata.w(i,j,k,10)=densg(i);  %density
-                   simdata.w(i,j,k,9)=presg(i)./(densg(i)*(consts.fgamma-1));
+                   presg(i)=tempg(i)*densg(i)*R/mu;
+                   energ(i)=presg(i)./(densg(i)*(consts.fgamma-1));
+                   simdata.w(i,j,k,9)=energ(i);
                end
            end
        end
