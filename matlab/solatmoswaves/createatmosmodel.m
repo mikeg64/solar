@@ -48,11 +48,11 @@ consts.mu=4*pi/1.0e7
        xx=zeros(nx1,nx2,nx3);
        yy=zeros(nx1,nx2,nx3);
        zz=zeros(nx1,nx2,nx3);
-       
+       rheight=zeros(1,nx1);
        
        for i=1:nx1
            for j=1:nx2
-               for k=1:nx3
+               for k=1:nx3               
                    xx(i,j,k)=xmin+dx*(i-1);
                    yy(i,j,k)=ymin+dy*(j-1);
                    zz(i,j,k)=zmin+dz*(k-1);
@@ -60,7 +60,9 @@ consts.mu=4*pi/1.0e7
            end
        end
        
-       
+       for i=1:nx1
+          rheight(1,i)=xmin+dx*(i-1); 
+       end
        
        simdata.w=zeros(nx1,nx2,nx3,nw);
 
@@ -165,11 +167,11 @@ end
 
 
 
-energg=interp1(nvals,nenerg,xmine:dxe:xmaxe);
+%energg=interp1(nvals,nenerg,xmine:dxe:xmaxe);
 tempg=interp1(nheight,ntemp,xmin:dx:xmax);
 presg=interp1(nheight,npres,xmin:dx:xmax);
 densg=interp1(nheight,ndens,xmin:dx:xmax);
-energ=zeros(1,nx1);
+energg=zeros(1,nx1);
 
 
 %rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
@@ -204,7 +206,7 @@ R=8.31e3;
 % 
 % ! 1.6Mm
 % 
-% !iniene=6840.d0*8.31e3*(2.3409724e-09)/0.6d0/(eqpar(gamma_)-1.0)
+iniene=6840.d0*R*(2.3409724e-09)/mu/(consts.fgamma-1.0);
 % 
 % !iniene=6840.d0*8.31e3*(2.2139002e-09)/0.6d0/(eqpar(gamma_)-1.0)
 % 
@@ -225,6 +227,19 @@ R=8.31e3;
 % 
 %   enddo
 %  enddo
+
+
+      for i=1:nx1
+           for j=1:nx2
+               for k=1:nx3
+                   simdata.w(i,j,k,10)=densg(i);  %density
+                   simdata.w(i,j,k,9)=iniene;  %density
+                                    
+               end
+           end
+      end
+
+
 
 % use energy to get pthermal
 
@@ -247,7 +262,9 @@ R=8.31e3;
 % p(ixmin1:ixmax1,ixmin2:ixmax2,ixmin3:ixmax3)=(eqpar(gamma_)&
 %    -one)*(w(ixmin1:ixmax1,ixmin2:ixmax2,ixmin3:ixmax3,e_)-p(ixmin1:ixmax1,&
 %    ixmin2:ixmax2,ixmin3:ixmax3))
-
+for i=1:nx1
+    presg(i)=(consts.fgamma-1)*iniene;
+end
 
 
 
@@ -267,7 +284,10 @@ R=8.31e3;
 %   enddo
 %  enddo
 % enddo
-
+for i=2:nx1-1
+    comi=rheight(i+1)-rheight(i);
+    presg(i)=presg(i)+densg(i)*comi*consts.ggg;
+end
 
 %update density
 % do ix_3=ixGlo3,ixGhi3
@@ -284,6 +304,12 @@ R=8.31e3;
 %      enddo
 %    enddo
 %  enddo 
+% for i=3:nx1-2
+%     comi=rheight(i+1)-rheight(i);
+%     densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );   
+% end
+
+
 
 
 % !lower boundary
@@ -293,6 +319,14 @@ R=8.31e3;
 %         p_2=w(ix_1,ix_2,ix_3,rho_)*eqpar(grav1_)
 %         w(ix_1-2,ix_2,ix_3,p_) = 12.d0*(x(ix_1,ix_2,ix_3,1)-x(ix_1&
 %            -1,ix_2,ix_3,1))*p_2+p_1
+for i=5:-1:3
+  p_1=presg(i+2)-8*presg(i+1)+8*presg(i-1);
+  p_2=densg(i)*consts.ggg;
+  presg(i-2)= p_1+12.0*(rheight(i)-rheight(i-1))*p_2;
+end
+
+
+
 
 % !upper boundary
 % do ix_1=ixmax1-4,ixmax1-2
@@ -312,7 +346,11 @@ R=8.31e3;
 %       enddo
 %    enddo
 % enddo
-
+for i=nx1-4:nx1-2
+  p_1=presg(i-2)-8*presg(i-1)+8*presg(i+1);
+  p_2=densg(i)*consts.ggg;
+  presg(i+2)= p_1-12.0*(rheight(i)-rheight(i-1))*p_2;
+end
 
 %compute enrgy using pressure
 % ! Calculate total energy from pressure, kinetic and magnetic energy
@@ -330,23 +368,29 @@ R=8.31e3;
 %    ixmin3:ixmax3,b2_)*w(ixmin1:ixmax1,ixmin2:ixmax2,ixmin3:ixmax3,bg2_))&
 %    +(w(ixmin1:ixmax1,ixmin2:ixmax2,ixmin3:ixmax3,b3_)*w(ixmin1:ixmax1,&
 %    ixmin2:ixmax2,ixmin3:ixmax3,bg3_)))
-
+for i=1:nx1
+    energg(i)=presg(i)/(consts.fgamma -1);
+end
 
 
 
 %e=p/(rho*(gamma-1.d0))+0.5d0*(bx*bx+bz*bz)
-for i=4:nx1-3   
-    tempg(i)=(tempg(i-3)+tempg(i-2)+tempg(i-1)+tempg(i+1)+tempg(i+2)+tempg(i+3))/6;
-end
+% for i=4:nx1-3   
+%     tempg(i)=(tempg(i-3)+tempg(i-2)+tempg(i-1)+tempg(i+1)+tempg(i+2)+tempg(i+3))/6;
+% end
 
-
+disp('rebuilding array');
       for i=1:nx1
            for j=1:nx2
                for k=1:nx3
+                   
+                   for iw=1:13
+                      simdata.w(i,j,k,iw)=0.0; 
+                   end
                    simdata.w(i,j,k,10)=densg(i);  %density
-                   presg(i)=tempg(i)*densg(i)*R/mu;
-                   energ(i)=presg(i)./(densg(i)*(consts.fgamma-1));
-                   simdata.w(i,j,k,9)=energ(i);
+%                    presg(i)=tempg(i)*densg(i)*R/mu;
+%                    energ(i)=presg(i)./(densg(i)*(consts.fgamma-1));
+                   simdata.w(i,j,k,9)=energg(i);
                end
            end
       end
@@ -355,9 +399,9 @@ end
       
       
       
+    disp('writing array');  
       
       
       
-      
-% writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
+ writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
         
