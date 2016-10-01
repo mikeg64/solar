@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Plots data in binary dumps.
-# Usage: python orszag-tang.py ../../../hermes-temp/bin/nl-shwave.0024.bin
+# Plots data in binary dumps from sac smaug.
+# Usage: python sac-rea.py ../../../hermes-temp/bin/nl-shwave.0024.bin
 
 from numpy import *
 import sys
@@ -16,42 +16,22 @@ from pylab import *
 try:
   file = open(sys.argv[1],'rb')
 except:
-  print 'Usage: ./read.py <binary_dump>'
+  print 'Usage: ./sac-read.py <binary_dump>'
   raise SystemExit
 
 file.seek(0,2)
 eof = file.tell()
 file.seek(0,0)
 
-coordsys = fromfile(file,dtype=int32,count=1)[0]
+#file.read.string()
+name = file.read(80)
+t = fromfile(file,dtype=double,count=1)
+nit = fromfile(file,dtype=int32,count=1)
 
-#nx,ny,nz = fromfile(file,dtype=int32,count=7)[:3]
-
-ndata = fromfile(file,dtype=int32,count=7)[:7]
+ndata = fromfile(file,dtype=int32,count=3)[:3]
 nx= ndata[0]
 ny= ndata[1]
 nz= ndata[2]
-
-
-gamma1,cs = fromfile(file,dtype=float,count=2)
-
-t,dt = fromfile(file,dtype=float,count=2)
-
-x = fromfile(file,dtype=float,count=nx)
-y = fromfile(file,dtype=float,count=ny)
-z = fromfile(file,dtype=float,count=nz)
-
-shape = (ny,nx)
-count = prod(shape)
-
-rho = fromfile(file,dtype=float,count=count).reshape(shape)
-m1 = fromfile(file,dtype=float,count=count).reshape(shape)
-m2 = fromfile(file,dtype=float,count=count).reshape(shape)
-m3 = fromfile(file,dtype=float,count=count).reshape(shape)
-e = fromfile(file,dtype=float,count=count).reshape(shape)
-b1 = fromfile(file,dtype=float,count=count).reshape(shape)
-b2 = fromfile(file,dtype=float,count=count).reshape(shape)
-b3 = fromfile(file,dtype=float,count=count).reshape(shape)
 
 if file.tell() != eof: print 'Error: Too few bytes read.'
 
@@ -59,16 +39,17 @@ file.close()
 
 
 #display config information
-print shape
-print nx,ny,nz
-print ndata
-print t,dt
-print gamma1,cs
-print coordsys
-print count
+print name
+#print shape
+#print nx,ny,nz
+#print ndata
+#print t,dt
+#print gamma1,cs
+#print coordsys
+#print count
 
 
-print y[0],y[1],y[191]
-print rho.shape
-print rho[0][0],rho[191][191]
+#print y[0],y[1],y[191]
+#print rho.shape
+#print rho[0][0],rho[191][191]
 
