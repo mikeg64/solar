@@ -232,7 +232,7 @@ atm.mhs_snapshot.save_SACsources(
           option_pars,
           physical_constants,
           coords,
-          model_pars['Nxyz']
+          [129,129,128]
          )
 # save auxilliary variable and 1D profiles for plotting and analysis
 atm.mhs_snapshot.save_auxilliary3D(
@@ -248,7 +248,7 @@ atm.mhs_snapshot.save_auxilliary3D(
           option_pars,
           physical_constants,
           coords,
-          model_pars['Nxyz']
+          [129,129,128]
          )
 if rank==0:
     atm.mhs_snapshot.save_auxilliary1D(
@@ -259,7 +259,7 @@ if rank==0:
           option_pars,
           physical_constants,
           coords,
-          model_pars['Nxyz']
+          [129,129,128]
          )
 if rho.min()<0 or pressure.min()<0:
     print"FAIL rank {}: negative rho.min() {} and/or pressure.min() {}.".format(

@@ -23,7 +23,7 @@ max_slice = 3
 
 #### Read IDL save file ###################################################
 
-idl_save = scipy.io.readsav('test.sav',python_dict=True, verbose=False)
+idl_save = scipy.io.readsav('../../../temp/test.sav',python_dict=True, verbose=False)
 
 #### Unpack variables #####################################################
 

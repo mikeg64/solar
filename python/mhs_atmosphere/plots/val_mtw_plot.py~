@@ -111,19 +111,19 @@ for paper in papers:
                              line_density=line_density
                              )
     plot_label = figsdir+paper+'_axis.eps'
-    keys = ['alfven_speed','sound_speed','mag_field_z_bg']
-#    ymin = min(oneD_arrays['density']['axis'].in_units('kg / km**3').value.min(),
-#               oneD_arrays['temperature']['edge'].value.min(),
-#               oneD_arrays['temperature']['axis'].value.min(),
-#               oneD_arrays['density']['edge'].in_units('kg / km**3').value.min(),
-#               oneD_arrays['thermal_pressure']['edge'].value.min(),
-#               oneD_arrays['thermal_pressure']['axis'].value.min())*0.5
-#    ymax = max(oneD_arrays['density']['axis'].in_units('kg / km**3').value.max(),
-#               oneD_arrays['temperature']['edge'].value.max(),
-#               oneD_arrays['temperature']['axis'].value.max(),
-#               oneD_arrays['density']['edge'].in_units('kg / km**3').value.max(),
-#               oneD_arrays['thermal_pressure']['edge'].value.max(),
-#               oneD_arrays['thermal_pressure']['axis'].value.max())*2.
+#    keys = ['alfven_speed','sound_speed','mag_field_z_bg']
+    ymin = min(oneD_arrays['density']['axis'].in_units('kg / km**3').value.min(),
+               oneD_arrays['temperature']['edge'].value.min(),
+               oneD_arrays['temperature']['axis'].value.min(),
+               oneD_arrays['density']['edge'].in_units('kg / km**3').value.min(),
+               oneD_arrays['thermal_pressure']['edge'].value.min(),
+               oneD_arrays['thermal_pressure']['axis'].value.min())*0.5
+    ymax = max(oneD_arrays['density']['axis'].in_units('kg / km**3').value.max(),
+               oneD_arrays['temperature']['edge'].value.max(),
+               oneD_arrays['temperature']['axis'].value.max(),
+               oneD_arrays['density']['edge'].in_units('kg / km**3').value.max(),
+               oneD_arrays['thermal_pressure']['edge'].value.max(),
+               oneD_arrays['thermal_pressure']['axis'].value.max())*2.
     if 'mfe_setup' in paper:
         loc_legend='lower left'
     else:
