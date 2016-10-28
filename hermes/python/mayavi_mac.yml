@@ -1,0 +1,5 @@
+name: mayavi-mac
+channels: !!python/tuple
+- !!python/unicode 'defaults'
+prefix: /Users/mike/anaconda/envs/mayavi-mac
+

@@ -1,0 +1,40 @@
+Traceback (most recent call last):
+  File "tube.py", line 18, in <module>
+    from mayavi import mlab
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/mayavi/mlab.py", line 27, in <module>
+    from mayavi.tools.camera import view, roll, yaw, pitch, move
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/mayavi/tools/camera.py", line 25, in <module>
+    from engine_manager import get_engine
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/mayavi/tools/engine_manager.py", line 12, in <module>
+    from mayavi.preferences.api import preference_manager
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/mayavi/preferences/api.py", line 4, in <module>
+    from preference_manager import preference_manager
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/mayavi/preferences/preference_manager.py", line 29, in <module>
+    from traitsui.api import View, Group, Item
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/api.py", line 35, in <module>
+    from .editors.api import (ArrayEditor, BooleanEditor, ButtonEditor,
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/editors/__init__.py", line 22, in <module>
+    from .api import (toolkit, ArrayEditor, BooleanEditor, ButtonEditor,
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/editors/api.py", line 10, in <module>
+    from .code_editor import CodeEditor
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/editors/code_editor.py", line 36, in <module>
+    class ToolkitEditorFactory ( EditorFactory ):
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/editors/code_editor.py", line 48, in ToolkitEditorFactory
+    mark_color = Color( 0xECE9D8 )
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traits/traits.py", line 487, in __call__
+    return self.maker_function( *args, **metadata )
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traits/traits.py", line 1191, in Color
+    return ColorTrait( *args, **metadata )
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/toolkit_traits.py", line 7, in ColorTrait
+    return toolkit().color_trait( *args, **traits )
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/toolkit.py", line 109, in toolkit
+    _toolkit = _import_toolkit(ETSConfig.toolkit)
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/toolkit.py", line 51, in _import_toolkit
+    return __import__( name, globals=globals(), level=1 ).toolkit
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/qt4/__init__.py", line 24, in <module>
+    import toolkit
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/traitsui/qt4/toolkit.py", line 24, in <module>
+    from pyface.qt import QtCore, QtGui, qt_api
+  File "/Users/mike/anaconda/envs/mayavi-solar/lib/python2.7/site-packages/pyface/qt/QtGui.py", line 4, in <module>
+    from PyQt4.Qt import QKeySequence, QTextCursor
+ImportError: cannot import name QKeySequence

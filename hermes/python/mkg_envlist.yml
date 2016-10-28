@@ -1,0 +1,35 @@
+# packages in environment at /Users/mike/anaconda/envs/mayavi-solar:
+#
+apptools                  4.2.1                    py27_0  
+configobj                 5.0.6                    py27_0  
+distribute                0.6.45                   py27_1  
+envisage                  4.4.0                    py27_1  
+freetype                  2.5.5                         1  
+libpng                    1.6.17                        0  
+matplotlib                1.4.3                np19py27_3  
+mayavi                    4.4.0                np19py27_0  
+mkl                       11.3.3                        0  
+numpy                     1.9.3                    py27_3  
+openssl                   1.0.2j                        0  
+pip                       8.1.2                    py27_0  
+pyface                    4.4.0                    py27_0  
+pyparsing                 2.0.3                    py27_0  
+pyqt                      4.11.4                   py27_4  
+pyside                    1.1.1                    py27_0  
+python                    2.7.12                        1  
+python-dateutil           2.5.3                    py27_0  
+python.app                1.2                      py27_4  
+pytz                      2016.7                   py27_0  
+qt                        4.8.7                         4  
+readline                  6.2                           2  
+scipy                     0.17.1               np19py27_1  
+setuptools                27.2.0                   py27_0  
+sip                       4.18                     py27_0  
+six                       1.10.0                   py27_0  
+sqlite                    3.13.0                        0  
+tk                        8.5.18                        0  
+traits                    4.4.0                    py27_0  
+traitsui                  4.4.0                    py27_0  
+vtk                       5.10.1                   py27_0  
+wheel                     0.29.0                   py27_0  
+zlib                      1.2.8                         3  
