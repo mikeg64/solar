@@ -32,12 +32,12 @@ kgc.nu=0;
 % B2=0;
 
 %compute the Q
-for j=1:100
+for j1=1:100
     
    %TP=180; %driver period in seconds
-   TP=j*5;
+   TP=j1*5;
 %    TP=300;
-om=2*pi/TP;
+om=1/TP;
 iom=100;
     
 %     iom=j*5;
@@ -58,8 +58,9 @@ kgc.k1=k;
     
     
     
-for i=nr:-1:1 
-    csn=cs(i);
+for i1=nr:-1:1
+    z=height(i1);
+    csn=cs(i1);
     lamn=csn.^2./(consts.fgamma*consts.ggg);
     omn=csn./(2.*lamn);
     
@@ -76,24 +77,29 @@ for i=nr:-1:1
         A1=(om-A2*(exp(1i*(kgc.k1+kgc.k2)*kgc.L)))/(1-exp(2*1i*kgc.k1*kgc.L));
         B1=om-A1;
         B2=0;
-        s(i,j)=-om*kn*real((A1.^2-B1.^2));
+        s(i1,j1)=-om*kn*real((A1.^2-B1.^2)+A1*B1*(exp( -2*1i*kn*z)-exp(2*1i*kn*z)));
     end
     if nr<=tri   %region 2 
         A2=om*kgc.k1*exp(-1i*kgc.k2*kgc.L)/(exp(1i*kgc.k1*kgc.L)-sin(kgc.k1*kgc.L)*(1i*kgc.k1+1i*kgc.k2+((1/(2*kgc.lam2))-(1/(2*kgc.lam1)))));
         A1=(om-A2*(exp(1i*(kgc.k1+kgc.k2)*kgc.L)))/(1-exp(2*1i*kgc.k1*kgc.L));
         B1=om-A1;
         B2=0;
-        s(i,j)=-om*kn*real((A2.^2-B2.^2));
+        s(i1,j1)=-om*kn*real((A2.^2-B2.^2));
     end
     
-    s(i,j)=sqrt(s(i,j).*conj(s(i,j)));
+    s(i1,j1)=sqrt(s(i1,j1).*conj(s(i1,j1)));
 end
 end
 figure;
 h=surf(real(s'),'LineStyle','none');
 % h=surf(s);
-hold on;
+% hold on;
 
+figure;
+plot(5*(1:60),s(342,1:60)./s(1880,1:60),5*(1:60),s(684,1:60)./s(1880,1:60),5*(1:60),s(1367,1:60)./s(1880,1:60))
 
+figure;
+
+plot(height(:),s(:,6)./s(1880,6),height(:),s(:,36)./s(1880,36),height(:),s(:,60)./s(1880,60));
 
 
