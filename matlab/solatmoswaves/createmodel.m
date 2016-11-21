@@ -8,6 +8,10 @@ consts.fgamma=1.66666667e0
 consts.ggg=274.0e0 % acceleration due to gravity on the sun
 consts.mu=4*pi/1.0e7
 
+ngx1=2;
+ngx2=2;
+ngx3=2;
+
   it=0;
        time=0;
        ndim=3;
@@ -31,9 +35,9 @@ consts.mu=4*pi/1.0e7
        ymax=4.0e6;
        zmax=4.0e6;
        
-       dx=(xmax-xmin)/(nx1-1);
-       dy=(ymax-ymin)/(nx2-1);
-       dz=(zmax-zmin)/(nx3-1);
+       dx=(xmax-xmin)/(nx1-2*ngx1);
+       dy=(ymax-ymin)/(nx2-2*ngx2);
+       dz=(zmax-zmin)/(nx3-2*ngx3);
        
        
        xx=zeros(nx1,nx2,nx3);
@@ -44,9 +48,9 @@ consts.mu=4*pi/1.0e7
        for i=1:nx1
            for j=1:nx2
                for k=1:nx3
-                   xx(i,j,k)=xmin+dx*(i-1);
-                   yy(i,j,k)=ymin+dy*(j-1);
-                   zz(i,j,k)=zmin+dz*(k-1);
+                   xx(i,j,k)=(xmin-ngx1*dx)+i*dx;
+                   yy(i,j,k)=(ymin-ngx1*dx)+dy*j;
+                   zz(i,j,k)=(zmin-ngx1*dx)+dz*k;
                end
            end
        end
@@ -106,10 +110,20 @@ pres = data(:,4);
 
 cs=sqrt(consts.fgamma.*pres./dens); 
 
-tempg=interp1(height,temp,xmin:dx:xmax);
-presg=interp1(height,pres,xmin:dx:xmax);
-densg=interp1(height,dens,xmin:dx:xmax);
+% dens=1e12*dens;
+tempg=interp1(height,temp,(xmin-ngx1*dx):dx:(xmax+ngx1*dx));
+presg=interp1(height,pres,(xmin-ngx1*dx):dx:(xmax+ngx1*dx));
+densg=interp1(height,dens,(xmin-ngx1*dx):dx:(xmax+ngx1*dx));
 
+ninterp=size(tempg);
+nint=ninterp(2);
+
+tempg(nint)=tempg(nint-2);
+tempg(nint-1)=tempg(nint-2);
+presg(nint)=presg(nint-2);
+presg(nint-1)=presg(nint-2);
+densg(nint)=densg(nint-2);
+densg(nint-1)=densg(nint-2);
 
 %rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
 %set background density
@@ -127,5 +141,5 @@ densg=interp1(height,dens,xmin:dx:xmax);
            end
        end
 
-
+%writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
         

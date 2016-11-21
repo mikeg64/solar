@@ -1,5 +1,5 @@
 newfilename='3D_128_2p5_2p5_12p5_asc.ini';
-
+%extrapolating atmospheric model
 
 simparams=sim_params;
 simgridinfo=sim_gridinfo;
