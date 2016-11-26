@@ -17,9 +17,10 @@ consts.mu=4*pi/1.0e7
        neqpar=7;
        nw=13;
        nx1=128;
-       nx2=128;
-       nx3=128;
-
+%        nx2=128;
+%        nx3=128;
+      nx2=4;
+       nx3=4;
 
       gamma=1.666667;
        eta=0;
@@ -27,18 +28,19 @@ consts.mu=4*pi/1.0e7
        g2=0;
        g3=0;
        
-       %xmin=133333.33;
-       xmin=199219.0;
+       xmin=133333.33;
+       %xmin=199219.0;
+       %xmin=311111.0;
        %ymin=1953.1;
        ymin=39687.5;
        %zmin=1953.1;
        zmin=39687.5;
-       %xmax=5955555.6e0;
-       xmax=12.8496e6;
-       %ymax=4.0e6;
-       %zmax=4.0e6;
-       ymax=2.559984e6;
-       zmax=2.559984e6;
+       xmax=5955555.6e0;
+       %xmax=12.8496e6;
+       ymax=4.0e6;
+       zmax=4.0e6;
+       %ymax=2.559984e6;
+       %zmax=2.559984e6;
        
        dx=(xmax-xmin)/(nx1-1);
        dy=(ymax-ymin)/(nx2-1);
@@ -136,41 +138,46 @@ for i=nvals:-1:1
     nheight(i,1)=height(2048,1)+(nvals-i+1)*deltah;
 end
 
-ndens(3614:4392,1)=dens(1270:2048);
-ntemp(3614:4392,1)=temp(1270:2048);
-npres(3614:4392,1)=pres(1270:2048);
-
-
-%load the results from the fitting
-load('dens_corona_fittedmodel.mat');
-load('temp_corona_fittedmodel.mat');
-load('pres_corona_fittedmodel.mat');
-dens_corona=cfit(dens_corona_fittedmodel);
-temp_corona=cfit(temp_corona_fittedmodel);
-pres_corona=cfit(pres_corona_fittedmodel);
-
-
-%compute values beyound transition region between 6.5Mm and 25Mm
-%using data fitted with power law
-for i=1:3613
-    newh=nheight(i,1);
-%using matlab fitting functions
-     ndens(i,1)=dens_corona(newh);
-     npres(i,1)=pres_corona(newh);
-     ntemp(i,1)=temp_corona(newh);
+% ndens(3614:4392,1)=dens(1270:2048);
+% ntemp(3614:4392,1)=temp(1270:2048);
+% npres(3614:4392,1)=pres(1270:2048);
+% 
+% 
+% %load the results from the fitting
+% load('dens_corona_fittedmodel.mat');
+% load('temp_corona_fittedmodel.mat');
+% load('pres_corona_fittedmodel.mat');
+% dens_corona=cfit(dens_corona_fittedmodel);
+% temp_corona=cfit(temp_corona_fittedmodel);
+% pres_corona=cfit(pres_corona_fittedmodel);
+% 
+% 
+% %compute values beyound transition region between 6.5Mm and 25Mm
+% %using data fitted with power law
+% for i=1:3613
+%     newh=nheight(i,1);
+% %using matlab fitting functions
+%      ndens(i,1)=dens_corona(newh);
+%      npres(i,1)=pres_corona(newh);
+%      ntemp(i,1)=temp_corona(newh);
 
 %old power law    
 %     ndens(i,1)=1.817e-7*newh.^(-0.667);
 %     npres(i,1)=6.717e-10*newh.^(1.219);
 %     ntemp(i,1)=2.669e-7*newh.^(1.886);
-end
+%end
 
 
 
 %energg=interp1(nvals,nenerg,xmine:dxe:xmaxe);
-tempg=interp1(nheight,ntemp,xmin:dx:xmax);
-presg=interp1(nheight,npres,xmin:dx:xmax);
-densg=interp1(nheight,ndens,xmin:dx:xmax);
+% tempg=interp1(nheight,ntemp,xmin:dx:xmax);
+% presg=interp1(nheight,npres,xmin:dx:xmax);
+% densg=interp1(nheight,ndens,xmin:dx:xmax);
+% energg=zeros(1,nx1);
+
+tempg=interp1(height,temp,xmin:dx:xmax);
+presg=interp1(height,pres,xmin:dx:xmax);
+densg=interp1(height,dens,xmin:dx:xmax);
 energg=zeros(1,nx1);
 
 
@@ -196,7 +203,7 @@ R=8.31e3;
 %mu_thermal=0.6d0;
 %R=8.31e3;
 
-% temp*R*density/((mu_thermal))
+% pressure=temp*R*density/((mu_thermal))
 %parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
 %iniene=6840.d0*8.31e3*(2.3409724e-09)/0.6d0/(eqpar(gamma_)-1.0)
 
@@ -233,7 +240,7 @@ iniene=6840.d0*R*(2.3409724e-09)/mu/(consts.fgamma-1.0);
            for j=1:nx2
                for k=1:nx3
                    simdata.w(i,j,k,10)=densg(i);  %density
-                   simdata.w(i,j,k,9)=iniene;  %density
+                   simdata.w(i,j,k,9)=iniene;  %energy
                                     
                end
            end
@@ -266,6 +273,8 @@ for i=1:nx1
     presg(i)=(consts.fgamma-1)*iniene;
 end
 
+presg1=presg;
+
 
 
 %compute correct pressure for gravitationally stratified atmosphere
@@ -284,11 +293,22 @@ end
 %   enddo
 %  enddo
 % enddo
-for i=2:nx1-1
-    comi=rheight(i+1)-rheight(i);
-    presg(i)=presg(i)+densg(i)*comi*consts.ggg;
+
+
+ 
+
+
+for i=nx1-1:-1:1
+    comi=-abs(rheight(i+1)-rheight(i));
+    presg(i)=presg(i+1)-densg(i)*comi*consts.ggg;
 end
 
+
+for i=3:nx1-2
+     comi=-abs(rheight(i+1)-rheight(i));
+     %densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
+     densg(i)=(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
+end
 %update density
 % do ix_3=ixGlo3,ixGhi3
 %  do ix_2=ixGlo2,ixGhi2
@@ -304,10 +324,6 @@ end
 %      enddo
 %    enddo
 %  enddo 
-% for i=3:nx1-2
-%     comi=rheight(i+1)-rheight(i);
-%     densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );   
-% end
 
 
 
@@ -321,7 +337,7 @@ end
 %            -1,ix_2,ix_3,1))*p_2+p_1
 for i=5:-1:3
   p_1=presg(i+2)-8*presg(i+1)+8*presg(i-1);
-  p_2=densg(i)*consts.ggg;
+  p_2=-densg(i)*consts.ggg;
   presg(i-2)= p_1+12.0*(rheight(i)-rheight(i-1))*p_2;
 end
 
@@ -348,9 +364,13 @@ end
 % enddo
 for i=nx1-4:nx1-2
   p_1=presg(i-2)-8*presg(i-1)+8*presg(i+1);
-  p_2=densg(i)*consts.ggg;
+  p_2=-densg(i)*consts.ggg;
   presg(i+2)= p_1-12.0*(rheight(i)-rheight(i-1))*p_2;
 end
+
+presg2=presg;
+
+
 
 %compute enrgy using pressure
 % ! Calculate total energy from pressure, kinetic and magnetic energy
@@ -403,5 +423,5 @@ disp('rebuilding array');
       
       
       
- writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
+ %writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
         
