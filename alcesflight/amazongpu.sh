@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#https://aws.amazon.com/blogs/aws/new-p2-instance-type-for-amazon-ec2-up-to-16-gpus/
 
 sudo yum update -y
 sudo yum groupinstall -y "Development tools"
