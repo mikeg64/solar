@@ -1,0 +1,5 @@
+.r procedures
+.r vac2vtk3d
+.r vacscalar2vtk3d
+.r run_convert_wash_vtk
+exit
