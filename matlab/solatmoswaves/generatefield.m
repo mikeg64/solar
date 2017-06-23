@@ -20,8 +20,8 @@ if strcmp(mode,'fluxtube')
     
     %tube width =100km
     %footpoint intensity 1kG ala thin photospheric flux tubes
-    nb=4;
-    mb=4;
+    nb=1;
+    mb=1;
     
     nx1=simgridinfo.grid_dimensions(1);
     nx2=simgridinfo.grid_dimensions(2);
@@ -38,10 +38,19 @@ if strcmp(mode,'fluxtube')
     
     xf=zeros(nx1,nx2,nx3);
     
+  
+
+    
     d_z=1.5; % width of Gaussian in Mm
     z_shift= 0.0; % shift in Mm
     A=0.45; % amplitude
     scale=1.0e6;
+    b0z_top=0.08;
+   
+    f0=2.0e6; %tube opening factor
+
+    Ab0z=20.d0; % bz - amplitude
+    
     
     x=zeros(nx1);
     y=zeros(nx2);
@@ -57,41 +66,53 @@ if strcmp(mode,'fluxtube')
     for i=1:nx1
         x(i)=simparams.domain_left_edge(1)+dx*(i-1);
         b0z(i)=(par4((x(i)/scale-z_shift),d_z,A)).^2;
+        %b0z(i)=(par3((x(i)/scale-z_shift),d_z,A));
     end
     
     
-    b0z_top=0.08;
-    b0z=b0z./max(b0z);
-    f0=2.0e6; %tube opening factor
+    
+    
 
-    Ab0z=20.d0; % bz - amplitude
+    
+    
+    
+    
+    b0z=b0z./max(b0z);
+   
     b0z=Ab0z.*b0z+b0z_top;
     
     dbz=deriv1(b0z,x);
 
-%     x=x-max(x)/2.d0
-%     y=y-max(y)/2.d0
+     z=z-max(z)/2.d0
+     y=y-max(y)/2.d0
 
     
     
-    
-    for ib=0:nb-1
-        for jb=0:mb-1
+ ib=0;
+ jb=0;
+ %   for ib=0:nb-1
+ %       for jb=0:mb-1
             
             if nb>1
                 ybp=simparams.domain_left_edge(2)+(ib+1)*nx2*dy*(simgridinfo.grid_dimensions(2)/((nb+1)))-nx2*dy*(simgridinfo.grid_dimensions(2)/(2*(nb+1)));
             else
-                ybp=simparams.domain_left_edge(2)+(ib+1)*nx2*dy*(simgridinfo.grid_dimensions(2)/((nb+1)));                
+                ybp=simparams.domain_left_edge(2)+(ib+1)*nx2*dy*(1/((nb+1)));                
             end
             
             if mb>1
                 zbp=simparams.domain_left_edge(3)+(jb+1)*nx3*dz*(simgridinfo.grid_dimensions(3)/((mb+1)))-nx3*dz*(simgridinfo.grid_dimensions(3)/(2*(mb+1)));                
             else
-                zbp=simparams.domain_left_edge(3)+(jb+1)*nx3*dz*(simgridinfo.grid_dimensions(3)/((mb+1)));
+                zbp=simparams.domain_left_edge(3)+(jb+1)*nx3*dz*(1/((mb+1)));
             end
             
   
 
+            
+            
+            
+            
+            
+            
 for k=1:nx3
 for j=1:nx2
 for i=1:nx1
@@ -105,12 +126,15 @@ xf(i,j,k)=(par4(f,f0,0.5)).^2;
 end
 end
 end
-xf=xf/max(xf);
+xf=xf./max(max(max(xf)));
 
 for k=1:n3 
 for j=1:n2
 for i=1:n1
 
+% bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
+% bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
+% by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
 bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
@@ -119,10 +143,10 @@ end
 end
 end           
                        
-        end  %end of loop
-    end
-    
-end   %building fluxtube
+%         end  %end of loop
+%     end
+%     
+ end   %building fluxtube
 
 
 
@@ -288,7 +312,7 @@ simdata.w(:,:,:,13)=bz;
 
 
 
-%Functions used to compute tube 
+
 
 
 function [res]=inte(f,dx)
@@ -304,18 +328,18 @@ end
 res=0.0;
 if (nel > 1) 
     if (nel == 2) 
-        res=dx*0.5d0*(f(1)+f(0))
+        res=dx*0.5*(f(1)+f(0));
     end
 
     if (nel > 2)
       for k=1:nel-1 
-          res=res+0.5*(f(k-1)+f(k))*(dx/1.0);
+          res=res+0.5*(f(k-1)+f(k))*dx;
       end
     end
 end %outer
 
 %return,res
-%end
+end
 
 
 
@@ -323,9 +347,29 @@ end %outer
 function [res]=par4(x,x0,A)
     res=A.*exp(-1.0*x.^2./(x0.^2));
 
-%end
+end
 
 
+function [res]=par3(x,x0,A)
+
+    A=A/(x0.^2);
+    
+  
+
+if (x <= -2*x0)
+    res=0;
+elseif ((x >= -2*x0) & (x <= -x0)) 
+    res=A*(x+3*x0)*(x+x0)+A*x0.^2;
+elseif ((x >= -x0) & (x <= x0)) 
+    res=-A*(x+x0)*(x-x0)+A*x0.^2;
+elseif ((x >= x0) & (x <= 2*x0)) 
+    res=A*(x-3*x0)*(x-x0)+A*x0.^2;
+elseif (x >= 2*x0) 
+    res=0;
+end
+
+%return,res
+end
 
 
 
@@ -354,7 +398,7 @@ res(1)=res(2);
 res(num-1)=res(num-3);
 res(num-2)=res(num-3);
 
-%end
+end
 
 
 

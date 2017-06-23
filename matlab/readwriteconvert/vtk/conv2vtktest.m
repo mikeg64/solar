@@ -3,7 +3,7 @@
 % Read the npict-th picture from 1 or more files
 %http://uk.mathworks.com/matlabcentral/answers/97118-how-do-i-read-a-fortran-unformatted-binary-data-file-into-matlab
 filename='/fastdata/cs1mkg/sac/p5b0_0_bv10g_a1250/3D_spic_128_bv10g_12.out';
-
+npict=1; %this is a step number
     fid=fopen(filename,'rb');
 
    hr1=fread(fid, 1, 'int32');
@@ -81,9 +81,9 @@ for iw=1:nw
      wd(iw,:,:,:)=tmp;
 end
 
+clear tmp;
 
+vtkfile='ne';
+vacscalar2vtk3d(npict,wd,xx,yy,zz,3,1,vtkfile);
 
-  
-
-clear tmp; 
    
