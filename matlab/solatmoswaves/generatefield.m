@@ -69,6 +69,8 @@ if strcmp(mode,'fluxtube')
         %b0z(i)=(par3((x(i)/scale-z_shift),d_z,A));
     end
     
+    dyb=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/nb;
+    dzb=(simparams.domain_right_edge(3)-simparams.domain_left_edge(3))/mb;
     
     
     
@@ -83,32 +85,41 @@ if strcmp(mode,'fluxtube')
     
     dbz=deriv1(b0z,x);
 
-     z=z-max(z)/2.d0
-     y=y-max(y)/2.d0
 
+  xold=x;
+  yold=y;
+  zold=z;
     
     
  ib=0;
  jb=0;
- %   for ib=0:nb-1
- %       for jb=0:mb-1
-            
-            if nb>1
-                ybp=simparams.domain_left_edge(2)+(ib+1)*nx2*dy*(simgridinfo.grid_dimensions(2)/((nb+1)))-nx2*dy*(simgridinfo.grid_dimensions(2)/(2*(nb+1)));
-            else
-                ybp=simparams.domain_left_edge(2)+(ib+1)*nx2*dy*(1/((nb+1)));                
-            end
-            
-            if mb>1
-                zbp=simparams.domain_left_edge(3)+(jb+1)*nx3*dz*(simgridinfo.grid_dimensions(3)/((mb+1)))-nx3*dz*(simgridinfo.grid_dimensions(3)/(2*(mb+1)));                
-            else
-                zbp=simparams.domain_left_edge(3)+(jb+1)*nx3*dz*(1/((mb+1)));
-            end
-            
-  
+    for ib=0:nb-1
+        for jb=0:mb-1
+
+
+
+
 
             
+          %  if nb>1
+          %      ybp=simparams.domain_left_edge(2)+(ib+1)*nx2*dy*(simgridinfo.grid_dimensions(2)/((nb+1)))-nx2*dy*(simgridinfo.grid_dimensions(2)/(2*(nb+1)));
+          %  else
+          %      ybp=simparams.domain_left_edge(2)+(ib+1)*nx2*dy*(1/((nb+1)));                
+          %  end
             
+          %  if mb>1
+          %      zbp=simparams.domain_left_edge(3)+(jb+1)*nx3*dz*(simgridinfo.grid_dimensions(3)/((mb+1)))-nx3*dz*(simgridinfo.grid_dimensions(3)/(2*(mb+1)));                
+          %  else
+          %      zbp=simparams.domain_left_edge(3)+(jb+1)*nx3*dz*(1/((mb+1)));
+          %  end
+            
+  
+          %  z=zold-max(z)/2.d0;
+          %  y=yold-max(y)/2.d0;
+
+            
+            z=zold-(jb-1)*dzb-(dzb/2);
+            y=yold-(ib-1)*dyb-(dyb/2);           
             
             
             
@@ -117,7 +128,7 @@ for k=1:nx3
 for j=1:nx2
 for i=1:nx1
 
-f=b0z(i)*sqrt((y(j)-ybp).^2+(z(k)-zbp).^2);
+f=b0z(i)*sqrt((y(j)).^2+(z(k)).^2);
 
 xf(i,j,k)=(par4(f,f0,0.5)).^2;
 
@@ -135,19 +146,22 @@ for i=1:n1
 % bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 % bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 % by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
-bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
-bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
-by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
+bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k));
+bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j))/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k));
+by(i,j,k)=by(i,j,k)-dbz(i)*(y(k))/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k);
+
+
 
 end
 end
 end           
                        
-%         end  %end of loop
-%     end
+         end  %end of loop
+     end
 %     
  end   %building fluxtube
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%checked to here
 
 
 %compute magnetostatics pressure correction
@@ -171,31 +185,31 @@ dbvardz=zeros(nx1,nx2,nx3);
 
 for k=1:nx3
 for j=1:nx2
- dbzdz(:,j,k)=deriv1(bz(:,j,k),z);
- dbxdz(:,j,k)=deriv1(bx(:,j,k),z);
- dbydz(:,j,k)=deriv1(by(:,j,k),z);
+ dbzdz(:,j,k)=deriv1(bz(:,j,k),x);
+ dbxdz(:,j,k)=deriv1(bx(:,j,k),x);
+ dbydz(:,j,k)=deriv1(by(:,j,k),x);
 end
 end
 
 
 for k=1:nx3
 for i=1:nx1
- dbzdx(i,:,k)=deriv1(bz(i,:,k),x);
- dbxdx(i,:,k)=deriv1(bx(i,:,k),x);
- dbydx(i,:,k)=deriv1(by(i,:,k),x);
+ dbzdx(i,:,k)=deriv1(bz(i,:,k),y);
+ dbxdx(i,:,k)=deriv1(bx(i,:,k),y);
+ dbydx(i,:,k)=deriv1(by(i,:,k),y);
 end
 end
 
 
 for j=1:nx2
 for i=1:nx1
- dbzdy(i,j,:)=deriv1(bz(i,j,:),y);
- dbxdy(i,j,:)=deriv1(bx(i,j,:),y);
- dbydy(i,j,:)=deriv1(by(i,j,:),y); 
+ dbzdy(i,j,:)=deriv1(bz(i,j,:),z);
+ dbxdy(i,j,:)=deriv1(bx(i,j,:),z);
+ dbydy(i,j,:)=deriv1(by(i,j,:),z); 
 end
 end
 
-
+divb=dbzdz+dbxdx+dbydy;
 
 
 for i=1:nx1
@@ -294,6 +308,10 @@ end
 
 rho1=rho+rho1
 p=Bvari+simdata.w(:,:,:,5)*(consts.fgamma-1.0);
+
+
+
+
 
 %rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
 %set background density
