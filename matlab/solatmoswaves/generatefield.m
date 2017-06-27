@@ -49,7 +49,8 @@ if strcmp(mode,'fluxtube')
    
     f0=2.0e6; %tube opening factor
 
-    Ab0z=20.d0; % bz - amplitude
+    Ab0z=20.e0; % bz - amplitude
+    mu=4.0*pi*1.0e-7
     
     
     x=zeros(nx1);
@@ -155,11 +156,27 @@ by(i,j,k)=by(i,j,k)-dbz(i)*(y(k))/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k);
 end
 end
 end           
+
+zold=z;
+yold=y;
+
+
                        
          end  %end of loop
      end
+
+
+
+
 %     
  end   %building fluxtube
+
+
+% ************** convert to VAC magnetic field
+bz=bz./sqrt(mu);
+bx=bx./sqrt(mu);
+by=by./sqrt(mu);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %checked to here
 
