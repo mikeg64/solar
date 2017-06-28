@@ -198,7 +198,17 @@ br=zeros(nx1,nx2,nx3);
 Bvarix=zeros(nx1,nx2,nx3);
 Bvariy=zeros(nx1,nx2,nx3);
 Bvar=zeros(nx1,nx2,nx3);
-dbvardz=zeros(nx1,nx2,nx3);
+Bvaridz=zeros(nx1,nx2,nx3);
+Bvaridz1=zeros(nx1,nx2,nx3);
+dBvardz=zeros(nx1,nx2,nx3);
+
+
+bxby=zeros(nx1,nx2,nx3);
+dbxbydy=zeros(nx1,nx2,nx3);
+bxbz=zeros(nx1,nx2,nx3);
+dbxbzdz=zeros(nx1,nx2,nx3);
+bxby=zeros(nx1,nx2,nx3);
+dbxbydx=zeros(nx1,nx2,nx3);
 
 for k=1:nx3
 for j=1:nx2
@@ -232,7 +242,7 @@ divb=dbzdz+dbxdx+dbydy;
 for i=1:nx1
 for j=1:nx2
 for k=1:nx3
-  br(i,j,k)=(bx(i,j,k)+bz(i,j,k)).*sqrt(x(j).^2+y(k).^2)/(x(j)+y(k));
+  br(i,j,k)=(bx(i,j,k)+bz(i,j,k)).*sqrt(y(j).^2+z(k).^2)/(y(j)+z(k));
 end
 end
 end
@@ -242,7 +252,7 @@ end
 for i=1:nx1
 for j=1:nx2
 for k=1:nx3
-  dbzdr(i,j,k)=dbzdx(i,j,k).*(x(j)./sqrt(x(j).^2+y(k).^2))+dbzdy(i,j,k).*(y(k)./sqrt(x(j).^2+y(k).^2))
+  dbzdr(i,j,k)=dbzdx(i,j,k).*(y(j)./sqrt(y(j).^2+z(k).^2))+dbzdy(i,j,k).*(z(k)./sqrt(y(j).^2+z(k).^2))
 end
 end
 end
@@ -251,21 +261,74 @@ end
 % ***** dbrdz
 for k=1:nx3
 for j=1:nx2
- dbrdz(:,j,k)=deriv1(br(:,j,k),z);
+ dbrdz(:,j,k)=deriv1(br(:,j,k),x);
 end
 end
 
 
+%%define matlab code here
+%check b_field_vertical_tube.pro
+bxby=bx.*by;
 
-F=bz.*(dbrdz-dbzdr)
-G=br.*(dbrdz-dbzdr)
+for j=1:nx2
+for i=1:nx1
+ dbxbydy(i,j,:)=deriv1(bxby(i,j,:),z);
+end
+end
 
 
-bvar=bz*br
+%print,'dBxBydy'
+
+
+bxbz=bx.*bz
+
+for j=1:nx2
+for i=1:nx1
+ dbxbzdz(:,j,k)=deriv1(bxbz(:,j,k),x);
+end
+end
+
+for j=0,n2-1 do begin
+for k=0,n3-1 do begin
+ dbxbzdz(*,j,k)=deriv1(bxbz(*,j,k),z)
+endfor
+endfor
+
+print,'dBxBzdz'
+
+
+bxby=bx*by
+
+for i=0,n1-1 do begin
+for k=0,n3-1 do begin
+ dbxbydx(i,*,k)=deriv1(bxby(i,*,k),x)
+endfor
+endfor
+
+print,'dBxBydx'
+
+bybz=dblarr(n1,n2,n3)
+dbybzdz=dblarr(n1,n2,n3)
+bybz=by*bz
+
+for j=0,n2-1 do begin
+for k=0,n3-1 do begin
+ dbybzdz(*,j,k)=deriv1(bybz(*,j,k),z)
+endfor
+endfor
+
+
+
+%F=bz.*(dbrdz-dbzdr)
+%G=br.*(dbrdz-dbzdr)
+
+F=dbxbydy+dbxbzdz
+G=dbxbydx+dbybzdz
+
 
 for k=1:nx3
 for j=1:nx2
- dbvardz(:,j,k)=deriv1(bvar(:,j,k),z);
+ dbvardz(:,j,k)=deriv1(bvar(:,j,k),x);
 end
 end
 
@@ -281,18 +344,19 @@ end
 end
 
 for i=1,nx1
+
 for k=1,nx3
   for j=1,nx2
-   sum=inte((Bvar(i,1:j,k).*x(j)./sqrt(x(j).^2+y(k).^2)),x(1)-x(0))
+   sum=inte((Bvar(i,1:j,k).*y(j)./sqrt(y(j).^2+z(k).^2)),y(1)-y(0))
    Bvarix(i,j,k)=sum
   end
 end
-end
 
-for i=1,nx1
+
+
 for j=1,nx2
   for k=1,nx3
-   sum=inte((Bvar(i,j,0:k).*y(k)./sqrt(x(j).^2+y(k).^2)),y(1)-y(0));
+   sum=inte((Bvar(i,j,0:k).*z(k)./sqrt(y(j).^2+z(k).^2)),z(1)-z(0));
   Bvariy(i,j,k)=sum
   end
 end
@@ -304,7 +368,7 @@ Bvari=Bvarix+Bvariy-bz^2./2+br.^2./2;
 
 
 for i=1:n2 
-    bvaridz(:,i)=deriv1(bvari(:,i),z);
+    bvaridz(:,i)=deriv1(Bvari(:,i),z);
 end
 
 
