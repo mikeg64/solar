@@ -38,7 +38,9 @@ if strcmp(mode,'fluxtube')
     
     xf=zeros(nx1,nx2,nx3);
     
-  
+Bmax=0.15  ; %mag field Tesla
+%Bmin=0.0006d0  ; %mag field Tesla
+Bmin=0.0002  ; %mag field Tesla
 
     
     d_z=1.5; % width of Gaussian in Mm
@@ -51,8 +53,21 @@ if strcmp(mode,'fluxtube')
 
     Ab0z=20.e0; % bz - amplitude
     mu=4.0*pi*1.0e-7
-    
-    
+ 
+
+gamma=1.66666667;
+ggg=-274.0;
+   
+
+xr=0.1e6;
+yr=0.1e6;
+
+R2=(xr.^2+yr.^2);
+
+A=R2/2;
+
+
+  
     x=zeros(nx1);
     y=zeros(nx2);
     z=zeros(nx3);
@@ -66,8 +81,9 @@ if strcmp(mode,'fluxtube')
     
     for i=1:nx1
         x(i)=simparams.domain_left_edge(1)+dx*(i-1);
-        b0z(i)=(par4((x(i)/scale-z_shift),d_z,A)).^2;
+        %b0z(i)=(par4((x(i)/scale-z_shift),d_z,A)).^2;
         %b0z(i)=(par3((x(i)/scale-z_shift),d_z,A));
+        b0z(i)=par4((x(i)/scale-z_shift),d_z,A);
     end
     
     dyb=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/nb;
@@ -75,17 +91,22 @@ if strcmp(mode,'fluxtube')
     
     
     
-
+	bnmin=min(b0z);
+	bnmax=max(b0z);
     
     
+    for i=1:nx1
+	b0z(i)=((Bmax-Bmin)./(bnmax-bnmin)).*(b0z(i)-bnmin)+Bmin;
+    end
     
-    
-    b0z=b0z./max(b0z);
-   
-    b0z=Ab0z.*b0z+b0z_top;
+    %b0z=b0z./max(b0z);  
+    %b0z=Ab0z.*b0z+b0z_top;
     
     dbz=deriv1(b0z,x);
 
+
+	%y=y-(max(y)-min(y))/2 ;%+5000.d0
+	%z=z-(max(z)-min(z))/2 ;%+5000.d0
 
   xold=x;
   yold=y;
@@ -119,8 +140,8 @@ if strcmp(mode,'fluxtube')
           %  y=yold-max(y)/2.d0;
 
             
-            z=zold-(jb-1)*dzb-(dzb/2);
-            y=yold-(ib-1)*dyb-(dyb/2);           
+            z=zold-((jb-1)*dzb/2)-dzb;
+            y=yold-((ib-1)*dyb/2)-dyb;           
             
             
             
@@ -129,9 +150,15 @@ for k=1:nx3
 for j=1:nx2
 for i=1:nx1
 
-f=b0z(i)*sqrt((y(j)).^2+(z(k)).^2);
+%f=b0z(i)*sqrt((y(j)).^2+(z(k)).^2);
 
-xf(i,j,k)=(par4(f,f0,0.5)).^2;
+%xf(i,j,k)=(par4(f,f0,0.5)).^2;
+
+
+f=(y(j).^2+z(k).^2)./R2;
+xf(i,j,k)=exp(-f);
+
+
 
 
 
@@ -139,6 +166,7 @@ end
 end
 end
 xf=xf./max(max(max(xf)));
+b0zz=0.0001;
 
 for k=1:n3 
 for j=1:n2
@@ -147,9 +175,18 @@ for i=1:n1
 % bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 % bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 % by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
-bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k));
-bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j))/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k));
-by(i,j,k)=by(i,j,k)-dbz(i)*(y(k))/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k);
+%bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k));
+%bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j))/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k));
+%by(i,j,k)=by(i,j,k)-dbz(i)*(y(k))/sqrt((x(j)).^2+(y(k)).^2)*xf(i,j,k);
+
+
+bz(i,j,k)=bz(i,j,k)+b0zz.*xf(i,j,k);
+bx(i,j,k)=bx(i,j,k);
+by(i,j,k)=by(i,j,k);
+
+
+
+
 
 
 
@@ -170,6 +207,8 @@ yold=y;
 
 %     
  end   %building fluxtube
+
+bb=(bx.^2+by.^2+bz.^2)/2/mu;
 
 
 % ************** convert to VAC magnetic field
@@ -213,58 +252,32 @@ dbxbydx=zeros(nx1,nx2,nx3);
 for k=1:nx3
 for j=1:nx2
  dbzdz(:,j,k)=deriv1(bz(:,j,k),x);
- dbxdz(:,j,k)=deriv1(bx(:,j,k),x);
- dbydz(:,j,k)=deriv1(by(:,j,k),x);
+% dbxdz(:,j,k)=deriv1(bx(:,j,k),x);
+% dbydz(:,j,k)=deriv1(by(:,j,k),x);
 end
 end
 
 
 for k=1:nx3
 for i=1:nx1
- dbzdx(i,:,k)=deriv1(bz(i,:,k),y);
+% dbzdx(i,:,k)=deriv1(bz(i,:,k),y);
  dbxdx(i,:,k)=deriv1(bx(i,:,k),y);
- dbydx(i,:,k)=deriv1(by(i,:,k),y);
+% dbydx(i,:,k)=deriv1(by(i,:,k),y);
 end
 end
 
 
 for j=1:nx2
 for i=1:nx1
- dbzdy(i,j,:)=deriv1(bz(i,j,:),z);
- dbxdy(i,j,:)=deriv1(bx(i,j,:),z);
+% dbzdy(i,j,:)=deriv1(bz(i,j,:),z);
+% dbxdy(i,j,:)=deriv1(bx(i,j,:),z);
  dbydy(i,j,:)=deriv1(by(i,j,:),z); 
 end
 end
 
 divb=dbzdz+dbxdx+dbydy;
 
-
-for i=1:nx1
-for j=1:nx2
-for k=1:nx3
-  br(i,j,k)=(bx(i,j,k)+bz(i,j,k)).*sqrt(y(j).^2+z(k).^2)/(y(j)+z(k));
-end
-end
-end
-
-
-
-for i=1:nx1
-for j=1:nx2
-for k=1:nx3
-  dbzdr(i,j,k)=dbzdx(i,j,k).*(y(j)./sqrt(y(j).^2+z(k).^2))+dbzdy(i,j,k).*(z(k)./sqrt(y(j).^2+z(k).^2))
-end
-end
-end
-
-
-% ***** dbrdz
-for k=1:nx3
-for j=1:nx2
- dbrdz(:,j,k)=deriv1(br(:,j,k),x);
-end
-end
-
+bxby=bx.*by;
 
 %%define matlab code here
 %check b_field_vertical_tube.pro
@@ -280,7 +293,7 @@ end
 %print,'dBxBydy'
 
 
-bxbz=bx.*bz
+bxbz=bx.*bz;
 
 for j=1:nx2
 for i=1:nx1
@@ -288,42 +301,39 @@ for i=1:nx1
 end
 end
 
-for j=0,n2-1 do begin
-for k=0,n3-1 do begin
- dbxbzdz(*,j,k)=deriv1(bxbz(*,j,k),z)
-endfor
-endfor
-
-print,'dBxBzdz'
 
 
-bxby=bx*by
 
-for i=0,n1-1 do begin
-for k=0,n3-1 do begin
- dbxbydx(i,*,k)=deriv1(bxby(i,*,k),x)
-endfor
-endfor
+;print,'dBxBzdz'
+
+
+bxby=bx*by;
+
+for i=1:nx1
+for k=1:nx3
+ dbxbydx(i,:,k)=deriv1(bxby(i,:,k),y);
+end
+end
 
 print,'dBxBydx'
 
-bybz=dblarr(n1,n2,n3)
-dbybzdz=dblarr(n1,n2,n3)
+
+
+%bybz=dblarr(n1,n2,n3)
+%dbybzdz=dblarr(n1,n2,n3)
 bybz=by*bz
 
-for j=0,n2-1 do begin
-for k=0,n3-1 do begin
- dbybzdz(*,j,k)=deriv1(bybz(*,j,k),z)
-endfor
-endfor
+for j=1:nx2
+for k=1:nx3
+ dbybzdz(:,j,k)=deriv1(bybz(:,j,k),x)
+end
+end
 
-
-
-%F=bz.*(dbrdz-dbzdr)
-%G=br.*(dbrdz-dbzdr)
-
+%************* BEGIN INTEGRATION ****************************
 F=dbxbydy+dbxbzdz
 G=dbxbydx+dbybzdz
+
+
 
 
 for k=1:nx3
@@ -412,6 +422,50 @@ simdata.w(:,:,:,13)=bz;
 
 
 
+for i=1:nx1
+for j=1:nx2
+for k=1:nx3
+  br(i,j,k)=(bx(i,j,k)+bz(i,j,k)).*sqrt(y(j).^2+z(k).^2)/(y(j)+z(k));
+end
+end
+end
+
+
+
+for i=1:nx1
+for j=1:nx2
+for k=1:nx3
+  dbzdr(i,j,k)=dbzdx(i,j,k).*(y(j)./sqrt(y(j).^2+z(k).^2))+dbzdy(i,j,k).*(z(k)./sqrt(y(j).^2+z(k).^2))
+end
+end
+end
+
+
+% ***** dbrdz
+for k=1:nx3
+for j=1:nx2
+ dbrdz(:,j,k)=deriv1(br(:,j,k),x);
+end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+%F=bz.*(dbrdz-dbzdr)
+%G=br.*(dbrdz-dbzdr)
+
+F=dbxbydy+dbxbzdz
+G=dbxbydx+dbybzdz
+
+
 
 
 function [res]=inte(f,dx)
@@ -440,11 +494,13 @@ end %outer
 %return,res
 end
 
-
+function [res]=par5(x,x0,A)
+    res=A.*exp(-1.0*((x+abs(min(x)))/x0)^0.95);
+end
 
 
 function [res]=par4(x,x0,A)
-    res=A.*exp(-1.0*x.^2./(x0.^2));
+    res=A.*exp(-x./(x0));
 
 end
 
