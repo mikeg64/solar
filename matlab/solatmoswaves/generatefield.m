@@ -168,9 +168,9 @@ end
 xf=xf./max(max(max(xf)));
 b0zz=0.0001;
 
-for k=1:n3 
-for j=1:n2
-for i=1:n1
+for k=1:nx3 
+for j=1:nx2
+for i=1:nx1
 
 % bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 % bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
@@ -233,21 +233,27 @@ dbzdy=zeros(nx1,nx2,nx3);
 dbxdy=zeros(nx1,nx2,nx3);
 dbydy=zeros(nx1,nx2,nx3);
 
-br=zeros(nx1,nx2,nx3);
+
 Bvarix=zeros(nx1,nx2,nx3);
 Bvariy=zeros(nx1,nx2,nx3);
-Bvar=zeros(nx1,nx2,nx3);
+Bvari=zeros(nx1,nx2,nx3);
+
+dpdx=zeros(nx1,nx2,nx3);
+
+rho1=zeros(nx1,nx2,nx3);
+
 Bvaridz=zeros(nx1,nx2,nx3);
 Bvaridz1=zeros(nx1,nx2,nx3);
 dBvardz=zeros(nx1,nx2,nx3);
-
+br=zeros(nx1,nx2,nx3);
 
 bxby=zeros(nx1,nx2,nx3);
 dbxbydy=zeros(nx1,nx2,nx3);
 bxbz=zeros(nx1,nx2,nx3);
 dbxbzdz=zeros(nx1,nx2,nx3);
 bxby=zeros(nx1,nx2,nx3);
-dbxbydx=zeros(nx1,nx2,nx3);
+bybz=zeros(nx1,nx2,nx3);
+dbybzdy=zeros(nx1,nx2,nx3);
 
 for k=1:nx3
 for j=1:nx2
@@ -277,7 +283,7 @@ end
 
 divb=dbzdz+dbxdx+dbydy;
 
-bxby=bx.*by;
+%bxby=bx.*by;
 
 %%define matlab code here
 %check b_field_vertical_tube.pro
@@ -304,7 +310,7 @@ end
 
 
 
-;print,'dBxBzdz'
+%;print,'dBxBzdz'
 
 
 bxby=bx*by;
@@ -315,13 +321,13 @@ for k=1:nx3
 end
 end
 
-print,'dBxBydx'
+%print,'dBxBydx'
 
 
 
 %bybz=dblarr(n1,n2,n3)
 %dbybzdz=dblarr(n1,n2,n3)
-bybz=by*bz
+bybz=by.*bz;
 
 for j=1:nx2
 for k=1:nx3
@@ -330,83 +336,119 @@ end
 end
 
 %************* BEGIN INTEGRATION ****************************
-F=dbxbydy+dbxbzdz
-G=dbxbydx+dbybzdz
+F=dbxbydy+dbxbzdz;
+G=dbxbydx+dbybzdz;
 
 
 
 
-for k=1:nx3
-for j=1:nx2
- dbvardz(:,j,k)=deriv1(bvar(:,j,k),x);
-end
-end
 
-
-
-%***** Bvar+br^2/r
 for i=1:nx1
+
+for kx=1:nx3
+  for jx=1:nx2
+   sum=inte(reshape(F(i,1:jx,kx),[jx,1]),y(1)-y(0)); 
+  Bvarix(i,jx,kx)=sum;
+ end
+end
+
+for jy=1:nx2
+  for ky=1:nx3
+   sum=inte(reshape(G(i,jy,1:ky),[ky,1]),z(1)-z(0)); 
+  Bvariy(i,jy,ky)=sum;
+ end
+end
+display(  i);
+
+endfor
+
+%************* END INTEGRATION ****************************
+
+Bvari=((Bvarix+Bvariy)/2)-(bz.^2)/2;
+
+
+
 for j=1:nx2
 for k=1:nx3
-  Bvar(i,j,k)=dbvardz(i,j,k)+br(i,j,k).^2/sqrt(x(j).^2+y(k).^2);
+ dpdz(:,j,k)=deriv1(Bvari(:,j,k),z);
 end
 end
+
+bxbybz=(bx.*bx+by.*by-bz.*bz)/2;
+
+for j=1:nx2
+for k=1:nx3
+ dbxbybzdz(:,j,k)=deriv1(bxbybz(:,j,k),z);
 end
-
-for i=1,nx1
-
-for k=1,nx3
-  for j=1,nx2
-   sum=inte((Bvar(i,1:j,k).*y(j)./sqrt(y(j).^2+z(k).^2)),y(1)-y(0))
-   Bvarix(i,j,k)=sum
-  end
-end
-
-
-
-for j=1,nx2
-  for k=1,nx3
-   sum=inte((Bvar(i,j,0:k).*z(k)./sqrt(y(j).^2+z(k).^2)),z(1)-z(0));
-  Bvariy(i,j,k)=sum
-  end
-end
-
 end
 
 
-Bvari=Bvarix+Bvariy-bz^2./2+br.^2./2;
+bxbz=bx.*bz;
 
-
-for i=1:n2 
-    bvaridz(:,i)=deriv1(Bvari(:,i),z);
+for i=1:nx1
+for k=1:nx3
+ dbxbzdx(i,:,k)=deriv1(bxbz(i,:,k),x);
+end
 end
 
 
-%intFdz=-bvaridz/ggg
+bybz=dblarr(n1,n2,n3)
+dbybzdy=dblarr(n1,n2,n3)
+bybz=by*bz
 
-
-for j=1:n1
-  for i=1:n2
-  rho1(j,i)=(bvaridz(j,i)+G(j,i))./ggg;
-  end
+for i=:nx1
+for j=1:nx2
+ dbybzdy(i,j,:)=deriv1(bybz(i,j,:),y);
 end
-%update the fields and save to output
+end
 
 
+%for i=1:nx1
+%for j=1:nx2
+%for k=1:nx3
+% rho1(i,j,k)=(dbxbybzdz(i,j,k)-dbxbzdx(i,j,k)-  dbybzdy(i,j,k)+dpdz(i,j,k))./ggg;
+%end
+%end
+%end
 
 
-
+rho1=(dbxbybzdz-dbxbzdx-  dbybzdy+dpdz)./ggg;
 
 rho1=rho+rho1
 p=Bvari+simdata.w(:,:,:,5)*(consts.fgamma-1.0);
 
 
+%lower boundary
 
+for ix_1=4:-1:2
+  for ix_2=1:nx2
+  for ix_3=1:nx3  
+         p_2=rho1(ix_1,ix_2,ix_3)*ggg
+         p(ix_1-1,ix_2,ix_3) = (z(1)-z(0))*p_2+p(ix_1,ix_2,ix_3)
+  end  
+  end
+ end
+
+
+%upper boundary
+
+for ix_1=nx1-2:nx1-1
+   for ix_2=1:nx2
+   for ix_3=1:nx3   
+           p_2=rho1(ix_1,ix_2,ix_3)*ggg
+           p(ix_1+1,ix_2,ix_3) = -(z(1)-z(0))*p_2+p(ix_1,ix_2,ix_3)
+   end	   
+   end
+end
 
 
 %rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
 %set background density
 %set background energy
+
+
+
+
 
 
 %update the background energy and magnetic fields
@@ -419,51 +461,6 @@ simdata.w(:,:,:,13)=bz;
 
 
 
-
-
-
-for i=1:nx1
-for j=1:nx2
-for k=1:nx3
-  br(i,j,k)=(bx(i,j,k)+bz(i,j,k)).*sqrt(y(j).^2+z(k).^2)/(y(j)+z(k));
-end
-end
-end
-
-
-
-for i=1:nx1
-for j=1:nx2
-for k=1:nx3
-  dbzdr(i,j,k)=dbzdx(i,j,k).*(y(j)./sqrt(y(j).^2+z(k).^2))+dbzdy(i,j,k).*(z(k)./sqrt(y(j).^2+z(k).^2))
-end
-end
-end
-
-
-% ***** dbrdz
-for k=1:nx3
-for j=1:nx2
- dbrdz(:,j,k)=deriv1(br(:,j,k),x);
-end
-end
-
-
-
-
-
-
-
-
-
-
-
-
-%F=bz.*(dbrdz-dbzdr)
-%G=br.*(dbrdz-dbzdr)
-
-F=dbxbydy+dbxbzdz
-G=dbxbydx+dbybzdz
 
 
 
