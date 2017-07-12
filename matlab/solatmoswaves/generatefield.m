@@ -396,7 +396,7 @@ bybz=dblarr(n1,n2,n3)
 dbybzdy=dblarr(n1,n2,n3)
 bybz=by*bz
 
-for i=:nx1
+for i=1:nx1
 for j=1:nx2
  dbybzdy(i,j,:)=deriv1(bybz(i,j,:),y);
 end
@@ -460,97 +460,6 @@ simdata.w(:,:,:,13)=bz;
 
 
 
-
-
-
-
-
-function [res]=inte(f,dx)
-
-nsiz=size(f);
-
-if nsiz(1)>nsiz(2)
-    nel=nsiz(1);
-else
-    nel=nsiz(2);
-end
-
-res=0.0;
-if (nel > 1) 
-    if (nel == 2) 
-        res=dx*0.5*(f(1)+f(0));
-    end
-
-    if (nel > 2)
-      for k=1:nel-1 
-          res=res+0.5*(f(k-1)+f(k))*dx;
-      end
-    end
-end %outer
-
-%return,res
-end
-
-function [res]=par5(x,x0,A)
-    res=A.*exp(-1.0*((x+abs(min(x)))/x0)^0.95);
-end
-
-
-function [res]=par4(x,x0,A)
-    res=A.*exp(-x./(x0));
-
-end
-
-
-function [res]=par3(x,x0,A)
-
-    A=A/(x0.^2);
-    
-  
-
-if (x <= -2*x0)
-    res=0;
-elseif ((x >= -2*x0) & (x <= -x0)) 
-    res=A*(x+3*x0)*(x+x0)+A*x0.^2;
-elseif ((x >= -x0) & (x <= x0)) 
-    res=-A*(x+x0)*(x-x0)+A*x0.^2;
-elseif ((x >= x0) & (x <= 2*x0)) 
-    res=A*(x-3*x0)*(x-x0)+A*x0.^2;
-elseif (x >= 2*x0) 
-    res=0;
-end
-
-%return,res
-end
-
-
-
-function [res]=deriv1(f,x)
-nel=size(f);
-nel1=size(x);
-
-if nel(1)>nel(2)
-    num=nel(1);
-else
-    num=nel(2);
-end
-
-% if (nel ne nel1) then begin
-%  print,'Inconsistant input, stop.'
-%  stop
-% endif
-
-res=zeros(num);
-for i=2:num-3 
-    res(i)=(1./12.0./(x(i+1)-x(i)))*(8.0*f(i+1)-8.0*f(i-1)-f(i+2)+f(i-2));
-end
-%for i=1,nel-2 do res(i)=(1.d0/2.d0/(x(i+1)-x(i)))*(f(i+1)-f(i-1))
-res(0)=res(2);
-res(1)=res(2);
-res(num-1)=res(num-3);
-res(num-2)=res(num-3);
-
-end
 
 
 
