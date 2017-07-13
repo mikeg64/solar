@@ -34,7 +34,7 @@ if strcmp(mode,'fluxtube')
     bx=zeros(nx1,nx2,nx3);
     by=zeros(nx1,nx2,nx3);
     bz=zeros(nx1,nx2,nx3);
-    b0z=zeros(nx1);
+    b0z=zeros(nx1,1);
     
     xf=zeros(nx1,nx2,nx3);
     
@@ -68,9 +68,9 @@ A=R2/2;
 
 
   
-    x=zeros(nx1);
-    y=zeros(nx2);
-    z=zeros(nx3);
+    x=zeros(nx1,1);
+    y=zeros(nx2,1);
+    z=zeros(nx3,1);
     
     for j=1:nx2
         y(j)=simparams.domain_left_edge(2)+dy*(j-1);
@@ -360,7 +360,7 @@ for jy=1:nx2
 end
 display(  i);
 
-endfor
+end
 
 %************* END INTEGRATION ****************************
 
@@ -457,9 +457,5 @@ simdata.w(:,:,:,9)=p./((consts.fgamma-1.0))+0.5*(bx.*bx+bz.*bz+by.*by)
 simdata.w(:,:,:,11)=bx;
 simdata.w(:,:,:,12)=by;
 simdata.w(:,:,:,13)=bz;
-
-
-
-
 
 

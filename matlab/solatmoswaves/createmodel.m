@@ -2,6 +2,9 @@ simparams=sim_params;
 simgridinfo=sim_gridinfo;
 simdata=sim_data;
 
+%newfilename='3D_128_4Mm_tube1_asc.ini';
+newfilename='3D_128_256_256_4Mm_asc.ini';
+
 consts.mu=0.6e0; %magnetic permeability
 consts.R=8.31e3
 consts.fgamma=1.66666667e0
@@ -18,8 +21,8 @@ ngx3=2;
        neqpar=7;
        nw=13;
        nx1=128;
-       nx2=128;
-       nx3=128;
+       nx2=256;
+       nx3=256;
 
 
       gamma=1.666667;
@@ -43,12 +46,15 @@ ngx3=2;
        xx=zeros(nx1,nx2,nx3);
        yy=zeros(nx1,nx2,nx3);
        zz=zeros(nx1,nx2,nx3);
+
+       rheight=zeros(nx1);
        
        
        for i=1:nx1
            for j=1:nx2
                for k=1:nx3
                    xx(i,j,k)=(xmin-ngx1*dx)+i*dx;
+                   rheight(i)=(xmin-ngx1*dx)+i*dx;
                    yy(i,j,k)=(ymin-ngx1*dx)+dy*j;
                    zz(i,j,k)=(zmin-ngx1*dx)+dz*k;
                end
@@ -372,7 +378,9 @@ disp('rebuilding array');
            end
       end
 
+disp('generate field');
+%
+%[simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo, simdata, 'fluxtube');
 
-
-%writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
+writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
         

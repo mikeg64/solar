@@ -118,7 +118,7 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
        
        
         fprintf(fid,'%s\n',simparams.unique_identifier);
-        fprintf(fid,'%d %f %d %d\n',simparams.current_iteration, simparams.current_time, simgridinfo.ndimensions, 12);
+        fprintf(fid,'%d %f %d %d %d\n',simparams.current_iteration, simparams.current_time, simgridinfo.ndimensions,7, 13);
         
         gd=simgridinfo.grid_dimensions;
         fprintf(fid,'%d %d %d\n', gd(1), gd(2), gd(3));
