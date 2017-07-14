@@ -3,7 +3,7 @@ simgridinfo=sim_gridinfo;
 simdata=sim_data;
 
 %newfilename='3D_128_4Mm_tube1_asc.ini';
-newfilename='3D_128_256_256_4Mm_asc.ini';
+newfilename='/data/cs1mkg/smaug/configs/3D_128_4Mm_bin.ini';
 
 consts.mu=0.6e0; %magnetic permeability
 consts.R=8.31e3
@@ -21,11 +21,12 @@ ngx3=2;
        neqpar=7;
        nw=13;
        nx1=128;
-       nx2=256;
-       nx3=256;
+       nx2=128;
+       nx3=128;
 
 
       gamma=1.666667;
+      adiab=1.0;
        eta=0;
        g1=-274;
        g2=0;
@@ -75,6 +76,7 @@ ngx3=2;
 %         simparams.domain_left_edge=[0;0; 0.0];
 %         simparams.domain_right_edge=[0; 0; 0];
         simparams.eta=eta;
+        simparams.adiab=adiab;
 %        field_ordering=1;
         simparams.gamma=gamma;
         simparams.gravity0=g1;
@@ -382,5 +384,5 @@ disp('generate field');
 %
 %[simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo, simdata, 'fluxtube');
 
-writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
+writesac3D(newfilename, simparams, simgridinfo, simdata, 'binary');
         

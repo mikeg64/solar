@@ -12,6 +12,7 @@ classdef sim_params
         domain_left_edge=[0;0; 0.0];
         domain_right_edge=[0; 0; 0];
         eta=0.0;
+        adiab=1.0;
         field_ordering=1;
         gamma=1.66666667;
         gravity0=0.0;
@@ -23,7 +24,7 @@ classdef sim_params
         unique_identifier='notset';
         
         nw=13; %number of fields
-        neqpar=6; %number of equation parameters
+        neqpar=7; %number of equation parameters
          
     end
     
@@ -52,7 +53,7 @@ classdef sim_params
                    newobj.field_ordering =h5readatt(filename,'/simulation_parameters','field_ordering');
                  
                    newobj.gamma =h5readatt(filename,'/simulation_parameters','gamma');
-                   
+                    newobj.adiab =h5readatt(filename,'/simulation_parameters','adiab');
                   newobj.gravity0=h5readatt(filename,'/simulation_parameters','gravity0');
                   newobj.gravity1=h5readatt(filename,'/simulation_parameters','gravity1');
                   newobj.gravity2=h5readatt(filename,'/simulation_parameters','gravity2');
@@ -89,7 +90,7 @@ classdef sim_params
                    h5writeatt(filename,'/simulation_parameters','field_ordering',obj.field_ordering );
                  
                    h5writeatt(filename,'/simulation_parameters','gamma',obj.gamma );
-                   
+                    h5writeatt(filename,'/simulation_parameters','adiab',obj.adiab );
                   h5writeatt(filename,'/simulation_parameters','gravity0',obj.gravity0);
                   h5writeatt(filename,'/simulation_parameters','gravity1',obj.gravity1);
                   h5writeatt(filename,'/simulation_parameters','gravity2',obj.gravity2);
@@ -122,13 +123,14 @@ classdef sim_params
                                 newobj.eta=gdfinfo.Groups(5).Attributes(9).Value;
                                 newobj.field_ordering=gdfinfo.Groups(5).Attributes(10).Value;
                                 newobj.gamma=gdfinfo.Groups(5).Attributes(11).Value;
-                                newobj.gravity0=gdfinfo.Groups(5).Attributes(12).Value;
-                                newobj.gravity1=gdfinfo.Groups(5).Attributes(13).Value;
-                                newobj.gravity2=gdfinfo.Groups(5).Attributes(14).Value;
-                                newobj.nu=gdfinfo.Groups(5).Attributes(15).Value;
-                                newobj.num_ghost_zones=gdfinfo.Groups(5).Attributes(16).Value;
-                                newobj.refine_by=gdfinfo.Groups(5).Attributes(17).Value;
-                               c=gdfinfo.Groups(5).Attributes(18).Value;
+                                newobj.adiab=gdfinfo.Groups(5).Attributes(12).Value;
+                                newobj.gravity0=gdfinfo.Groups(5).Attributes(13).Value;
+                                newobj.gravity1=gdfinfo.Groups(5).Attributes(14).Value;
+                                newobj.gravity2=gdfinfo.Groups(5).Attributes(15).Value;
+                                newobj.nu=gdfinfo.Groups(5).Attributes(16).Value;
+                                newobj.num_ghost_zones=gdfinfo.Groups(5).Attributes(17).Value;
+                                newobj.refine_by=gdfinfo.Groups(5).Attributes(18).Value;
+                               c=gdfinfo.Groups(5).Attributes(19).Value;
                                 newobj.unique_identifier=c{1};
                                 %return newobj;
                    

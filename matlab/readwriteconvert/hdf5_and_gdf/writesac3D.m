@@ -1,9 +1,21 @@
 function writesac3D(filename, simparams, simgridinfo, simdata, mode)
 
-
-    
+          fid=fopen(filename, 'w');
+%           fdatline=zeros(1,7);
+%           fdatline(1)=double(simparams.gamma);
+%           fdatline(2)=double(simparams.eta);
+%           fdatline(3)=double(simparams.adiab);
+%           fdatline(4)=double(simparams.gravity0);
+%           fdatline(5)=double(simparams.gravity1);
+%           fdatline(6)=double(simparams.gravity2);
+%           fdatline(7)=;
+                     
     if strcmp(mode , 'binary')
 
+        
+        
+        
+        
         
            headline=char(zeros(1,79));
            sz=size(simparams.unique_identifier);
@@ -38,20 +50,31 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            fwrite(fid,double(simparams.gamma),'float64');           
            %eta=varbuf(2);
            fwrite(fid,double(simparams.eta),'float64');
+           
+           fwrite(fid,double(simparams.adiab),'float64');
            %g(1)=varbuf(3);
            fwrite(fid,double(simparams.gravity0),'float64');
            %g(2)=varbuf(4);
            fwrite(fid,double(simparams.gravity1),'float64');
            %g(3)=varbuf(5);
            fwrite(fid,double(simparams.gravity2),'float64');
-
+           fwrite(fid,double(0.0),'float64');
 
            %varnames=(setstr(fread(fid,79,'char')'));
-           tvarnames='x y z rho mx my mz e bx by bz gamma eta g1 g2 g3';
+           
+           tvarnames='x y h m1 m2 m3 e b1 b2 b3 eb rhob bg1 bg2 bg3 gamma eta grav1 grav2 grav3';
            sz=size(tvarnames);
            varnames=char(zeros(1,79));
            varnames(1:sz(2))=tvarnames;
+           disp(varnames);
            fwrite(fid,varnames,'char*1');
+           
+           
+           
+           
+           
+           
+           
   
                is=1;
     js=1;
@@ -59,6 +82,15 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
     iif=simparams.domain_dimensions(1);
     jf=simparams.domain_dimensions(2);
     kf=simparams.domain_dimensions(3);
+    
+    
+       p.dx(1)=(simparams.domain_right_edge(1)-simparams.domain_left_edge(1))/(simparams.domain_dimensions(1)-1);
+    p.dx(2)=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/(simparams.domain_dimensions(2)-1);
+    p.dx(3)=(simparams.domain_right_edge(3)-simparams.domain_left_edge(3))/(simparams.domain_dimensions(3)-1);
+ 
+ 
+    
+    
     
            for k1=ks:kf
                for j1=js:jf
@@ -95,7 +127,6 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
 
    if strcmp(mode , 'ascii')
        
-          fid=fopen(filename, 'w');
     
     
     is=1;
@@ -109,20 +140,16 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
    %jf=4;
    %kf=4;
     
-    p.dx(1)=(simparams.domain_right_edge(1)-simparams.domain_left_edge(1))/(simparams.domain_dimensions(1)-1);
-    p.dx(2)=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/(simparams.domain_dimensions(2)-1);
-    p.dx(3)=(simparams.domain_right_edge(3)-simparams.domain_left_edge(3))/(simparams.domain_dimensions(3)-1);
- 
        
        
        
        
         fprintf(fid,'%s\n',simparams.unique_identifier);
-        fprintf(fid,'%d %f %d %d\n',simparams.current_iteration, simparams.current_time, simgridinfo.ndimensions, 12);
+        fprintf(fid,'%d %f %d %d %d\n',simparams.current_iteration, simparams.current_time, simgridinfo.ndimensions,7, 13);
         
         gd=simgridinfo.grid_dimensions;
         fprintf(fid,'%d %d %d\n', gd(1), gd(2), gd(3));
-        fprintf(fid,'%f %f %f %f %f %d %d\n',simparams.gamma,simparams.eta,simparams.gravity0,simparams.gravity1,simparams.gravity2,0,0);
+        fprintf(fid,'%f %f %f %f %f %d %d\n',simparams.gamma,simparams.eta,simparams.adiab,simparams.gravity0,simparams.gravity1,simparams.gravity2,0,0);
         fprintf(fid,'x y z rho mx my mz e bx by bz gamma eta g1 g2 g3\n');
         
         
