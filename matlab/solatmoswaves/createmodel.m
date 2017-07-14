@@ -2,8 +2,8 @@ simparams=sim_params;
 simgridinfo=sim_gridinfo;
 simdata=sim_data;
 
-%newfilename='3D_128_4Mm_tube1_asc.ini';
-newfilename='/data/cs1mkg/smaug/configs/3D_128_4Mm_bin.ini';
+newfilename='3D_128_4Mm_bin.ini';
+%newfilename='/data/cs1mkg/smaug/configs/3D_128_4Mm_bin.ini';
 
 consts.mu=0.6e0; %magnetic permeability
 consts.R=8.31e3

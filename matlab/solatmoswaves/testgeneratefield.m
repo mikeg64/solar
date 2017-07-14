@@ -3,7 +3,7 @@ simgridinfo=sim_gridinfo;
 simdata=sim_data;
 
 %newfilename='3D_128_4Mm_tube1_asc.ini';
-newfilename='3D_128_256_256_4Mm_asc.ini';
+newfilename='3D_128_4Mm_asc.ini';
 
 consts.mu=0.6e0; %magnetic permeability
 consts.R=8.31e3
@@ -21,8 +21,8 @@ ngx3=2;
        neqpar=7;
        nw=13;
        nx1=128;
-       nx2=256;
-       nx3=256;
+       nx2=128;
+       nx3=128;
 
 
       gamma=1.666667;
@@ -105,7 +105,7 @@ ngx3=2;
         %getpicttest  3D version
 % Read the npict-th picture from 1 or more files
 %http://uk.mathworks.com/matlabcentral/answers/97118-how-do-i-read-a-fortran-unformatted-binary-data-file-into-matlab
-filename='3D_128_spic_bin.ini';
+filename='3D_128_4Mm_bin.ini';
 
     fid=fopen(filename,'rb');
 
@@ -197,9 +197,9 @@ clear tmp;
    
    disp('generate field');
 %
-%[simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo, simdata, 'fluxtube');
+[simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo, simdata, 'fluxtube');
 
-writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
+writesac3D(newfilename, simparams, simgridinfo, simdata, 'binary');
 
         
         

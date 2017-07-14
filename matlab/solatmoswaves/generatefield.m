@@ -102,7 +102,7 @@ A=R2/2;
     %b0z=b0z./max(b0z);  
     %b0z=Ab0z.*b0z+b0z_top;
     
-    dbz=deriv1(b0z,x);
+    dbz=deriv1(b0z,x,1);
 
 
 	%y=y-(max(y)-min(y))/2 ;%+5000.d0
@@ -257,7 +257,7 @@ dbybzdy=zeros(nx1,nx2,nx3);
 
 for k=1:nx3
 for j=1:nx2
- dbzdz(:,j,k)=deriv1(bz(:,j,k),x);
+ dbzdz(:,j,k)=deriv1(bz(:,j,k),x,1);
 % dbxdz(:,j,k)=deriv1(bx(:,j,k),x);
 % dbydz(:,j,k)=deriv1(by(:,j,k),x);
 end
@@ -267,7 +267,7 @@ end
 for k=1:nx3
 for i=1:nx1
 % dbzdx(i,:,k)=deriv1(bz(i,:,k),y);
- dbxdx(i,:,k)=deriv1(bx(i,:,k),y);
+ dbxdx(i,:,k)=deriv1(bx(i,:,k),y,2);
 % dbydx(i,:,k)=deriv1(by(i,:,k),y);
 end
 end
@@ -277,7 +277,7 @@ for j=1:nx2
 for i=1:nx1
 % dbzdy(i,j,:)=deriv1(bz(i,j,:),z);
 % dbxdy(i,j,:)=deriv1(bx(i,j,:),z);
- dbydy(i,j,:)=deriv1(by(i,j,:),z); 
+ dbydy(i,j,:)=deriv1(by(i,j,:),z,3); 
 end
 end
 
@@ -291,7 +291,7 @@ bxby=bx.*by;
 
 for j=1:nx2
 for i=1:nx1
- dbxbydy(i,j,:)=deriv1(bxby(i,j,:),z);
+ dbxbydy(i,j,:)=deriv1(bxby(i,j,:),z,3);
 end
 end
 
@@ -303,7 +303,7 @@ bxbz=bx.*bz;
 
 for j=1:nx2
 for i=1:nx1
- dbxbzdz(:,j,k)=deriv1(bxbz(:,j,k),x);
+ dbxbzdz(:,j,k)=deriv1(bxbz(:,j,k),x,1);
 end
 end
 
@@ -313,11 +313,11 @@ end
 %;print,'dBxBzdz'
 
 
-bxby=bx*by;
+bxby=bx.*by;
 
 for i=1:nx1
 for k=1:nx3
- dbxbydx(i,:,k)=deriv1(bxby(i,:,k),y);
+ dbxbydx(i,:,k)=deriv1(bxby(i,:,k),y,2);
 end
 end
 
@@ -331,7 +331,7 @@ bybz=by.*bz;
 
 for j=1:nx2
 for k=1:nx3
- dbybzdz(:,j,k)=deriv1(bybz(:,j,k),x)
+ dbybzdz(:,j,k)=deriv1(bybz(:,j,k),x,1);
 end
 end
 
@@ -347,14 +347,14 @@ for i=1:nx1
 
 for kx=1:nx3
   for jx=1:nx2
-   sum=inte(reshape(F(i,1:jx,kx),[jx,1]),y(1)-y(0)); 
+   sum=inte(reshape(F(i,1:jx,kx),[jx,1]),y(2)-y(1)); 
   Bvarix(i,jx,kx)=sum;
  end
 end
 
 for jy=1:nx2
   for ky=1:nx3
-   sum=inte(reshape(G(i,jy,1:ky),[ky,1]),z(1)-z(0)); 
+   sum=inte(reshape(G(i,jy,1:ky),[ky,1]),z(2)-z(1)); 
   Bvariy(i,jy,ky)=sum;
  end
 end
@@ -370,7 +370,7 @@ Bvari=((Bvarix+Bvariy)/2)-(bz.^2)/2;
 
 for j=1:nx2
 for k=1:nx3
- dpdz(:,j,k)=deriv1(Bvari(:,j,k),z);
+ dpdz(:,j,k)=deriv1(Bvari(:,j,k),z,1);
 end
 end
 
@@ -378,7 +378,7 @@ bxbybz=(bx.*bx+by.*by-bz.*bz)/2;
 
 for j=1:nx2
 for k=1:nx3
- dbxbybzdz(:,j,k)=deriv1(bxbybz(:,j,k),z);
+ dbxbybzdz(:,j,k)=deriv1(bxbybz(:,j,k),z,1);
 end
 end
 
@@ -387,18 +387,18 @@ bxbz=bx.*bz;
 
 for i=1:nx1
 for k=1:nx3
- dbxbzdx(i,:,k)=deriv1(bxbz(i,:,k),x);
+ dbxbzdx(i,:,k)=deriv1(bxbz(i,:,k),x,2);
 end
 end
 
 
-bybz=dblarr(n1,n2,n3)
-dbybzdy=dblarr(n1,n2,n3)
-bybz=by*bz
+% bybz=dblarr(n1,n2,n3)
+% dbybzdy=dblarr(n1,n2,n3)
+bybz=by.*bz;
 
 for i=1:nx1
 for j=1:nx2
- dbybzdy(i,j,:)=deriv1(bybz(i,j,:),y);
+ dbybzdy(i,j,:)=deriv1(bybz(i,j,:),y,3);
 end
 end
 
@@ -414,8 +414,8 @@ end
 
 rho1=(dbxbybzdz-dbxbzdx-  dbybzdy+dpdz)./ggg;
 
-rho1=rho+rho1
-p=Bvari+simdata.w(:,:,:,5)*(consts.fgamma-1.0);
+rho1=simdata.w(:,:,:,1)+rho1+simdata.w(:,:,:,10);
+p=Bvari+simdata.w(:,:,:,5)*(gamma-1.0);
 
 
 %lower boundary
@@ -423,8 +423,8 @@ p=Bvari+simdata.w(:,:,:,5)*(consts.fgamma-1.0);
 for ix_1=4:-1:2
   for ix_2=1:nx2
   for ix_3=1:nx3  
-         p_2=rho1(ix_1,ix_2,ix_3)*ggg
-         p(ix_1-1,ix_2,ix_3) = (z(1)-z(0))*p_2+p(ix_1,ix_2,ix_3)
+         p_2=rho1(ix_1,ix_2,ix_3)*ggg;
+         p(ix_1-1,ix_2,ix_3) = (z(2)-z(1))*p_2+p(ix_1,ix_2,ix_3);
   end  
   end
  end
@@ -435,8 +435,8 @@ for ix_1=4:-1:2
 for ix_1=nx1-2:nx1-1
    for ix_2=1:nx2
    for ix_3=1:nx3   
-           p_2=rho1(ix_1,ix_2,ix_3)*ggg
-           p(ix_1+1,ix_2,ix_3) = -(z(1)-z(0))*p_2+p(ix_1,ix_2,ix_3)
+           p_2=rho1(ix_1,ix_2,ix_3)*ggg;
+           p(ix_1+1,ix_2,ix_3) = -(z(2)-z(1))*p_2+p(ix_1,ix_2,ix_3);
    end	   
    end
 end
@@ -453,7 +453,7 @@ end
 
 %update the background energy and magnetic fields
 simdata.w(:,:,:,10)=rho1;
-simdata.w(:,:,:,9)=p./((consts.fgamma-1.0))+0.5*(bx.*bx+bz.*bz+by.*by)
+simdata.w(:,:,:,9)=p./((gamma-1.0))+0.5*(bx.*bx+bz.*bz+by.*by);
 simdata.w(:,:,:,11)=bx;
 simdata.w(:,:,:,12)=by;
 simdata.w(:,:,:,13)=bz;

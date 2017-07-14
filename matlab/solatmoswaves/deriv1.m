@@ -1,14 +1,15 @@
-function [res]=deriv1(f,x)
+function [res]=deriv1(f,x, dim)
 nel=size(f);
 nel1=size(x);
 
 f1=reshape(f,[nel1 1]);
+num=nel(dim);
 
-if nel(1)>nel(2)
-    num=nel(1);
-else
-    num=nel(2);
-end
+% if nel(1)>nel(2)
+%     num=nel(1);
+% else
+%     num=nel(2);
+% end
 
 % if (nel ne nel1) then begin
 %  print,'Inconsistant input, stop.'

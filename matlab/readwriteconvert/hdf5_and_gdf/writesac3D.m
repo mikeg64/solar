@@ -9,7 +9,13 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
 %           fdatline(5)=double(simparams.gravity1);
 %           fdatline(6)=double(simparams.gravity2);
 %           fdatline(7)=;
-                     
+   
+      p.dx(1)=(simparams.domain_right_edge(1)-simparams.domain_left_edge(1))/(simparams.domain_dimensions(1)-1);
+    p.dx(2)=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/(simparams.domain_dimensions(2)-1);
+    p.dx(3)=(simparams.domain_right_edge(3)-simparams.domain_left_edge(3))/(simparams.domain_dimensions(3)-1);
+
+
+
     if strcmp(mode , 'binary')
 
         
@@ -24,9 +30,14 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
               headline=tstr(1:79);
            else
               headline(1:sz(2))=simparams.unique_identifier; 
-           end           
-           fwrite(fid,headline,'char*1');          
+           end 
            
+           fwrite(fid, 1, 'int32');
+           fwrite(fid,headline,'char*1');          
+           fwrite(fid, 1, 'int32');
+           
+           
+           fwrite(fid, 1, 'int32');
            %it
            fwrite(fid,int32(simparams.current_iteration),'integer*4');            
            %time
@@ -38,13 +49,18 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            fwrite(fid,int32(simparams.neqpar),'integer*4');
            %nw
            fwrite(fid,int32(simparams.nw),'integer*4');
+           fwrite(fid, 1, 'int32');
+           
+           fwrite(fid, 1, 'int32');
            %nx
            fwrite(fid,int32(simparams.domain_dimensions),'integer*4');
-           
+           fwrite(fid, 1, 'int32');
            
            nx=simparams.domain_dimensions;
            nxs=nx(1)*nx(2)*nx(3);
+           fwrite(fid, 1, 'int32');
            
+           fwrite(fid, 1, 'int32');
            %varbuf=fread(fid,7,'float64');
            %gamma=varbuf(1);
            fwrite(fid,double(simparams.gamma),'float64');           
@@ -59,6 +75,7 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            %g(3)=varbuf(5);
            fwrite(fid,double(simparams.gravity2),'float64');
            fwrite(fid,double(0.0),'float64');
+           
 
            %varnames=(setstr(fread(fid,79,'char')'));
            
@@ -67,8 +84,9 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            varnames=char(zeros(1,79));
            varnames(1:sz(2))=tvarnames;
            disp(varnames);
+           fwrite(fid, 1, 'int32');
            fwrite(fid,varnames,'char*1');
-           
+           fwrite(fid, 1, 'int32');
            
            
            
@@ -84,11 +102,9 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
     kf=simparams.domain_dimensions(3);
     
     
-       p.dx(1)=(simparams.domain_right_edge(1)-simparams.domain_left_edge(1))/(simparams.domain_dimensions(1)-1);
-    p.dx(2)=(simparams.domain_right_edge(2)-simparams.domain_left_edge(2))/(simparams.domain_dimensions(2)-1);
-    p.dx(3)=(simparams.domain_right_edge(3)-simparams.domain_left_edge(3))/(simparams.domain_dimensions(3)-1);
- 
- 
+  fwrite(fid, 1, 'int32');
+  
+ fwrite(fid, 1, 'int32');
     
     
     
