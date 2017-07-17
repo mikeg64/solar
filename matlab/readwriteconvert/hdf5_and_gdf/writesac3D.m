@@ -32,12 +32,12 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
               headline(1:sz(2))=simparams.unique_identifier; 
            end 
            
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            fwrite(fid,headline,'char*1');          
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            
            
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            %it
            fwrite(fid,int32(simparams.current_iteration),'integer*4');            
            %time
@@ -49,16 +49,16 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            fwrite(fid,int32(simparams.neqpar),'integer*4');
            %nw
            fwrite(fid,int32(simparams.nw),'integer*4');
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            %nx
            fwrite(fid,int32(simparams.domain_dimensions),'integer*4');
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            
            nx=simparams.domain_dimensions;
            nxs=nx(1)*nx(2)*nx(3);
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            
            fwrite(fid, 1, 'int32');
            %varbuf=fread(fid,7,'float64');
@@ -67,13 +67,13 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            %eta=varbuf(2);
            fwrite(fid,double(simparams.eta),'float64');
            
-           fwrite(fid,double(simparams.adiab),'float64');
            %g(1)=varbuf(3);
            fwrite(fid,double(simparams.gravity0),'float64');
            %g(2)=varbuf(4);
            fwrite(fid,double(simparams.gravity1),'float64');
            %g(3)=varbuf(5);
            fwrite(fid,double(simparams.gravity2),'float64');
+           fwrite(fid,double(0.0),'float64');
            fwrite(fid,double(0.0),'float64');
            
 
@@ -84,9 +84,9 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
            varnames=char(zeros(1,79));
            varnames(1:sz(2))=tvarnames;
            disp(varnames);
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            fwrite(fid,varnames,'char*1');
-           fwrite(fid, 1, 'int32');
+%            fwrite(fid, 1, 'int32');
            
            
            
@@ -102,9 +102,9 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
     kf=simparams.domain_dimensions(3);
     
     
-  fwrite(fid, 1, 'int32');
+%   fwrite(fid, 1, 'int32');
   
- fwrite(fid, 1, 'int32');
+%  fwrite(fid, 1, 'int32');
     
     
     
@@ -124,19 +124,35 @@ function writesac3D(filename, simparams, simgridinfo, simdata, mode)
                  end %j1
              end %k1
            
-           
-           for idim=1:ndim
-              %X(:,idim)=fread(fid,nxs,'float64');
-              fwrite(fid,X(:,idim),'float64');
-           end
-
            nw=13;
-           for iw=1:nw
-              %fread(fid,4);
-              %w(:,iw)=fread(fid,nxs,'float64');
-              fwrite(fid,simdata.w(:,:,:,iw),'float64');
-              %fread(fid,4);
-           end
+           for k1=ks:kf
+               for j1=js:jf
+                     for i1=is:iif
+                             for idim=1:ndim
+                                 
+                                 fwrite(fid,X(i1,j1,k1,idim),'float64');
+                                 
+             
+                             end %loop over idim 
+                             
+                             
+
+                               for iw=1:nw
+                                  %fread(fid,4);
+                                  %w(:,iw)=fread(fid,nxs,'float64');
+                                  fwrite(fid,simdata.w(i1,j1,k1,iw),'float64');
+                                  %fread(fid,4);
+                               end
+                             
+                             
+                             
+                       end %i1
+                 end %j1
+            end %k1
+             
+           fwrite(fid, '\n', 'char*1');
+             
+     
         
         display('write binary sac file');
     end
