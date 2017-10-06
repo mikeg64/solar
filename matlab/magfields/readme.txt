@@ -1,0 +1,1 @@
+General routines for experimenting with magnetic fields
