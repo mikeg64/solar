@@ -211,7 +211,6 @@ R=8.31e3;
 % 
 % !iniene=6840.d0*8.31e3*(2.3409724e-09)/0.6d0/(eqpar(gamma_)-1.0)
 iniene=6840.d0*R*(2.3409724e-09)/mu/(consts.fgamma-1.0);
-
 % 
 % !iniene=6840.d0*8.31e3*(2.2139002e-09)/0.6d0/(eqpar(gamma_)-1.0)
 % 

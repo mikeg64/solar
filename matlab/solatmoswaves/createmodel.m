@@ -2,6 +2,15 @@ simparams=sim_params;
 simgridinfo=sim_gridinfo;
 simdata=sim_data;
 
+
+
+
+%The config file 3D_128_spic_bin.ini is in the archive
+%pmodeini.tgz available at the following link
+%https://drive.google.com/open?id=0B-AKVl-pk6ziVUFqUzMycWJoODg
+
+
+
 newfilename='3D_128_4Mm_bin.ini';
 %newfilename='/data/cs1mkg/smaug/configs/3D_128_4Mm_bin.ini';
 

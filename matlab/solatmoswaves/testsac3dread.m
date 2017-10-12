@@ -1,6 +1,11 @@
 %getpicttest  3D version
 % Read the npict-th picture from 1 or more files
 %http://uk.mathworks.com/matlabcentral/answers/97118-how-do-i-read-a-fortran-unformatted-binary-data-file-into-matlab
+
+%The config file 3D_128_spic_bin.ini is in the archive
+%pmodeini.tgz available at the following link
+%https://drive.google.com/open?id=0B-AKVl-pk6ziVUFqUzMycWJoODg
+
 filename='3D_128_spic_bin.ini';
 
     fid=fopen(filename,'rb');
