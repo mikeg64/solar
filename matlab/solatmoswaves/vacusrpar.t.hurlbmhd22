@@ -1,0 +1,31 @@
+!##############################################################################
+! include vacusrpar - hurlb
+
+!
+! extra parameters for Hurlburt and Toomre 2D magnetoconvection problem
+! these are calculated from special input parameters in specialini
+! ---------------------------------------------------------------------
+!
+! added general purpose eqpar parameters 
+! aside from dimensionless eqpar(gamma_) and eqpar(eta_) 
+!
+!  1)dimensionless thermal conduction coefficient 
+!          eqpar(kappa_) 
+!
+!  2,3,4)dimensionless gravity vector components
+!          eqpar(grav1_) eqpar(grav2_) eqpar(grav3_) 
+!
+!  5)dimensionless viscosity coefficient
+!          eqpar(nu_)  
+!
+! and problem specific one
+!          eqpar(temptop_) dimensionless temperature at top 
+!
+! 
+INTEGER,PARAMETER:: kappa_=neqpar+1, grav0_= kappa_, grav^C_=grav0_+^C, &
+                    nu_=grav^NC_+1, temptop_=grav^NC_+2, &
+                    nspecialpar=3+^NC
+CHARACTER*22,PARAMETER:: specialparname='kappa g1 g2 nu Ttop'
+
+! end include vacusrpar - hurlb
+!##############################################################################

@@ -1,0 +1,42 @@
+ &testlist 
+        teststr=' '
+ &end
+
+ &filelist
+	filenameini='data/htmhd22.ini'
+	filename=   'data/htmhd22.log',
+		    'data/htmhd22.out'
+	typefilelog='special'
+ &end
+
+ &savelist
+        itsave(1,2)=0
+        dtsave=0.1,1.0
+ &end
+
+ &stoplist
+        tmax=60.0
+ &end
+
+ &methodlist
+	wnames=		'rho m1 m2 e b1 b2 egrav'
+	typefull=	6*'tvdlf'
+        typelimiter=    6*'minmod'
+	dimsplit=	F
+ 	divbfix=        F 
+        nproc=          1,0,0,1
+        procpar=        0.,0.0001,1
+        sourcesplit=    T
+        sourceunsplit=  F
+ &end
+
+ &boundlist
+	typeB=6*'periodic',6*'periodic',
+              2*'symm0','asymm','special','asymm','symm',
+              2*'symm0','asymm','special','asymm','symm'
+ &end
+
+ &paramlist
+        courantpar=    0.4
+        dtdiffpar=0.2
+ &end

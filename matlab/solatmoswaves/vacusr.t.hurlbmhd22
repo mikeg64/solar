@@ -1,0 +1,341 @@
+!##############################################################################
+! module vacusr - hurlb ! setvac -d=22 -g=.,. -p=mhd -u=hurlbmhd22 
+
+! INCLUDE:vacnul.specialini.t
+! INCLUDE:vacnul.specialbound.t
+! INCLUDE:vacnul.specialsource.t
+! INCLUDE:vacnul.specialio.t
+
+INCLUDE:vacusr.viscosity.t
+INCLUDE:vacusr.thermcond.t
+INCLUDE:vacusr.gravity.t
+
+!=============================================================================
+subroutine specialini(ix^L,w)
+
+! This subroutine initializes w for Hurlburt and Toomre
+! and calculates the eqpar array from problem-specific input parameters
+! ---------------------------------------------------------------------
+!
+! problem specific input parameters for 
+! Hurlburt and Toomre 2D magnetoconvection problem
+!
+! we need (apart from the aspect ratio which is set through domain action): 
+! i)equilibrium parameters: (1) ratio of specific heats (gamma)
+! ------------------------- (2) the polytropic index mpoly (m)
+!                            --> sets gravity g
+!                           (3) the density contrast chi
+!                            --> sets top temperature zz0 (z0)
+!                           (4) the Chandrasekhar number qchand (Q)
+!                            --> initial field strength B (need nu and eta)
+!                           (5,6) amplitudes for vx and vy perturbations
+!                           (7,8) wavenumber for vx and vy perturbations
+! ii)parameters setting the dissipative coefficients:
+! ---------------------------------------------------
+!    (1) Prandtl number sigma (viscous/thermal conduction)
+!    (2) the Rayleigh number at half-depth rhat (degree of instability)
+!    (3) the magnetic Prandtl number zeta0
+!      (magnetic diffusion/thermal conduction)
+!
+! hence read in i) gamma, mpoly, chi, qchand, dvx, dvy, nkx, nky
+!               ii) sigma, rhat, zeta0  
+!
+! this allows calculation of all equation parameters, namely
+! the general purpose ones:
+! ------------------------
+!  eqpar(gamma_) eqpar(eta_) eqpar(kappa_) eqpar(grav1.2_) eqpar(nu_) 
+!
+! and the problem specific one:
+! ----------------------------
+!  eqpar(temptop_) for setting the top temperature
+! 
+
+include 'vacdef.f'
+
+integer:: ix^L
+double precision:: w(ixG^T,nw)
+
+integer:: mpoly
+double precision:: zeta0,rhat,sigma,zz0,qchand,bstrength,dvx,dvy
+double precision:: nkx, nky, gamma, qchi, qmpoly, eta2
+!-----------------------------------------------------------------------------
+
+if(ndim/=2)stop'2D problem'
+
+! read in equilibrium parameters
+
+write(*,*)'give gamma/mpoly/qchi/qchand'
+read(*,*) gamma
+read(*,*) mpoly
+read(*,*) qchi
+read(*,*) qchand
+write(*,*)'gamma, mpoly, qchi,qchand'
+write(*,*)gamma, mpoly, qchi, qchand
+
+qmpoly=dble(mpoly)
+
+zz0=one/(qchi**(one/qmpoly)-one)
+write(*,*)'Top layer dimensionless temperature z0=',zz0
+eqpar(temptop_)=zz0
+
+eqpar(gamma_)=gamma
+eqpar(grav1_)= zero
+eqpar(grav2_)=-(qmpoly+one)
+
+write(*,*)'give dvx dvy nkx nky'
+read(*,*) dvx
+read(*,*) dvy
+read(*,*) nkx
+read(*,*) nky
+write(*,*) 'velocity perturbation: dvx,dvy,nkx,nky'
+write(*,*) dvx,dvy,nkx,nky
+
+! read in dissipative parameters
+
+write(*,*)'give sigma rhat zeta0'
+read(*,*) sigma
+read(*,*) rhat
+read(*,*) zeta0
+write(*,*) 'sigma,rhat,zeta0:'
+write(*,*) sigma,rhat,zeta0
+
+! calculate eqpar-array from input parameters
+
+eta2=(qmpoly+one)*(gamma/(gamma-1)-(qmpoly+1))*((gamma-one)/gamma)*&
+     ((zz0+half)**(2*qmpoly-one)/zz0**(2*qmpoly))*&
+     (zeta0**2/(sigma*rhat))
+if(eta2<=smalldouble)then
+   write(*,*)'Negative or too small value for eta**2:',eta2
+   stop
+endif
+eqpar(eta_)=sqrt(eta2)
+eqpar(nu_)=eqpar(eta_)*sigma/zeta0
+eqpar(kappa_)=(gamma/(gamma-one))*eqpar(eta_)/zeta0
+
+write(*,*)'dimensionless values for dissipative coefficients:'
+write(*,*)'resistivity          eta=',eqpar(eta_)
+write(*,*)'viscosity             nu=',eqpar(nu_)
+write(*,*)'thermal conduction kappa=',eqpar(kappa_)
+
+bstrength=dsqrt(qchand*eqpar(nu_)*eqpar(eta_))
+write(*,*)'dimensionless magnetic field strength:',bstrength
+
+!
+! set polytropic stratification
+! assume stratification gravity along -e_y
+!
+
+w(ix^S,rho_)= ((zz0+one-x(ix^S,2))/zz0)**qmpoly
+w(ix^S,b1_)= zero
+w(ix^S,b2_)=bstrength
+! set pressure
+w(ix^S,e_)= zz0*(((zz0+one-x(ix^S,2))/zz0)**(qmpoly+one))
+
+!
+! small velocity perturbations
+!
+! amplitudes and wavenumbers from input
+!
+w(ix^S,m1_)=dvx*dsin(x(ix^S,1)*nkx)*dsin(x(ix^S,2)*nky)
+w(ix^S,m2_)=dvy*dsin(x(ix^S,1)*nkx)*dsin(x(ix^S,2)*nky)
+
+! follow by conserv action
+
+return
+end
+
+!=============================================================================
+subroutine readfileini_special(w)
+include 'vacdef.f'
+double precision:: w(ixG^T,nw)
+stop 'Special readfileini is not defined'
+end
+!=============================================================================
+subroutine savefileout_special(qunit,w,ix^L)
+include 'vacdef.f'
+integer:: qunit,ix^L
+double precision:: w(ixG^T,nw)
+stop 'Special savefileout is not defined'
+end
+!=============================================================================
+subroutine savefilelog_special(qunit,w,ix^L)
+
+! Save user-defined log data into filename(filelog_) in user-defined format.
+! Check savefilelog_default on opening the file etc.
+
+include 'vacdef.f'
+
+integer:: qunit
+double precision:: w(ixG^T,nw)
+integer:: ix^L,ix,iw
+logical:: fileopen
+double precision::  total,wmean(nw+1)
+!-----------------------------------------------------------------------------
+
+inquire(qunit,opened=fileopen)
+if(.not.fileopen)then
+    open(qunit,file=filename(filelog_),status='unknown')
+    write(qunit,'(a)')fileheadout
+    write(qunit,'(a15,a64)')'it   t   dt   ',wnames
+endif
+
+do iw=1,nw
+   wmean(iw)=sum(dvolume(ix^S)*w(ix^S,iw))/volume
+end do
+
+wmean(nw+1)=wmean(e_)+eqpar(grav2_)* &
+     sum(dvolume(ix^S)*w(ix^S,rho_)*x(ix^S,2))/volume
+write(qunit,'(i7,100(1pe13.5))')it,t,dt,wmean
+call flush(qunit)                                             !!!flush
+
+return
+end
+!=============================================================================
+subroutine specialbound(qt,ix^L,iw,iB,w)
+
+! qt is the time, the iB-th boundary region is in the ix^L region,
+! and the subroutine should provide the values for w(ix^S,iw).
+
+! This subroutine fixes the temperature at the top boundary,
+! and its vertical derivative at the bottom
+! -->special action for energy only
+! -->assumes all non-special boundary values set
+! Hurlburt and Toomre (1988)
+
+include 'vacdef.f'
+
+integer:: ix^L,iw,iB
+double precision:: qt,w(ixG^T,nw)
+
+integer:: jdir,ixLO^L
+double precision:: xtemp(ixG^T),tempb(ixG^T)
+!-----------------------------------------------------------------------------
+oktest=index(teststr,'specialbound')>=1
+if(oktest)write(*,*)'specialbound with iw,iB:',iw,iB
+if(oktest)write(*,*)'          in region ixL:',ix^L
+
+select case(iB)
+!
+! top boundary: fix temperature to zz0, stored in eqpar(temptop_)
+!
+case(4)
+   select case(iw)
+   case(e_)
+      w(ix^S,e_)=(w(ix^S,rho_)*eqpar(temptop_))&
+                  /(eqpar(gamma_)-one)+&
+                 (^C&w(ix^S,m^C_)**2+)/(two*w(ix^S,rho_))+&
+                 (^C&w(ix^S,b^C_)**2+)/two
+   case default
+      stop 'Special boundary is not defined for this variable'
+   end select
+!
+! bottom boundary: fix temperature gradient to minus one
+! hence Te=Te_bottom-y
+!
+case(3)
+   select case(iw)
+   case(e_)
+! determine bottom temperature Te_bottom
+! input patch ixS is below the physical domain, need values
+! from one row up (ixmax2+1)
+      ixLOmin1=ixmin1;ixLOmax1=ixmax1;ixLOmin2=ixmax2+1;ixLOmax2=ixLOmin2;
+      xtemp(ix^S)=zero
+      call getpthermal(.true.,w,ixLO^L,xtemp)
+      xtemp(ixLO^S)=xtemp(ixLO^S)/w(ixLO^S,rho_)
+! extrapolate linearly with fixed temperature gradient dTe/dy=-1
+! note: Te_bottom determined here is from bottom row: when
+! grid set with domain action, this is actually dy/2 above y=0 level
+! use that ghost cell patch has two rows
+      do jdir=1,2
+        tempb(ixmin1:ixmax1,ixLOmin2-jdir)=   &
+           xtemp(ixmin1:ixmax1,ixLOmin2)       &
+           -(x(ixmin1:ixmax1,ixLOmin2-jdir,2)-x(ixmin1:ixmax1,ixLOmin2,2))
+      enddo;
+! avoid negative temperatures
+      if(minval(tempb(ix^S))<zero)then
+         write(*,*)'fixing temperature in bottom boundary...'
+         tempb(ix^S)=max(zero,tempb(ix^S))
+      endif
+! set energy values
+      w(ix^S,e_)= (w(ix^S,rho_)*tempb(ix^S))&
+                  /(eqpar(gamma_)-one)+&
+                 (^C&w(ix^S,m^C_)**2+)/(two*w(ix^S,rho_))+&
+                 (^C&w(ix^S,b^C_)**2+)/two
+   case default
+      stop 'Special boundary is not defined for this variable'
+   end select
+case default
+   stop 'Special boundary is defined for iB=3,4 regions only'
+end select
+
+return
+end
+
+!=============================================================================
+subroutine specialsource(qdt,ixI^L,ixO^L,iws,qtC,w,qt,wnew)
+
+include 'vacdef.f'
+
+integer:: ixI^L,ixO^L,iws(niw_)
+double precision:: qdt,w(ixG^T,nw),wnew(ixG^T,nw),qtC,qt
+
+! Add sources from gravity, thermal conduction and viscosity
+
+!-----------------------------------------------------------------------------
+
+oktest=index(teststr,'specialsource')>=1
+
+! Sources for gravity in eqs. for M1, M2, M3 and e
+call addsource_grav(qdt,ixI^L,ixO^L,iws,qtC,w,qt,wnew)
+
+if(oktest)write(*,*)'With gravity source:',wnew(ixtest^D,iwtest)
+
+! Sources for viscosity in eqs. for M1, M2, M3 and e
+if(abs(eqpar(nu_))>smalldouble)&
+   call addsource_visc(qdt,ixI^L,ixO^L,iws,qtC,w,qt,wnew) 
+
+if(oktest)write(*,*)'With viscous source:',wnew(ixtest^D,iwtest)
+
+! Source for thermal conduction in e
+if(e_/=0 .and. abs(eqpar(kappa_))>smalldouble) &
+   call addsource_tcond(qdt,ixI^L,ixO^L,iws,qtC,w,qt,wnew)
+
+if(oktest)write(*,*)'With thermal conduction source:',wnew(ixtest^D,iwtest)
+
+return
+end
+!=============================================================================
+subroutine getdt_special(w,ix^L)
+
+! Check diffusion time limit for dt for all special source terms
+
+include 'vacdef.f'
+
+double precision:: w(ixG^T,nw)
+integer:: ix^L
+!-----------------------------------------------------------------------------
+
+call getdt_grav(w,ix^L)
+call getdt_visc(w,ix^L)
+call getdt_tcond(w,ix^L)
+
+return
+end
+!=============================================================================
+subroutine specialeta(w,ix^L,idirmin)
+
+
+include 'vacdef.f'
+
+double precision:: w(ixG^T,nw)
+integer:: ix^L,idirmin
+
+!!! double precision:: current(ixG^T,7-2*ndir:3),eta(ixG^T),gradeta(ixG^T,ndim)
+!!! common/resist/current,eta,gradeta
+!-----------------------------------------------------------------------------
+
+stop 'specialeta is not defined'
+end
+!=============================================================================
+! end module vacusr - hurlb  
+!##############################################################################

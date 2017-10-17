@@ -1,0 +1,23 @@
+data/htmhd22.ini
+hurlb_mhd22
+x y rho m1 m2 e b1 b2    gamma eta
+domain
+120,40				      -ixmax (hence aspect ratio =3)
+0.0,0.0				      -min coordinates
+3.0,1.0                               -max coordinates (y must be 1!)
+special
+1.6666667                      -gamma (5/3)
+1                              -mpoly
+11.0                           -chi
+72.0                           -qchand
+1.d-4                          -dvx
+1.d-4                          -dvy
+2.0943951                      -nkx (2*pi/3)
+6.2831531                      -nky (2*pi)
+1.0                            -sigma
+1.d5                           -rhat
+0.25                           -zeta0
+conserv
+typefileout
+binary
+save
