@@ -191,19 +191,19 @@ nint=ninterp(2);
 % presg(ng1:nx1-ng1)=presgt;
 % densg(ng1:nx1-ng1)=densgt;
 % 
-% tempg(nx1)=tempg(nx1-2);
-% tempg(nx1-1)=tempg(nx1-2);
-% presg(nx1)=presg(nx1-2);
-% presg(nx1-1)=presg(nx1-2);
-% densg(nx1)=densg(nx1-2);
-% densg(nx1-1)=densg(nx1-2);
+tempg(nx1)=tempg(nx1-2);
+tempg(nx1-1)=tempg(nx1-2);
+presg(nx1)=presg(nx1-2);
+presg(nx1-1)=presg(nx1-2);
+densg(nx1)=densg(nx1-2);
+densg(nx1-1)=densg(nx1-2);
 % 
-% tempg(1)=tempg(3);
-% tempg(2)=tempg(3);
-% presg(1)=presg(3);
-% presg(2)=presg(3);
-% densg(1)=densg(3);
-% densg(2)=densg(3);
+tempg(1)=tempg(3);
+tempg(2)=tempg(3);
+presg(1)=presg(3);
+presg(2)=presg(3);
+densg(1)=densg(3);
+densg(2)=densg(3);
 
 %rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
 %set background density
@@ -328,7 +328,7 @@ end
 for i=3:nx1-2
      comi=-abs(rheight(i+1)-rheight(i));
      %densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
-     densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
+     densg(i)=-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
 end
 
 
