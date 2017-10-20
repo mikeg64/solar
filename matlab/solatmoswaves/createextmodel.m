@@ -9,7 +9,7 @@ simdata=sim_data;
 consts.mu=0.6e0; %magnetic permeability
 consts.R=8.31e3
 consts.fgamma=1.66666667e0
-consts.ggg=274.0e0 % acceleration due to gravity on the sun
+consts.ggg=-274.0e0 % acceleration due to gravity on the sun
 consts.mu=4*pi/1.0e7
 
   it=0;
@@ -58,6 +58,7 @@ consts.mu=4*pi/1.0e7
        for i=1:nx1
            for j=1:nx2
                for k=1:nx3
+                   rheight(i)=xmin-(ng1*dx)+dx*(i-1);
                    xx(i,j,k)=xmin-(ng1*dx)+dx*(i-1);
                    yy(i,j,k)=ymin-(ng2*dy)+dy*(j-1);
                    zz(i,j,k)=zmin-(ng3*dz)+dz*(k-1);
@@ -168,19 +169,46 @@ for i=1:3613
 %     ntemp(i,1)=2.669e-7*newh.^(1.886);
 end
 
+% for i=1:3613
+%     nenerg(i)=npres(i)/(consts.fgamma -1);
+% end
 
-
-energg=interp1(nvals,nenerg,xmine:dxe:xmaxe);
-tempg=interp1(nheight,ntemp,xmin:dx:xmax);
-presg=interp1(nheight,npres,xmin:dx:xmax);
-densg=interp1(nheight,ndens,xmin:dx:xmax);
+tempg=zeros(1,nx1);
+presg=zeros(1,nx1);
+densg=zeros(1,nx1);
 energ=zeros(1,nx1);
 
+
+% energg=interp1(nvals,nenerg,xmine:dxe:xmaxe);
+tempg=interp1(nheight,ntemp,xmin-ng1*dx:dx:xmax+ng1*dx);
+presg=interp1(nheight,npres,xmin-ng1*dx:dx:xmax+ng1*dx);
+densg=interp1(nheight,ndens,xmin-ng1*dx:dx:xmax+ng1*dx);
+
+ninterp=size(tempg);
+nint=ninterp(2);
+
+% tempg=tempgt(ng1:nx1-ng1);
+% presg(ng1:nx1-ng1)=presgt;
+% densg(ng1:nx1-ng1)=densgt;
+% 
+% tempg(nx1)=tempg(nx1-2);
+% tempg(nx1-1)=tempg(nx1-2);
+% presg(nx1)=presg(nx1-2);
+% presg(nx1-1)=presg(nx1-2);
+% densg(nx1)=densg(nx1-2);
+% densg(nx1-1)=densg(nx1-2);
+% 
+% tempg(1)=tempg(3);
+% tempg(2)=tempg(3);
+% presg(1)=presg(3);
+% presg(2)=presg(3);
+% densg(1)=densg(3);
+% densg(2)=densg(3);
 
 %rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b
 %set background density
 %set background energy
-mu=0.6d0;
+mu_thermal=0.6d0;
 R=8.31e3;
 
 %parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
@@ -210,7 +238,7 @@ R=8.31e3;
 % ! 1.6Mm
 % 
 % !iniene=6840.d0*8.31e3*(2.3409724e-09)/0.6d0/(eqpar(gamma_)-1.0)
-iniene=6840.d0*R*(2.3409724e-09)/mu/(consts.fgamma-1.0);
+iniene=6840.d0*R*(2.3409724e-09)/mu_thermal/(consts.fgamma-1.0);
 % 
 % !iniene=6840.d0*8.31e3*(2.2139002e-09)/0.6d0/(eqpar(gamma_)-1.0)
 % 
@@ -293,14 +321,14 @@ presg1=presg;
 
 for i=nx1-1:-1:1
     comi=-abs(rheight(i+1)-rheight(i));
-    presg(i)=presg(i+1)-densg(i)*comi*consts.ggg;
+    presg(i)=presg(i+1)+densg(i)*comi*consts.ggg;
 end
 
 
 for i=3:nx1-2
      comi=-abs(rheight(i+1)-rheight(i));
      %densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
-     densg(i)=(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
+     densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
 end
 
 
@@ -376,6 +404,9 @@ end
 %     tempg(i)=(tempg(i-3)+tempg(i-2)+tempg(i-1)+tempg(i+1)+tempg(i+2)+tempg(i+3))/6;
 % end
 
+for i=1:nx1
+    energg(i)=presg(i)/(consts.fgamma -1);
+end
 
       for i=1:nx1
            for j=1:nx2
@@ -395,6 +426,6 @@ end
       
       
       
-      
+%[simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo, simdata, 'fluxtube');      
 % writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
         
