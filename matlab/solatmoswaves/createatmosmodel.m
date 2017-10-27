@@ -181,9 +181,9 @@ maxheight=12.8496e6;
 % densg=interp1(nheight,ndens,xmin:dx:xmax);
 % energg=zeros(1,nx1);
 
-tempg=interp1(height,temp,xmin:dx:xmax);
-presg=interp1(height,pres,xmin:dx:xmax);
-densg=interp1(height,dens,xmin:dx:xmax);
+tempg=interp1(height,temp,xmin-(ng1*dx):dx:xmax+(ng1*dx));
+presg=interp1(height,pres,xmin-(ng1*dx):dx:xmax)+(ng1*dx);
+densg=interp1(height,dens,xmin-(ng1*dx):dx:xmax)+(ng1*dx);
 energg=zeros(1,nx1);
 
 
