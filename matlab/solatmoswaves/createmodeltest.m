@@ -420,5 +420,5 @@ disp('generate field');
 %
 %[simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo, simdata, 'fluxtube');
 
-% writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
+ writesac3D(newfilename, simparams, simgridinfo, simdata, 'ascii');
         
