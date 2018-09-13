@@ -164,7 +164,7 @@ def write_sac_ascii(filename, alldat, modelinfo):
                 for i1 in range(dim[0]):
                     line=""
                     for j in range(ndim+nfields):
-                        line=line+str(alldat[i1,i2,i3,j])
+                        line=line+str(alldat[i1,i2,i3,j])+" "
                     line=line+"\n"
                     file.write(line)
                     
@@ -257,6 +257,7 @@ def write_sac_bin(filename, alldat, modelinfo):
     time=modelinfo[2]
     nits=modelinfo[1]
     nvar=modelinfo[4]
+    print(dim,ndim,nfields,nvar)
     
     
     head1=str(nits)+" "+str(time)+" "+str(ndim)+" "+str(nvar)+" "+str(nfields)+"\n"
@@ -286,7 +287,7 @@ def write_sac_bin(filename, alldat, modelinfo):
                 for i1 in range(dim[0]):
                     line=""
                     for j in range(ndim+nfields):
-                        line=line+str(alldat[i1,i2,i3,j])
+                        line=line+str(alldat[j,i1,i2,i3,])
                     line=line+"\n"
                     file.write(line.encode('utf-8'))
                     
@@ -295,7 +296,7 @@ def write_sac_bin(filename, alldat, modelinfo):
             for i1 in range(dim[0]):
                 line=""
                 for j in range(ndim+nfields):              
-                    line=line+" "+str(alldat[i1,i2,j])
+                    line=line+" "+str(alldat[j,i1,i2,])
                 line=line+"\n"
                 file.write(line.encode('utf-8'))    
                 
