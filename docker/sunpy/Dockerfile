@@ -24,6 +24,7 @@ RUN pip2 install matplotlib
 RUN pip2 install pandas
 RUN pip2 install -U scikit-learn
 RUN pip2 install astropy
+RUN pip2 install astropy-helpers
 RUN pip2 install astroquery
 RUN pip2 install aplpy
 RUN pip2 install spectral-cube
@@ -56,9 +57,10 @@ ENV HOME /home/jupyter
 
 #RUN git clone https://github.com/littlelogking/virtual-astro
 RUN git clone https://github.com/mikeg64/solar
-RUN git clone https://github.com/SWAT-Sheffield/pysac
 
-RUN python pysac/setup.py -install
+#pysac install failed
+#RUN git clone https://github.com/SWAT-Sheffield/pysac
+#RUN python pysac/setup.py -install
 
 RUN ["mkdir", "notebooks"]
 RUN ["mkdir", "notebooks/gallery_python"]
