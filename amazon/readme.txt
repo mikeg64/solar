@@ -89,6 +89,59 @@ sudo usermod -aG admin awsgui
 sudo vim /etc/ssh/sshd_config # edit line "PasswordAuthentication" to yes
 
 sudo /etc/init.d/ssh restart
+
+
+history of commands run to set up server
+
+
+    1  sudo apt install dos2unix
+    2  sudo bash amazon-ec2-hermes-1.sh 
+    3  docker
+    4  pwd
+    5  ls
+    6  cp amazon-ec2-hermes-1.sh amazon-ec2-hermes-2.sh 
+    7  sudo bash amazon-ec2-hermes-2.sh 
+    8  ls
+    9  sudo /bin/rm -rf proj
+   10  bash amazon-ec2-hermes-2.sh 
+   11  spack
+   12  sudo apt install gnome-session gdm3
+   13  sudo apt --fix-broken install
+   14  sudo apt install gnome-session gdm3
+   15  gedit &
+   16  sudo apt install gedit
+   17  gedit &
+   18  cd proj
+   19  ls
+   20  cd hermes
+   21  ls
+   22  autoconf
+   23  sudo apt install autoconf
+   24  autoconf
+   25  sudo apt install perl
+   26  autoconf
+   27  ls
+   28  cd proj/solar
+   29  git pull
+   30  cd
+   31  sudo apt update
+   32  sudo apt install -y ubuntu-desktop xrdp
+   33  sudo vi /etc/xrdp/xrdp.ini
+   34  sudo gedit /etc/xrdp/xrdp.ini &
+   35  sudo service xrdp restart
+   36  desktop
+   37  rdesktop
+   38  history
+   39  sudo systemctl enable xrdp
+
+
+
+
+
+
+
+
+
 Setting up ui based ubuntu machine on AWS.
 In security group open port 5901. Then ssh to the server instance. Run following commands to install ui and vnc server:
 
