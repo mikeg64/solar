@@ -1,4 +1,4 @@
-function [simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo, simdata, mode)
+function [simparams, simgridinfo, simdata]=generatefield_verttube(simparams, simgridinfo, simdata, mode)
 
 %Generate magnetic field configuration
 %simple fluxtube using self similarity and hydrostatic pressure correction
@@ -15,7 +15,7 @@ function [simparams, simgridinfo, simdata]=generatefield(simparams, simgridinfo,
 %3. Inclined (off vertical field)
 %4. Flux tube array
 
-if strcmp(mode,'fluxtube')
+if strcmp(mode,'vertfieldtube')
     
     
     %tube width =100km
@@ -181,8 +181,8 @@ for i=1:nx1
 
 
 bz(i,j,k)=bz(i,j,k)+b0zz.*xf(i,j,k);
-bx(i,j,k)=bx(i,j,k)+(dbz.*xf(i,j,k))./2;
-by(i,j,k)=by(i,j,k)+(dbz.*xf(i,j,k))./2;
+bx(i,j,k)=bx(i,j,k);
+by(i,j,k)=by(i,j,k);
 
 
 
