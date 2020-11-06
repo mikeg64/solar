@@ -24,7 +24,7 @@ from keras.preprocessing.image import ImageDataGenerator
 
 
 def load_validation_data(model_name):
-    data_dir = os.path.join(os.getcwd() + '/square256')
+    data_dir = os.path.join(os.getcwd() + '/data/test_data/square256')
 
     valid_c = []
     objs_c = []
