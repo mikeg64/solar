@@ -77,8 +77,23 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 dpkg -i google-chrome-stable_current_amd64.deb
 
 #install anaconda
-curl -O https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
-bash Anaconda3-2019.03-Linux-x86_64.sh
+#curl -O https://repo.anaconda.com/archive/Anaconda2-2019.10-Linux-x86_64.sh
+#bash Anaconda2-2019.10-Linux-x86_64.sh
+
+apt -y install openjdk-14-jre
+apt -y install graphviz
+apt -y install doxygen
+apt -y install doxygen-gui
+
+#wget https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2021-03/R/eclipse-cpp-2021-03-R-linux-gtk-x86_64.tar.gz
+
+#tar -zxvf eclipse-cpp-2021-03-R-linux-gtk-x86_64.tar.gz
+#mv eclipse-cpp-2021-03-R-linux-gtk-x86_64 /opt
+#ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse
+#sudo cp /opt/eclipse/icon.xpm /usr/share/pixmaps/eclipse.xpm
+
+
+
 
 
 

@@ -300,6 +300,48 @@ http://www.krizna.com/ubuntu/enable-remote-desktop-ubuntu-16-04-vnc/
 shareimprove this answer
 
 
+Install eclipse
+If you've downloaded Eclipse from their official website, follow these steps for the installation.
+
+Extract the eclipse.XX.YY.tar.gz using
+
+tar -zxvf eclipse.XX.YY.tar.gz
+Become root and Copy the extracted folder to /opt
+
+sudo mv eclipse.XX.YY /opt
+Create a desktop file and install it:
+
+gedit eclipse.desktop
+and copy the following to the eclipse.desktop file
+
+[Desktop Entry]
+Name=Eclipse 
+Type=Application
+Exec=env UBUNTU_MENUPROXY=0 eclipse44
+Terminal=false
+Icon=eclipse
+Comment=Integrated Development Environment
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=Eclipse
+and make sure that it has executable permission, then execute the following command to automatically install it in the unity:
+
+sudo desktop-file-install eclipse.desktop
+Create a symlink in /usr/local/bin using
+
+sudo ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse44
+For eclipse icon to be displayed in dash, eclipse icon can be added as
+
+sudo cp /opt/eclipse/icon.xpm /usr/share/pixmaps/eclipse.xpm
+Don't forget that you need to have either OpenJDK or Sun Java installed to be able to run eclipse. Check this question for more information about Java installation. Here is a simple example of installing Open JDK 1.6:
+
+sudo apt-get install openjdk-6-jdk
+Launch Eclipse and then give it the required permissions to modify the osgi file:
+
+sudo chown -R $USER:$USER /opt/eclipse/configuration/org.eclipse.osgi
+NB! You must launch Eclipse first, because the org.eclipse.osgi directory is created only after the first launch.
+
+
 
 
 
