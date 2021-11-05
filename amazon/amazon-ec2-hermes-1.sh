@@ -94,6 +94,7 @@ apt -y install doxygen-gui
 
 
 
+mount s3 bucket
+#!/bin/bash
 
-
-
+s3fs  hermes-mhd -o use_cache=/tmp -o allow_other -o uid=1001 -o mp_umask=002 -o multireq_max=5 mys3bucket
