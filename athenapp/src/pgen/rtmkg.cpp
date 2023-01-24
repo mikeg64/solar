@@ -112,7 +112,8 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
     double val3c[132][4],rho,pres,energ,val;
 
   char st1[100],st2[100],st3[100],st4[100];
-  int ireadf=0;
+  int ireadf=1;
+  int i;
 
 
 
@@ -123,7 +124,7 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
     {
 
 
-    FILE *fid=fopen("../tst/2D-mhd/VALMc_rho_132_test_sac_all.dat","r");
+    FILE *fid=fopen("/home/mike/proj/athena/inputs/mhd/solp/VALMc_rho_132_test_sac_all.dat","r");
     printf("%d %d %d %d %d %d\n",is,js,ks,ie,je,ke);
     for(i=0; i<132; i++)
                {
@@ -150,7 +151,7 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
                  if((i+js)<=je)
 		{
 		  //cc_pos(pGrid,is,i+js,ks,&x1,&x2,&x3);
-                  printf("%f %f %f %f %f\n",x2, val3c[i][0], val3c[i][1], val3c[i][2], val3c[i][3]);
+                  printf(" %f %f %f %f\n", val3c[i][0], val3c[i][1], val3c[i][2], val3c[i][3]);
                 //if(p->ipe==1)
                  }
 
@@ -658,7 +659,7 @@ void MeshBlock::UserWorkInLoop() {
   n2=2;
 
   s_period=50.0; //Driver period
-  AA=500.0;       //Driver amplitude
+  AA=10.0;       //Driver amplitude
   //AA=1;
   xcy=-2.8e6;
   xcx=0.0;

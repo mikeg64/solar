@@ -1,0 +1,71 @@
+<comment>
+problem   = Rayleigh-Taylor instability
+reference = Liska, R., & Wendroff, B., SIAM J. Sci. Comput., 25, 995-1017 (2003)
+configure = --prob=rt
+
+<job>
+problem_id = rt          # problem ID: basename of output filenames
+
+<output1>
+file_type  = hst         # History data dump
+dt         = 0.2        # time increment between outputs
+
+<output2>
+file_type  = vtk         # Binary data dump
+variable   = prim        # variables to be output
+dt         = 0.2         # time increment between outputs
+
+<output3>
+file_type  = rst         # restart data dump
+dt         = 4.0        # time increment between outputs
+
+
+
+<time>
+cfl_number = 0.4         # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim       = 1000000000      # cycle limit
+tlim       = 600.0        # time limit
+integrator  = vl2       # time integration algorithm
+xorder      = 2         # order of spatial reconstruction
+ncycle_out  = 1         # interval for stdout summary info
+
+<mesh>
+nx1        = 400         # Number of zones in X1-direction
+x1min      = -2000000.0 # minimum value of X1
+x1max      = 2000000.0  # maximum value of X1
+ix1_bc     = periodic    # inner-X1 boundary flag
+ox1_bc     = periodic    # outer-X1 boundary flag
+
+nx2        = 132         # Number of zones in X2-direction
+x2min      = 133333.33        # minimum value of X2
+x2max      = 5955555.6         # maximum value of X2
+ix2_bc     = user        # inner-X2 boundary flag
+ox2_bc     = user        # outer-X2 boundary flag
+
+nx3        = 1           # Number of zones in X3-direction
+x3min      = -0.5        # minimum value of X3
+x3max      = 0.5         # maximum value of X3
+ix3_bc     = periodic    # inner-X3 boundary flag
+ox3_bc     = periodic    # outer-X3 boundary flag
+
+#num_threads = 4
+
+#<meshblock>
+#nx1     =    200
+#nx2     =    100
+#nx3     =    1
+
+
+
+
+<hydro>
+iso_sound_speed = 12762.0 
+gamma      = 1.4         # gamma = C_p/C_v
+grav_acc2  = -274.0
+
+<problem>
+iprob = 1
+amp   = 0.01
+drat  = 125454.0
+b0   = 0.0001
+
