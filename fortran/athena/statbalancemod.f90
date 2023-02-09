@@ -42,6 +42,7 @@ module statbalancemod
     real, parameter :: pi=4.*atan(1.0)
     real, parameter :: mu_mass=2.2d0          !0.6d0
     real, parameter :: R=8.31e3
+    real, parameter :: mu_thermal = 0.6
 
 ! adiabatic gas parameter and the magnetic permeablity
     real, parameter :: fgamma=1.66666667e0,mumag=4*pi/1.0e7
@@ -63,7 +64,7 @@ module statbalancemod
     public :: mu_mass, R,fgamma,mumag
     public :: rho0, p0, gs
     public :: Tch, Tc, ytr, wtr
-    public :: writefile, temp, hydropres, dens, hydrodens
+    public :: writefile, temp, hydropres, dens, hydrodens, hydropres2
 
 
 private
@@ -107,6 +108,68 @@ real function hydropres(heights, hindex, npoints, deltah)
     hydropres=psum
 
 end function
+
+subroutine hydropres2(heights, npoints, deltah, pres, dens)
+
+
+
+    real, intent(inout) :: pres(4096), dens(4096)
+    real, intent(in) :: deltah, heights(4096)
+    integer, intent(in) :: npoints
+    integer :: i
+    !6840
+    !real :: iniene = 5840.d0*R*(0.00252e-1)/mu_thermal/(fgamma-1.0)
+    real :: iniene = 6840.d0*R*(2.3409724e-09)/mu_thermal/(fgamma-1.0)
+    !real :: iniene = 231287.68d0*R*(1.09e-11)/mu_thermal/(fgamma-1.0)
+    real  :: p_1, p_2, comi
+
+
+
+!iniene=731191.34d0*8.31e3*(1.1806882e-11)/0.6d0/(eqpar(gamma_)-1.0)
+!iniene=731191.34d0*8.31e3*(1.1790001e-11)/0.6d0/(eqpar(gamma_)-1.0)
+! 1.6Mm
+!!!!!!iniene=6840.d0*R*(2.3409724e-09)/mu_thermal/(consts.fgamma-1.0);
+!iniene=6840.d0*8.31e3*(2.2139002e-09)/0.6d0/(eqpar(gamma_)-1.0)
+!iniene=731191.34d0*8.31e3*(4.5335481e-12)/0.6d0/(eqpar(gamma_)-1.0)
+
+
+
+    do i=1,npoints
+!       presg(i)=(consts.fgamma-1)*iniene;
+        pres(i)=(fgamma-1)*iniene
+    enddo
+
+
+
+!presg1=presg;
+
+    do i=npoints-1,1,-1
+        comi=-abs(heights(i+1)-heights(i))
+        pres(i)=pres(i+1)-dens(i)*comi*gs
+    enddo
+
+
+    do i=3,npoints-2
+        comi=-abs(heights(i+1)-heights(i))
+!     %densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
+        dens(i)=(1.0/gs)*(  (1.0/(12*(heights(i+1)-heights(i)))) *(pres(i+2)-8*pres(i+1)+8*pres(i-1)-pres(i-2))     )
+    enddo
+
+    do i=5,3,-1
+        p_1=pres(i+2)+8*pres(i+1)-8*pres(i-1)
+        p_2= -dens(i)*gs
+        pres(i-2)= -p_1-12.0*(heights(i)-heights(i-1))*p_2
+    enddo
+
+
+
+
+endsubroutine
+
+
+
+
+
 
 
 
@@ -160,7 +223,8 @@ subroutine writefile(height, dens, press, temp, nitems)
 
     open(unit=9, file='atmos.txt')
 
-    do i=1,nitems
+    !starting at point number 4 because lower points had -ve enrgy density
+    do i=37,nitems
         write(9,*) height(i),temp(i),dens(i), press(i)
 200     format(F16.6,2X,F16.6,2X,F16.6,2X,F16.6)
     end do

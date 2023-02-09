@@ -6,19 +6,23 @@ program hydrostatsolatmos
 
     !        height(m)        temp(K)     dens(kg)          pres()
     !        5955555.6       1599238.9   5.5055286e-12      0.12194448
-    use statbalancemod, only: temp, writefile, hydropres, hydrodens, dens
+    use statbalancemod, only: temp, writefile, hydropres, hydrodens, dens, hydropres2
 
     implicit none
 
 
+    real, parameter :: deltah = 22700.0d0
+    !real, parameter :: deltah = 45454.545455
 
-    real, parameter :: deltah = 45454.545455
+    ! value to include photosphere starth is 200.0
+    !real, parameter :: starth = 2138469.0
     real, parameter :: starth = 200.0
-    integer, parameter :: npoints=132
+    !we save the laST 132 points because the first three are -ve energy density
+    integer, parameter :: npoints=293
     !real, parameter :: pi=4.0*atan(1.0)
     real,allocatable :: sh(:),sdens(:),spres(:),stemp(:)
     real :: hcurrent
-    integer :: i, ii
+    integer :: i, ii, presmethod=2
 
 
     allocate(sh(1:npoints))
@@ -38,16 +42,31 @@ program hydrostatsolatmos
 
     do i=1,npoints
         !calculate height
-        sh(i)=hcurrent+deltah
+        sh(i)=hcurrent
         hcurrent=sh(i)
+        hcurrent=hcurrent+deltah
 
         ! calculate temperature
         stemp(i)=temp(sh(i))
 
     enddo
 
+    do i=1,npoints
 
-    hcurrent=starth
+        !sdens(i)=dens(sh(i),spres(i))
+        ii=1+npoints-i
+        sdens(ii)=hydrodens(sh, ii, npoints, deltah)
+
+    enddo
+
+
+    !pres2 calculation
+    !hydropres2(heights, hindex, npoints, deltah, pres, dens)
+    call hydropres2(sh, npoints, deltah, spres, sdens)
+
+
+    !!hcurrent=starth
+if (presmethod.eq.1) then
     do i=1,npoints
         !calculate height
         !sh(i)=hcurrent+deltah
@@ -65,15 +84,10 @@ program hydrostatsolatmos
 
 !        print *, 'result'
     enddo
+endif
 
 
-    do i=1,npoints
 
-        !sdens(i)=dens(sh(i),spres(i))
-        ii=1+npoints-i
-        sdens(ii)=hydrodens(sh, ii, npoints, deltah)
-
-    enddo
 
 
     call writefile(sh,sdens,spres,stemp,npoints)
