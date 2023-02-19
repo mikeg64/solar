@@ -6,7 +6,7 @@ program hydrostatsolatmos
 
     !        height(m)        temp(K)     dens(kg)          pres()
     !        5955555.6       1599238.9   5.5055286e-12      0.12194448
-    use statbalancemod, only: temp, writefile, hydropres, hydrodens, dens, hydropres2
+    use statbalancemod, only: temp, writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla
 
     implicit none
 
@@ -20,7 +20,7 @@ program hydrostatsolatmos
     !we save the laST 132 points because the first three are -ve energy density
     integer, parameter :: npoints=293
     !real, parameter :: pi=4.0*atan(1.0)
-    real,allocatable :: sh(:),sdens(:),spres(:),stemp(:)
+    real,allocatable :: sh(:),sdens(:),spres(:),stemp(:),sbruntvas(:)
     real :: hcurrent
     integer :: i, ii, presmethod=2
 
@@ -29,13 +29,14 @@ program hydrostatsolatmos
     allocate(sdens(1:npoints))
     allocate(spres(1:npoints))
     allocate(stemp(1:npoints))
+    allocate(sbruntvas(1:npoints))
 
     ! initialise array values
     sh(:)=0
     sdens(:)=0
     spres(:)=0
     stemp(:)=0
-
+    sbruntvas(:)=0
     !perform the computation loop
     !hcurrent=deltah
     hcurrent=starth
@@ -88,9 +89,9 @@ endif
 
 
 
+    call bruntvaisalla(sh, npoints, deltah, spres, sdens, sbruntvas)
 
-
-    call writefile(sh,sdens,spres,stemp,npoints)
+    call writefile(sh,sdens,spres,stemp,sbruntvas,npoints)
 
     print *, 'complete'
 end program  hydrostatsolatmos

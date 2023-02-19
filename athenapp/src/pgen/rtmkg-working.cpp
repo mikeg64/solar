@@ -109,72 +109,18 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
   int iprob = pin->GetInteger("problem","iprob");
   Real drat = pin->GetOrAddReal("problem","drat",3.0);
 
-    double val3c[132][4],rho,pres,energ,val;
-
-  char st1[100],st2[100],st3[100],st4[100];
-  int ireadf=1;
-  int i;
-
-
-
-  /*read VALIIc data*/
-/*see initialisation_user.h.spicule1_mpi in smaug_pmode/models*/
-/*only do this if the ireadf flag is set otherwise read default configuration*/
-    if(ireadf)
-    {
-
-
-/*    FILE *fid=fopen("/home/mike/proj/athena/inputs/mhd/solp/VALMc_rho_132_test_sac_all.dat","r");*/
-    FILE *fid=fopen("/home/mike/proj/athena/inputs/mhd/solp/arstatatmos.txt","r");
-    printf("%d %d %d %d %d %d\n",is,js,ks,ie,je,ke);
-    for(i=0; i<132; i++)
-               {
-                 //fscanf(fid, " %s %s %s %s %n", st1, st2, st3, st4,&ntt);
-	         fscanf(fid, " %s %s %s %s", st1, st2, st3, st4);
-		 //fscanf(fid, " %g %g %g %g", &val3c[131-i][0], &val3c[131-i][0], &val3c[131-i][0], &val3c[131-i][0]);
-                 //printf("%s %s %s %s\n",st1,st2,st3,st4);
-                 sscanf(st1,"%lf",&val); //height
-                 val3c[131-i][0]=val;
-		 sscanf(st2,"%lf",&val); //temp
-		 val3c[131-i][1]=val;
-		 sscanf(st3,"%lf",&val); //dens
-		 val3c[131-i][2]=val;
-		 sscanf(st4,"%lf",&val); //pres
-		 val3c[131-i][3]=val;
-
-
-
-
-              }
-    fclose(fid);
-
-             for(i=0; i<132; i++)
-                 if((i+js)<=je)
-		{
-		  //cc_pos(pGrid,is,i+js,ks,&x1,&x2,&x3);
-                  printf(" %f %f %f %f\n", val3c[i][0], val3c[i][1], val3c[i][2], val3c[i][3]);
-                //if(p->ipe==1)
-                 }
-
-    }
-
-
-
-
-
 
   // 2D PROBLEM ---------------------------------------------------------------
 
-  //use energy=pressure/(gamma-1)  to compute updated energy
   if (block_size.nx3 == 1) {
     grav_acc = phydro->hsrc.GetG2();
     for (int k=ks; k<=ke; k++) {
       for (int j=js; j<=je; j++) {
         for (int i=is; i<=ie; i++) {
-          Real den=5.5e-12;
+          Real den=1.0;
           //if (pcoord->x2v(j) > 0.0) den *= drat;
           // reverse the density
-          if (pcoord->x2v(j) < -(2.0e6)) den *= drat;
+          if (pcoord->x2v(j) < -0.2) den *= drat;
 
           if (iprob == 1) {
             phydro->u(IM2,k,j,i) = (1.0 + std::cos(kx*pcoord->x1v(i)))*
@@ -191,27 +137,6 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
             phydro->u(IEN,k,j,i) = (1.0/gamma + grav_acc*den*(pcoord->x2v(j)))/gm1;
             phydro->u(IEN,k,j,i) += 0.5*SQR(phydro->u(IM2,k,j,i))/den;
           }
-
-          //update the density and energy using the read values
-
-          if(ireadf)
-          {
-              rho=val3c[je-j][2];
-              pres=val3c[je-j][3];
-              energ= pres/(gamma-1);
-
-              phydro->u(IEN,k,j,i)=energ;
-              phydro->u(IDN,k,j,i)=rho;
-
-              phydro->u(IM1,k,j,i) = 0.0;
-              phydro->u(IM2,k,j,i) = 0.0;
-              phydro->u(IM3,k,j,i) = 0.0;
-          }
-
-
-
-
-
         }
       }
     }
@@ -223,14 +148,14 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
       for (int k=ks; k<=ke; k++) {
         for (int j=js; j<=je; j++) {
           for (int i=is; i<=ie+1; i++) {
-            pfield->b.x1f(k,j,i) = 0.0;
+            pfield->b.x1f(k,j,i) = b0;
           }
         }
       }
       for (int k=ks; k<=ke; k++) {
         for (int j=js; j<=je+1; j++) {
           for (int i=is; i<=ie; i++) {
-            pfield->b.x2f(k,j,i) = b0;
+            pfield->b.x2f(k,j,i) = 0.0;
           }
         }
       }
@@ -293,9 +218,9 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
         for (int j=js; j<=je; j++) {
           for (int i=is; i<=ie+1; i++) {
             if (pcoord->x3v(k) > 0.0) {
-              pfield->b.x1f(k,j,i) = 0.0;
+              pfield->b.x1f(k,j,i) = b0;
             } else {
-              pfield->b.x1f(k,j,i) = b0*std::sin(angle);
+              pfield->b.x1f(k,j,i) = b0*std::cos(angle);
             }
           }
         }
@@ -304,9 +229,9 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
         for (int j=js; j<=je+1; j++) {
           for (int i=is; i<=ie; i++) {
             if (pcoord->x3v(k) > 0.0) {
-              pfield->b.x2f(k,j,i) = b0;
+              pfield->b.x2f(k,j,i) = 0.0;
             } else {
-              pfield->b.x2f(k,j,i) = b0*std::cos(angle);
+              pfield->b.x2f(k,j,i) = b0*std::sin(angle);
             }
           }
         }
@@ -659,51 +584,21 @@ void MeshBlock::UserWorkInLoop() {
   n1=2;
   n2=2;
 
-  s_period=300.0; //Driver period
-  AA=500.0;       //Driver amplitude
-  //AA=0.0;
-  //xcy=-2.8e6;
-  xcy=900000.0;
-  //xcy=2.7e6;
+  s_period=50.0; //Driver period
+  AA=20.0;       //Driver amplitude
+  //AA=1;
+  xcy=-0.4;
   xcx=0.0;
-  delta_z=0.2e6;
-  delta_x=0.2e6;
-  delta_y=0.2e6;
+  delta_z=0.01;
+  delta_x=0.01;
+  delta_y=0.01;
 
   qt=this->pmy_mesh->time;
   dt=this->pmy_mesh->dt;
   tdep=sin(qt*2.0*PI/s_period);
-  //xxmax=(pcoord->x1v(ie+1))-(pcoord->x1v(is));
-  xxmax=4.0e6;
-  //  qt=time;
+  xxmax=(pcoord->x1v(ie+1))-(pcoord->x1v(is));
+    qt=time;
   // update vy
-  if(qt>=5000000 && qt <=-50000)
-  {
-   for (k=ks; k<=ke; k++) {
-    for (j=js; j<=je; j++) {
-
-#pragma omp simd
-      for (i=is; i<=ie+1; i++) {
-
-
-       ;// phydro->u(IM1,k,j,i)=0;
-        ;//phydro->u(IM2,k,j,i)=0;
-        ;//phydro->u(IM3,k,j,i)=0;
-
-      }
-    }
-  }
-  }
-
-
-
-
-
-
-
-
-  //if(qt>200.0)
-  //{
   for (k=ks; k<=ke; k++) {
     for (j=js; j<=je; j++) {
 
@@ -718,62 +613,16 @@ void MeshBlock::UserWorkInLoop() {
 
         exp_y=exp(-r2/(delta_y*delta_y));
 		//exp_z=exp(-r2/(delta_z*delta_z));
-        exp_x=exp(-r1/(delta_x*delta_x));
+        //exp_x=exp(-r1/(delta_x*delta_x));
 
-	exp_xyz=sin((PI/2)+(PI*x1*(n1+1)/xxmax))*exp_y;
-	//    exp_xyz=exp_x*exp_y;
-	vvy=AA*exp_xyz*tdep;
-        phydro->u(IM2,k,j,i)+= (dt)*vvy*phydro->u(IDN,k,j,i);//+27.4*phydro->u(IM2,k,j,i);
+	 exp_xyz=sin((PI/2)+(PI*x1*(n1+1)/xxmax))*exp_y;
+	 //   exp_xyz=exp_x*exp_y;
+	    vvy=AA*exp_xyz*tdep;
+        phydro->u(IM2,k,j,i)+= (dt)*vvy*phydro->u(IDN,k,j,i);
 
       }
     }
   }
-  //}
-
-
-   //set boundary momenta to zero
-    for (k=ks; k<=ke; k++) {
-    //for (j=js; j<=je; j++) {
-
-#pragma omp simd
-      for (i=is; i<=ie+1; i++) {
-
-
-                /*phydro->u(IDN,k,js+2,i)=phydro->u(IDN,k,js,i);
-                phydro->u(IDN,k,js+1,i)=phydro->u(IDN,k,js,i);
-
-
-                phydro->u(IDN,k,ke-1,i)=phydro->u(IDN,k,ke,i);
-                phydro->u(IDN,k,ke-2,i)=phydro->u(IDN,k,ke,i);
-
-
-               phydro->u(IM2,k,js,i)=0;
-                phydro->u(IM2,k,js+1,i)=0;
-                phydro->u(IM2,k,js+2,i)=0;
-
-                phydro->u(IM2,k,ke,i)=0;
-                phydro->u(IM2,k,ke-1,i)=0;
-                phydro->u(IM2,k,ke-2,i)=0;
-
-               phydro->u(IM1,k,js,i)=0;
-                phydro->u(IM1,k,js+1,i)=0;
-                phydro->u(IM1,k,js+2,i)=0;
-
-                phydro->u(IM1,k,ke,i)=0;
-                phydro->u(IM1,k,ke-1,i)=0;
-                phydro->u(IM1,k,ke-2,i)=0;*/
-
-
-
-      }
-    //}
-    }
-
-
-
-
-
-
 
 //pGrid->U[k][j][i].E += (pGrid->dt)*vvz*vvz*(pGrid->U[k][j][i].d)/2.0;
    // update total energy

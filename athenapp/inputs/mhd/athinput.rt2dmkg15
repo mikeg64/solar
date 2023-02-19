@@ -2,6 +2,8 @@
 problem   = Rayleigh-Taylor instability
 reference = Liska, R., & Wendroff, B., SIAM J. Sci. Comput., 25, 995-1017 (2003)
 configure = --prob=rt
+# 300s period 500m/s amplitude b0=1.0
+
 
 <job>
 problem_id = rt          # problem ID: basename of output filenames
@@ -37,8 +39,8 @@ ix1_bc     = periodic    # inner-X1 boundary flag
 ox1_bc     = periodic    # outer-X1 boundary flag
 
 nx2        = 132         # Number of zones in X2-direction
-x2min      = 136563.636365        # minimum value of X2
-x2max      = 6091109.09097         # maximum value of X2
+x2min      = 817400.0        # minimum value of X2
+x2max      = 6605900.0         # maximum value of X2
 ix2_bc     = user        # inner-X2 boundary flag
 ox2_bc     = user        # outer-X2 boundary flag
 
@@ -61,11 +63,11 @@ ox3_bc     = periodic    # outer-X3 boundary flag
 <hydro>
 iso_sound_speed = 8256.0           #8256.6, 91988.6 in the corona
 gamma      = 1.3333         # gamma = C_p/C_v
-grav_acc2  = -1526.070137525 #-276.0915    #-274.0
+grav_acc2  = -143.14512    #-1526.070137525 #-276.0915    #-274.0
 
 <problem>
 iprob = 1
 amp   = 0.01
 drat  = 125454.0
-b0   = 0.0
+b0   = 10.0
 

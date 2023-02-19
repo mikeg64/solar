@@ -24,7 +24,7 @@ dt         = 4.0        # time increment between outputs
 <time>
 cfl_number = 0.4         # The Courant, Friedrichs, & Lewy (CFL) Number
 nlim       = 1000000000      # cycle limit
-tlim       = 1200.0        # time limit
+tlim       = 600.0        # time limit
 integrator  = vl2       # time integration algorithm
 xorder      = 2         # order of spatial reconstruction
 ncycle_out  = 1         # interval for stdout summary info
@@ -37,8 +37,8 @@ ix1_bc     = periodic    # inner-X1 boundary flag
 ox1_bc     = periodic    # outer-X1 boundary flag
 
 nx2        = 132         # Number of zones in X2-direction
-x2min      = 136563.636365        # minimum value of X2
-x2max      = 6091109.09097         # maximum value of X2
+x2min      = 45654.54        # minimum value of X2
+x2max      = 6000200.0         # maximum value of X2
 ix2_bc     = user        # inner-X2 boundary flag
 ox2_bc     = user        # outer-X2 boundary flag
 
@@ -49,19 +49,37 @@ ix3_bc     = periodic    # inner-X3 boundary flag
 ox3_bc     = periodic    # outer-X3 boundary flag
 
 #num_threads = 4
-
-#<meshblock>
-#nx1     =    200
-#nx2     =    100
-#nx3     =    1
+refinement = static
 
 
+<meshblock>
+nx1     =    200
+nx2     =    66
+nx3     =    1
+
+<refinement1>
+x1min=-2000000.0
+x1max= 2000000.0
+x2min=1000000.0
+x2max= 2000000.0
+x3min=-0.5
+x3max= 0.5
+level=1
+
+<refinement2>
+x1min=-2000000.0
+x1max= 2000000.0
+x2min=45654.54
+x2max= 1000000.0
+x3min=-0.5
+x3max= 0.5
+level=2
 
 
 <hydro>
-iso_sound_speed = 8256.0           #8256.6, 91988.6 in the corona
+iso_sound_speed = 8256.0           #8256.6 
 gamma      = 1.3333         # gamma = C_p/C_v
-grav_acc2  = -1526.070137525 #-276.0915    #-274.0
+grav_acc2  =  0.0    #-274.0
 
 <problem>
 iprob = 1

@@ -49,22 +49,22 @@ module statbalancemod
 !   density kg/m^3
 !    real, parameter :: rho0=2.34d-4, p0=9228.6447
 !   pressure and density taken fromVALIIIc data
-    real, parameter :: rho0=5.48d-12, p0=2.7865d-4
+    real, parameter :: rho0=5.48d-12,p0=2.7865d-4
 !   solar gravity m/s^2
     real, parameter :: gs=274.0
 
 !   temperature profile parameters (K))
     real, parameter :: Tch=8000, Tc=1.8d6
 
-!   position of the transition zone (ytr) and width of transition zone (wtr) in metres
-    real, parameter :: ytr=2.0d6, wtr=0.02d6
+!   position of the transition zone (ytr) and width of transition zone (wtr) in metres wtr=0.02
+    real, parameter :: ytr=2.0d6, wtr=0.1d6
 
 
     public :: pi
     public :: mu_mass, R,fgamma,mumag
     public :: rho0, p0, gs
     public :: Tch, Tc, ytr, wtr
-    public :: writefile, temp, hydropres, dens, hydrodens, hydropres2
+    public :: writefile, temp, hydropres, dens, hydrodens, hydropres2, bruntvaisalla
 
 
 private
@@ -118,8 +118,9 @@ subroutine hydropres2(heights, npoints, deltah, pres, dens)
     integer, intent(in) :: npoints
     integer :: i
     !6840
-    !real :: iniene = 5840.d0*R*(0.00252e-1)/mu_thermal/(fgamma-1.0)
-    real :: iniene = 6840.d0*R*(2.3409724e-09)/mu_thermal/(fgamma-1.0)
+    real :: iniene = 5840.d0*R*(0.00252e-1)/mu_thermal/(fgamma-1.0)
+    !real :: iniene = 6840.d0*R*(2.3409724e-09)/mu_thermal/(fgamma-1.0)
+    !real :: iniene = 12840.d0*R*(2.3409724e-09)/mu_thermal/(fgamma-1.0)
     !real :: iniene = 231287.68d0*R*(1.09e-11)/mu_thermal/(fgamma-1.0)
     real  :: p_1, p_2, comi
 
@@ -166,8 +167,41 @@ subroutine hydropres2(heights, npoints, deltah, pres, dens)
 
 endsubroutine
 
+!compute bruntvaisalla frequency
+subroutine bruntvaisalla(heights, npoints, deltah, pres, dens, bruntvas)
+
+    real, intent(inout) :: pres(4096), dens(4096), bruntvas(4096)
+    real, intent(in) :: deltah, heights(4096)
+    real :: presgrad(4096), densgrad(4096)
+    integer, intent(in) :: npoints
+    integer :: i
+
+    real  :: p_1, p_2, comi
 
 
+
+    !compute density gradient
+    do i=3,npoints-2
+        comi=-abs(heights(i+1)-heights(i))
+        p_1= -dens(i+2)+8*dens(i+1)-8*dens(i-1)+dens(i-2)
+        p_2= (1.0d0/dens(i))
+        densgrad(i)= p_2*(p_1/comi)
+    enddo
+
+    !compute pressure gradient
+    do i=3,npoints-2
+        comi=-abs(heights(i+1)-heights(i))
+        p_1= -pres(i+2)+8*pres(i+1)-8*pres(i-1)+pres(i-2)
+        p_2= (1.0d0/(fgamma*pres(i)))
+        presgrad(i)= p_2*(p_1/comi)
+    enddo
+
+    do i=3,npoints-2
+         bruntvas(i)= -gs*(densgrad(i)-presgrad(i))
+    enddo
+
+
+endsubroutine
 
 
 
@@ -214,10 +248,10 @@ real function dens( height, spres )
 
 end function
 
-subroutine writefile(height, dens, press, temp, nitems)
+subroutine writefile(height, dens, press, temp,bruntvas, nitems)
     implicit none
     integer, intent(in) :: nitems
-    real, intent(in) :: height(nitems), dens(nitems), press(nitems), temp(nitems)
+    real, intent(in) :: height(nitems), dens(nitems), press(nitems), temp(nitems),bruntvas(nitems)
 
     integer :: i
 
@@ -225,7 +259,7 @@ subroutine writefile(height, dens, press, temp, nitems)
 
     !starting at point number 4 because lower points had -ve enrgy density
     do i=37,nitems
-        write(9,*) height(i),temp(i),dens(i), press(i)
+        write(9,*) height(i),temp(i),dens(i), press(i), bruntvas(i)
 200     format(F16.6,2X,F16.6,2X,F16.6,2X,F16.6)
     end do
 
