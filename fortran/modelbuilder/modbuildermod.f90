@@ -1,4 +1,4 @@
-module statbalancemod
+module modelbuildermod
     implicit none
 !mu=0.6d0;
 !R=8.31e3;
@@ -72,15 +72,6 @@ private
 
 contains
 
-!compute temp at height using tanh function
-real function temp( height )
-    real, intent(in) :: height
-    real :: tmptemp
-
-    tmptemp=1+tanh((height-ytr)/wtr)
-
-    temp=Tch+((Tc-Tch)/2.0)*tmptemp
-end function
 
 !compute pres
 real function hydropres(heights, hindex, npoints, deltah)
