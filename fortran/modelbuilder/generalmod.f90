@@ -1,4 +1,4 @@
-
+! types and general functions used for the model builder
 module generalmod
     implicit none
 
@@ -46,13 +46,13 @@ module generalmod
 contains
 
     !compute temp at height using tanh function
-    real function temp( height )
+    real function ttemp( height )
         real, intent(in) :: height
         real :: tmptemp
 
-        tmptemp=1+tanh((height-ytr)/wtr)
+        tmptemp=1+tanh(height)
 
-        temp=Tch+((Tc-Tch)/2.0)*tmptemp
+        ttemp=tmptemp
     end function
 
 

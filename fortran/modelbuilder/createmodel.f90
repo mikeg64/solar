@@ -2,7 +2,14 @@ program createmodel
 
 ! program to generate solar atmosphere configuration magnetohydrostatic equilibrium
 
-    use modelbuildermod, only: writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla
+! refer to
+!https://github.com/mikeg64/smaug_realpmode/blob/master/matlab/generateinitialconfiguration/generatefield_verttube.m
+
+!
+!writing routine
+!https://github.com/mikeg64/smaug_realpmode/blob/master/matlab/generateinitialconfiguration/hdf5_and_gdf/writesac3D.m
+
+    use modbuildermod, only: writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla
     use generalmod
 
 	implicit none
@@ -12,7 +19,7 @@ program createmodel
     real :: height, logdens, logtt   !parameters read from file a updated
     real, dimension(305) :: h, ld, ltt
 
-    real :: inene ! initial energy at photosphere obtained from VALIIc
+    real :: iniene ! initial energy at photosphere obtained from VALIIc
     integer :: i
 
 
