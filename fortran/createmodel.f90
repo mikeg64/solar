@@ -29,22 +29,25 @@ program createmodel
 	end type simdata
 
 	type simparams
-	        integer boundary_conditions(3)
-        	integer dimensionality
+            character(100) :: uniqueidentifier
+	        integer(3) :: boundary_conditions
+        	integer :: dimensionality
 
-        	real domain_left_edge(3)
-         	real domain_right_edge(3)
-        	real eta
-        	real adiab
-        	real fgamma
-        	real gravity0
-        	real gravity1
-        	real gravity2
-        	real nu
-        	integer num_ghost_zones
+        	real(3) :: domain_left_edge
+         	real(3) :: domain_right_edge
+         	integer :: currentiteration
+         	real :: currenttime
+        	real :: eta
+        	real :: adiab
+        	real :: fgamma
+        	real :: gravity0
+        	real :: gravity1
+        	real :: gravity2
+        	real :: nu
+        	integer :: num_ghost_zones
 
-        	integer nw
-        	integer neqpar
+        	integer :: nw
+        	integer :: neqpar
 	end type simparams
 
 	type mconsts
@@ -78,6 +81,7 @@ program createmodel
     gridinfo%grid_dimensions(3)= nx3
     gridinfo%ndimensions = ndim
 
+    params%uniqueidentifier='test'
     params%adiab=adiab
     params%dimensionality=ndim
     params%domain_left_edge(1)=xmin
@@ -156,7 +160,7 @@ iniene=6840.0e0*consts%R*(2.3409724e-09)/consts%mu_therm/(consts%fgamma-1.0)
   !read(1,3(1X, F10.0)) height, logdens, logtt
   close(unit = 1)
 
-
+  call writesac3d( 'testfile.txt', params, gridinfo, sdata, consts )
 
        	contains
 
@@ -169,7 +173,6 @@ iniene=6840.0e0*consts%R*(2.3409724e-09)/consts%mu_therm/(consts%fgamma-1.0)
        		type(simparams), intent(inout) :: ssimparams
        		type(simgridinfo), intent(inout) :: ssimgridinfo
        		type(simdata), intent(inout)  :: ssimdata
-
 
 
 

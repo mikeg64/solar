@@ -1,4 +1,7 @@
 module modbuildermod
+
+    use typesmod
+
     implicit none
 !mu=0.6d0;
 !R=8.31e3;
@@ -64,7 +67,7 @@ module modbuildermod
     public :: mu_mass, R,fgamma,mumag
     public :: rho0, p0, gs
     public :: Tch, Tc, ytr, wtr
-    public :: writefile, temp, hydropres, dens, hydrodens, hydropres2, bruntvaisalla
+    public :: writefile, temp, hydropres, dens, hydrodens, hydropres2, bruntvaisalla, genfield
 
 
 private
@@ -208,6 +211,7 @@ endsubroutine
 
 
 
+!using hydrostatic mass balance compute the integrated density
 
 !compute pres
 real function hydrodens(heights, hindex, npoints, deltah)
@@ -238,7 +242,11 @@ real function hydrodens(heights, hindex, npoints, deltah)
 end function
 
 
+! given height and pressure calculate the density
+! at that height use the ttemp function to compute the temperature
+!returns a single value
 
+!use the equation of state
 
 real function dens( height, spres )
     real, intent(in) :: height, spres
@@ -269,30 +277,20 @@ subroutine writefile(height, dens, press, temp,bruntvas, nitems)
 
 end subroutine writefile
 
-subroutine writesacfile(height, dens, press, temp,bruntvas, nitems)
-    implicit none
-
-! inputs w matrix with fields
-
-! parameter block
+       	![simparams, simgridinfo, simdata]=
+       	subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
 
 
-    integer, intent(in) :: nitems
-    real, intent(in) :: height(nitems), dens(nitems), press(nitems), temp(nitems),bruntvas(nitems)
 
-    integer :: i
+            integer, intent(in) :: fieldtype
+       		type(simparams), intent(inout) :: ssimparams
+       		type(simgridinfo), intent(inout) :: ssimgridinfo
+       		type(simdata), intent(inout)  :: ssimdata
 
-    open(unit=9, file='atmos.txt')
 
-    !starting at point number 4 because lower points had -ve enrgy density
-    do i=37,nitems
-        write(9,*) height(i),temp(i),dens(i), press(i), bruntvas(i)
-200     format(F16.6,2X,F16.6,2X,F16.6,2X,F16.6)
-    end do
 
-    close(unit=9)
 
-end subroutine writesacfile
 
+       	end subroutine genfield
 
 end module

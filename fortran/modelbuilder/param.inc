@@ -18,6 +18,20 @@
 	!
   	real, parameter :: lntwo=0.69314718055995d0
 
+    real, parameter :: mu_mass=2.2d0          !0.6d0
+    real, parameter :: R=8.31e3
+    real, parameter :: mu_thermal = 0.6
+
+    ! adiabatic gas parameter and the magnetic permeablity
+    real, parameter :: fgamma=1.66666667e0,mumag=4*pi/1.0e7
+
+!   density kg/m^3
+!    real, parameter :: rho0=2.34d-4, p0=9228.6447
+!   pressure and density taken fromVALIIIc data
+    real, parameter :: rho0=5.48d-12,p0=2.7865d-4
+!   solar gravity m/s^2
+    real, parameter :: gs=274.0
+
 	integer :: ngx1=2
 	integer :: ngx2=2
 	integer :: ngx3=2
@@ -30,7 +44,7 @@
     integer :: nw=13
     integer :: nx1=128
     integer :: nx2=128
-    integer :: nx3=305   ! made same as size of input file
+    integer :: nx3=135   ! made same as size of input file
 
 
     real :: rgamma=1.666667

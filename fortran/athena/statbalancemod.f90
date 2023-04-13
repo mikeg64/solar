@@ -242,7 +242,7 @@ real function dens( height, spres )
     real, intent(in) :: height, spres
     real :: tmpresult
 
-! parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
+    ! parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
     tmpresult= mu_mass*spres/(R*temp(height))
     dens=tmpresult
 

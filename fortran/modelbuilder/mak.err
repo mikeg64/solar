@@ -1,0 +1,900 @@
+gfortran -O3 -Wall -Wextra -fdefault-real-16 -mcmodel=large -fPIC -rdynamic -o typesmod.o -c typesmod.f90
+param.inc:8:4:
+
+    8 |         real, parameter :: pi=3.14159265358979323846264338327950d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:9:4:
+
+    9 |         real, parameter :: pi_1=1./pi,pi4_1=pi**(-4),pi5_1=pi**(-5)
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:10:4:
+
+   10 |         real, parameter :: sqrtpi=1.77245385090551602729816748334115d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:11:4:
+
+   11 |         real, parameter :: sqrt2=1.41421356237309504880168872420970d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:12:4:
+
+   12 |         real, parameter :: sqrt2pi=sqrt2*sqrtpi
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:13:4:
+
+   13 |         real, parameter :: four_pi_over_three=4.0/3.0*pi
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:14:4:
+
+   14 |         real, parameter :: onethird=1./3., twothird=2./3., fourthird=4./3., onesixth=1./6.
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:15:4:
+
+   15 |         real, parameter :: one_over_sqrt3=0.577350269189625764509148780501958d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:16:4:
+
+   16 |         real, parameter :: twopi = 6.2831853071795864769252867665590d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:17:4:
+
+   17 |         real, parameter :: dtor = pi/180.d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:19:4:
+
+   19 |         real, parameter :: lntwo=0.69314718055995d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:35:2:
+
+   35 |         integer :: ngx1=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:36:2:
+
+   36 |         integer :: ngx2=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:37:2:
+
+   37 |         integer :: ngx3=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:39:2:
+
+   39 |         integer :: it=0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:40:2:
+
+   40 |         integer :: rstat
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:10:2:
+
+   10 |         type simgridinfo
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:11:2:
+
+   11 |                 integer ndimensions
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:15:2:
+
+   15 |         end type simgridinfo
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:17:2:
+
+   17 |         type simdata
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:18:2:
+
+   18 |                 real w(128,128,135,16)
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:19:2:
+
+   19 |         end type simdata
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:21:2:
+
+   21 |         type simparams
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:24:2:
+
+   24 |                 integer boundary_conditions(3)
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:25:10:
+
+   25 |                 integer dimensionality
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:27:10:
+
+   27 |                 real domain_left_edge(3)
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:28:11:
+
+   28 |                 real domain_right_edge(3)
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:29:11:
+
+   29 |                 integer :: currentiteration
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:30:11:
+
+   30 |                 real :: currenttime
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:31:10:
+
+   31 |                 real eta
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:32:10:
+
+   32 |                 real adiab
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:33:10:
+
+   33 |                 real fgamma
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:34:10:
+
+   34 |                 real gravity0
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:35:10:
+
+   35 |                 real gravity1
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:36:10:
+
+   36 |                 real gravity2
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:37:10:
+
+   37 |                 real nu
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:38:10:
+
+   38 |                 integer num_ghost_zones
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:40:10:
+
+   40 |                 integer nw
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:41:10:
+
+   41 |                 integer neqpar
+      |                 1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:42:2:
+
+   42 |         end type simparams
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:44:2:
+
+   44 |         type mconsts
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:46:2:
+
+   46 |                 real :: mu
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:47:2:
+
+   47 |                 real :: fgamma
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:48:2:
+
+   48 |                 real :: ggg
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:49:2:
+
+   49 |                 real :: mu_therm
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+typesmod.f90:50:2:
+
+   50 |         end type mconsts
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:51:17:
+
+   51 |     real :: adiab=1.0
+      |                 1
+Warning: Unused PRIVATE module variable ‘adiab’ declared at (1) [-Wunused-value]
+param.inc:52:15:
+
+   52 |     real :: eta=0
+      |               1
+Warning: Unused PRIVATE module variable ‘eta’ declared at (1) [-Wunused-value]
+param.inc:53:14:
+
+   53 |     real :: g1=-274
+      |              1
+Warning: Unused PRIVATE module variable ‘g1’ declared at (1) [-Wunused-value]
+param.inc:54:14:
+
+   54 |     real :: g2=0
+      |              1
+Warning: Unused PRIVATE module variable ‘g2’ declared at (1) [-Wunused-value]
+param.inc:55:14:
+
+   55 |     real :: g3=0
+      |              1
+Warning: Unused PRIVATE module variable ‘g3’ declared at (1) [-Wunused-value]
+param.inc:39:14:
+
+   39 |         integer :: it=0
+      |                     1
+Warning: Unused PRIVATE module variable ‘it’ declared at (1) [-Wunused-value]
+param.inc:42:19:
+
+   42 |     integer :: ndim=3
+      |                   1
+Warning: Unused PRIVATE module variable ‘ndim’ declared at (1) [-Wunused-value]
+param.inc:43:21:
+
+   43 |     integer :: neqpar=7
+      |                     1
+Warning: Unused PRIVATE module variable ‘neqpar’ declared at (1) [-Wunused-value]
+param.inc:35:16:
+
+   35 |         integer :: ngx1=2
+      |                       1
+Warning: Unused PRIVATE module variable ‘ngx1’ declared at (1) [-Wunused-value]
+param.inc:36:16:
+
+   36 |         integer :: ngx2=2
+      |                       1
+Warning: Unused PRIVATE module variable ‘ngx2’ declared at (1) [-Wunused-value]
+param.inc:37:16:
+
+   37 |         integer :: ngx3=2
+      |                       1
+Warning: Unused PRIVATE module variable ‘ngx3’ declared at (1) [-Wunused-value]
+param.inc:44:17:
+
+   44 |     integer :: nw=13
+      |                 1
+Warning: Unused PRIVATE module variable ‘nw’ declared at (1) [-Wunused-value]
+param.inc:45:18:
+
+   45 |     integer :: nx1=128
+      |                  1
+Warning: Unused PRIVATE module variable ‘nx1’ declared at (1) [-Wunused-value]
+param.inc:46:18:
+
+   46 |     integer :: nx2=128
+      |                  1
+Warning: Unused PRIVATE module variable ‘nx2’ declared at (1) [-Wunused-value]
+param.inc:47:18:
+
+   47 |     integer :: nx3=135   ! made same as size of input file
+      |                  1
+Warning: Unused PRIVATE module variable ‘nx3’ declared at (1) [-Wunused-value]
+param.inc:50:18:
+
+   50 |     real :: rgamma=1.666667
+      |                  1
+Warning: Unused PRIVATE module variable ‘rgamma’ declared at (1) [-Wunused-value]
+param.inc:40:17:
+
+   40 |         integer :: rstat
+      |                        1
+Warning: Unused PRIVATE module variable ‘rstat’ declared at (1) [-Wunused-value]
+param.inc:60:16:
+
+   60 |     real :: xmax=5955555.6e0
+      |                1
+Warning: Unused PRIVATE module variable ‘xmax’ declared at (1) [-Wunused-value]
+param.inc:57:16:
+
+   57 |     real :: xmin=133333.33
+      |                1
+Warning: Unused PRIVATE module variable ‘xmin’ declared at (1) [-Wunused-value]
+param.inc:61:16:
+
+   61 |     real :: ymax=4.0e6
+      |                1
+Warning: Unused PRIVATE module variable ‘ymax’ declared at (1) [-Wunused-value]
+param.inc:58:16:
+
+   58 |     real :: ymin=1953.1
+      |                1
+Warning: Unused PRIVATE module variable ‘ymin’ declared at (1) [-Wunused-value]
+param.inc:62:16:
+
+   62 |     real :: zmax=4.0e6
+      |                1
+Warning: Unused PRIVATE module variable ‘zmax’ declared at (1) [-Wunused-value]
+param.inc:59:16:
+
+   59 |     real :: zmin=1953.1
+      |                1
+Warning: Unused PRIVATE module variable ‘zmin’ declared at (1) [-Wunused-value]
+gfortran -O3 -Wall -Wextra -fdefault-real-16 -mcmodel=large -fPIC -rdynamic -o generalmod.o -c generalmod.f90
+param.inc:8:4:
+
+    8 |         real, parameter :: pi=3.14159265358979323846264338327950d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:9:4:
+
+    9 |         real, parameter :: pi_1=1./pi,pi4_1=pi**(-4),pi5_1=pi**(-5)
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:10:4:
+
+   10 |         real, parameter :: sqrtpi=1.77245385090551602729816748334115d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:11:4:
+
+   11 |         real, parameter :: sqrt2=1.41421356237309504880168872420970d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:12:4:
+
+   12 |         real, parameter :: sqrt2pi=sqrt2*sqrtpi
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:13:4:
+
+   13 |         real, parameter :: four_pi_over_three=4.0/3.0*pi
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:14:4:
+
+   14 |         real, parameter :: onethird=1./3., twothird=2./3., fourthird=4./3., onesixth=1./6.
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:15:4:
+
+   15 |         real, parameter :: one_over_sqrt3=0.577350269189625764509148780501958d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:16:4:
+
+   16 |         real, parameter :: twopi = 6.2831853071795864769252867665590d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:17:4:
+
+   17 |         real, parameter :: dtor = pi/180.d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:19:4:
+
+   19 |         real, parameter :: lntwo=0.69314718055995d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:35:2:
+
+   35 |         integer :: ngx1=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:36:2:
+
+   36 |         integer :: ngx2=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:37:2:
+
+   37 |         integer :: ngx3=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:39:2:
+
+   39 |         integer :: it=0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:40:2:
+
+   40 |         integer :: rstat
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+generalmod.f90:42:9:
+
+   42 |                 type(simparams), intent(inout) :: ssimparams
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+generalmod.f90:43:9:
+
+   43 |                 type(simgridinfo), intent(inout) :: ssimgridinfo
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+generalmod.f90:44:9:
+
+   44 |                 type(simdata), intent(inout)  :: ssimdata
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+generalmod.f90:45:8:
+
+   45 |                 type(mconsts), intent(inout)  :: smconsts
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+generalmod.f90:32:3:
+
+   32 | 200     format(F16.6,2X,F16.6,2X,F16.6,2X,F16.6)
+      |   1
+Warning: Label 200 at (1) defined but not used [-Wunused-label]
+param.inc:51:17:
+
+   51 |     real :: adiab=1.0
+      |                 1
+Warning: Unused PRIVATE module variable ‘adiab’ declared at (1) [-Wunused-value]
+param.inc:52:15:
+
+   52 |     real :: eta=0
+      |               1
+Warning: Unused PRIVATE module variable ‘eta’ declared at (1) [-Wunused-value]
+param.inc:53:14:
+
+   53 |     real :: g1=-274
+      |              1
+Warning: Unused PRIVATE module variable ‘g1’ declared at (1) [-Wunused-value]
+param.inc:54:14:
+
+   54 |     real :: g2=0
+      |              1
+Warning: Unused PRIVATE module variable ‘g2’ declared at (1) [-Wunused-value]
+param.inc:55:14:
+
+   55 |     real :: g3=0
+      |              1
+Warning: Unused PRIVATE module variable ‘g3’ declared at (1) [-Wunused-value]
+param.inc:39:14:
+
+   39 |         integer :: it=0
+      |                     1
+Warning: Unused PRIVATE module variable ‘it’ declared at (1) [-Wunused-value]
+param.inc:42:19:
+
+   42 |     integer :: ndim=3
+      |                   1
+Warning: Unused PRIVATE module variable ‘ndim’ declared at (1) [-Wunused-value]
+param.inc:43:21:
+
+   43 |     integer :: neqpar=7
+      |                     1
+Warning: Unused PRIVATE module variable ‘neqpar’ declared at (1) [-Wunused-value]
+param.inc:35:16:
+
+   35 |         integer :: ngx1=2
+      |                       1
+Warning: Unused PRIVATE module variable ‘ngx1’ declared at (1) [-Wunused-value]
+param.inc:36:16:
+
+   36 |         integer :: ngx2=2
+      |                       1
+Warning: Unused PRIVATE module variable ‘ngx2’ declared at (1) [-Wunused-value]
+param.inc:37:16:
+
+   37 |         integer :: ngx3=2
+      |                       1
+Warning: Unused PRIVATE module variable ‘ngx3’ declared at (1) [-Wunused-value]
+param.inc:44:17:
+
+   44 |     integer :: nw=13
+      |                 1
+Warning: Unused PRIVATE module variable ‘nw’ declared at (1) [-Wunused-value]
+param.inc:45:18:
+
+   45 |     integer :: nx1=128
+      |                  1
+Warning: Unused PRIVATE module variable ‘nx1’ declared at (1) [-Wunused-value]
+param.inc:46:18:
+
+   46 |     integer :: nx2=128
+      |                  1
+Warning: Unused PRIVATE module variable ‘nx2’ declared at (1) [-Wunused-value]
+param.inc:47:18:
+
+   47 |     integer :: nx3=135   ! made same as size of input file
+      |                  1
+Warning: Unused PRIVATE module variable ‘nx3’ declared at (1) [-Wunused-value]
+param.inc:50:18:
+
+   50 |     real :: rgamma=1.666667
+      |                  1
+Warning: Unused PRIVATE module variable ‘rgamma’ declared at (1) [-Wunused-value]
+param.inc:40:17:
+
+   40 |         integer :: rstat
+      |                        1
+Warning: Unused PRIVATE module variable ‘rstat’ declared at (1) [-Wunused-value]
+param.inc:60:16:
+
+   60 |     real :: xmax=5955555.6e0
+      |                1
+Warning: Unused PRIVATE module variable ‘xmax’ declared at (1) [-Wunused-value]
+param.inc:57:16:
+
+   57 |     real :: xmin=133333.33
+      |                1
+Warning: Unused PRIVATE module variable ‘xmin’ declared at (1) [-Wunused-value]
+param.inc:61:16:
+
+   61 |     real :: ymax=4.0e6
+      |                1
+Warning: Unused PRIVATE module variable ‘ymax’ declared at (1) [-Wunused-value]
+param.inc:58:16:
+
+   58 |     real :: ymin=1953.1
+      |                1
+Warning: Unused PRIVATE module variable ‘ymin’ declared at (1) [-Wunused-value]
+param.inc:62:16:
+
+   62 |     real :: zmax=4.0e6
+      |                1
+Warning: Unused PRIVATE module variable ‘zmax’ declared at (1) [-Wunused-value]
+param.inc:59:16:
+
+   59 |     real :: zmin=1953.1
+      |                1
+Warning: Unused PRIVATE module variable ‘zmin’ declared at (1) [-Wunused-value]
+generalmod.f90:40:82:
+
+   40 | subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smconsts )
+      |                                                                                  1
+Warning: Unused dummy argument ‘smconsts’ at (1) [-Wunused-dummy-argument]
+generalmod.f90:40:72:
+
+   40 | subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smconsts )
+      |                                                                        1
+Warning: Unused dummy argument ‘ssimdata’ at (1) [-Wunused-dummy-argument]
+generalmod.f90:40:62:
+
+   40 | subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smconsts )
+      |                                                              1
+Warning: Unused dummy argument ‘ssimgridinfo’ at (1) [-Wunused-dummy-argument]
+gfortran -O3 -Wall -Wextra -fdefault-real-16 -mcmodel=large -fPIC -rdynamic -o modbuildermod.o -c modbuildermod.f90
+modbuildermod.f90:273:3:
+
+  273 | 200     format(F16.6,2X,F16.6,2X,F16.6,2X,F16.6)
+      |   1
+Warning: Label 200 at (1) defined but not used [-Wunused-label]
+modbuildermod.f90:176:49:
+
+  176 | subroutine bruntvaisalla(heights, npoints, deltah, pres, dens, bruntvas)
+      |                                                 1
+Warning: Unused dummy argument ‘deltah’ at (1) [-Wunused-dummy-argument]
+modbuildermod.f90:117:46:
+
+  117 | subroutine hydropres2(heights, npoints, deltah, pres, dens)
+      |                                              1
+Warning: Unused dummy argument ‘deltah’ at (1) [-Wunused-dummy-argument]
+gfortran -O3 -Wall -Wextra -fdefault-real-16 -mcmodel=large -fPIC -rdynamic -o createmodel.o -c createmodel.f90
+createmodel.f90:16:2:
+
+   16 |         implicit none
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:8:4:
+
+    8 |         real, parameter :: pi=3.14159265358979323846264338327950d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:9:4:
+
+    9 |         real, parameter :: pi_1=1./pi,pi4_1=pi**(-4),pi5_1=pi**(-5)
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:10:4:
+
+   10 |         real, parameter :: sqrtpi=1.77245385090551602729816748334115d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:11:4:
+
+   11 |         real, parameter :: sqrt2=1.41421356237309504880168872420970d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:12:4:
+
+   12 |         real, parameter :: sqrt2pi=sqrt2*sqrtpi
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:13:4:
+
+   13 |         real, parameter :: four_pi_over_three=4.0/3.0*pi
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:14:4:
+
+   14 |         real, parameter :: onethird=1./3., twothird=2./3., fourthird=4./3., onesixth=1./6.
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:15:4:
+
+   15 |         real, parameter :: one_over_sqrt3=0.577350269189625764509148780501958d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:16:4:
+
+   16 |         real, parameter :: twopi = 6.2831853071795864769252867665590d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:17:4:
+
+   17 |         real, parameter :: dtor = pi/180.d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:19:4:
+
+   19 |         real, parameter :: lntwo=0.69314718055995d0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:35:2:
+
+   35 |         integer :: ngx1=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:36:2:
+
+   36 |         integer :: ngx2=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:37:2:
+
+   37 |         integer :: ngx3=2
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:39:2:
+
+   39 |         integer :: it=0
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+param.inc:40:2:
+
+   40 |         integer :: rstat
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:28:2:
+
+   28 |         character (len=30), parameter :: newfilename='3D_128_4Mm_asc.ini'
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:30:2:
+
+   30 |         type (mconsts)::consts
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:35:2:
+
+   35 |         consts%mu_therm=mu_thermal
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:36:2:
+
+   36 |         consts%R=R
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:37:2:
+
+   37 |         consts%fgamma=rgamma
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:38:2:
+
+   38 |         consts%ggg=g1
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:39:2:
+
+   39 |         consts%mu=4*pi/1.0e7
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:169:9:
+
+  169 |         contains
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:172:9:
+
+  172 |         subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:177:9:
+
+  177 |                 type(simparams), intent(inout) :: ssimparams
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:178:9:
+
+  178 |                 type(simgridinfo), intent(inout) :: ssimgridinfo
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:179:9:
+
+  179 |                 type(simdata), intent(inout)  :: ssimdata
+      |                1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:185:9:
+
+  185 |         end subroutine genfield
+      |         1
+Warning: Nonconforming tab character at (1) [-Wtabs]
+createmodel.f90:172:73:
+
+  172 |         subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
+      |                                                                         1
+Warning: Unused dummy argument ‘fieldtype’ at (1) [-Wunused-dummy-argument]
+createmodel.f90:172:62:
+
+  172 |         subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
+      |                                                              1
+Warning: Unused dummy argument ‘ssimdata’ at (1) [-Wunused-dummy-argument]
+createmodel.f90:172:52:
+
+  172 |         subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
+      |                                                    1
+Warning: Unused dummy argument ‘ssimgridinfo’ at (1) [-Wunused-dummy-argument]
+createmodel.f90:172:38:
+
+  172 |         subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
+      |                                      1
+Warning: Unused dummy argument ‘ssimparams’ at (1) [-Wunused-dummy-argument]
+param.inc:17:26:
+
+   17 |         real, parameter :: dtor = pi/180.d0
+      |                               1
+Warning: Unused parameter ‘dtor’ declared at (1) [-Wunused-parameter]
+param.inc:52:15:
+
+   52 |     real :: eta=0
+      |               1
+Warning: Unused variable ‘eta’ declared at (1) [-Wunused-variable]
+param.inc:26:29:
+
+   26 |     real, parameter :: fgamma=1.66666667e0,mumag=4*pi/1.0e7
+      |                             1
+Warning: Unused parameter ‘fgamma’ declared at (1) [-Wunused-parameter]
+param.inc:13:40:
+
+   13 |         real, parameter :: four_pi_over_three=4.0/3.0*pi
+      |                                             1
+Warning: Unused parameter ‘four_pi_over_three’ declared at (1) [-Wunused-parameter]
+param.inc:14:63:
+
+   14 |         real, parameter :: onethird=1./3., twothird=2./3., fourthird=4./3., onesixth=1./6.
+      |                                                                    1
+Warning: Unused parameter ‘fourthird’ declared at (1) [-Wunused-parameter]
+param.inc:33:25:
+
+   33 |     real, parameter :: gs=274.0
+      |                         1
+Warning: Unused parameter ‘gs’ declared at (1) [-Wunused-parameter]
+param.inc:39:14:
+
+   39 |         integer :: it=0
+      |                     1
+Warning: Unused variable ‘it’ declared at (1) [-Wunused-variable]
+param.inc:19:27:
+
+   19 |         real, parameter :: lntwo=0.69314718055995d0
+      |                                1
+Warning: Unused parameter ‘lntwo’ declared at (1) [-Wunused-parameter]
+param.inc:21:30:
+
+   21 |     real, parameter :: mu_mass=2.2d0          !0.6d0
+      |                              1
+Warning: Unused parameter ‘mu_mass’ declared at (1) [-Wunused-parameter]
+param.inc:26:48:
+
+   26 |     real, parameter :: fgamma=1.66666667e0,mumag=4*pi/1.0e7
+      |                                                1
+Warning: Unused parameter ‘mumag’ declared at (1) [-Wunused-parameter]
+param.inc:35:16:
+
+   35 |         integer :: ngx1=2
+      |                       1
+Warning: Unused variable ‘ngx1’ declared at (1) [-Wunused-variable]
+param.inc:36:16:
+
+   36 |         integer :: ngx2=2
+      |                       1
+Warning: Unused variable ‘ngx2’ declared at (1) [-Wunused-variable]
+param.inc:37:16:
+
+   37 |         integer :: ngx3=2
+      |                       1
+Warning: Unused variable ‘ngx3’ declared at (1) [-Wunused-variable]
+param.inc:44:17:
+
+   44 |     integer :: nw=13
+      |                 1
+Warning: Unused variable ‘nw’ declared at (1) [-Wunused-variable]
+param.inc:15:36:
+
+   15 |         real, parameter :: one_over_sqrt3=0.577350269189625764509148780501958d0
+      |                                         1
+Warning: Unused parameter ‘one_over_sqrt3’ declared at (1) [-Wunused-parameter]
+param.inc:14:79:
+
+   14 |         real, parameter :: onethird=1./3., twothird=2./3., fourthird=4./3., onesixth=1./6.
+      |                                                                                    1
+Warning: Unused parameter ‘onesixth’ declared at (1) [-Wunused-parameter]
+param.inc:14:30:
+
+   14 |         real, parameter :: onethird=1./3., twothird=2./3., fourthird=4./3., onesixth=1./6.
+      |                                   1
+Warning: Unused parameter ‘onethird’ declared at (1) [-Wunused-parameter]
+param.inc:31:39:
+
+   31 |     real, parameter :: rho0=5.48d-12,p0=2.7865d-4
+      |                                       1
+Warning: Unused parameter ‘p0’ declared at (1) [-Wunused-parameter]
+param.inc:9:38:
+
+    9 |         real, parameter :: pi_1=1./pi,pi4_1=pi**(-4),pi5_1=pi**(-5)
+      |                                           1
+Warning: Unused parameter ‘pi4_1’ declared at (1) [-Wunused-parameter]
+param.inc:9:53:
+
+    9 |         real, parameter :: pi_1=1./pi,pi4_1=pi**(-4),pi5_1=pi**(-5)
+      |                                                          1
+Warning: Unused parameter ‘pi5_1’ declared at (1) [-Wunused-parameter]
+param.inc:9:26:
+
+    9 |         real, parameter :: pi_1=1./pi,pi4_1=pi**(-4),pi5_1=pi**(-5)
+      |                               1
+Warning: Unused parameter ‘pi_1’ declared at (1) [-Wunused-parameter]
+param.inc:31:27:
+
+   31 |     real, parameter :: rho0=5.48d-12,p0=2.7865d-4
+      |                           1
+Warning: Unused parameter ‘rho0’ declared at (1) [-Wunused-parameter]
+param.inc:12:29:
+
+   12 |         real, parameter :: sqrt2pi=sqrt2*sqrtpi
+      |                                  1
+Warning: Unused parameter ‘sqrt2pi’ declared at (1) [-Wunused-parameter]
+param.inc:16:27:
+
+   16 |         real, parameter :: twopi = 6.2831853071795864769252867665590d0
+      |                                1
+Warning: Unused parameter ‘twopi’ declared at (1) [-Wunused-parameter]
+param.inc:14:46:
+
+   14 |         real, parameter :: onethird=1./3., twothird=2./3., fourthird=4./3., onesixth=1./6.
+      |                                                   1
+Warning: Unused parameter ‘twothird’ declared at (1) [-Wunused-parameter]
+createmodel.f90:172:27:
+
+  172 |         subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
+      |                           ^
+Warning: ‘genfield’ defined but not used [-Wunused-function]
+gfortran -O3 -Wall -Wextra -fdefault-real-16 -mcmodel=large -fPIC -rdynamic -o solmodbuild typesmod.o generalmod.o modbuildermod.o createmodel.o

@@ -1,0 +1,58 @@
+
+    !compute temp at height using tanh function
+    real function ttemp( height )
+        real, intent(in) :: height
+        real :: tmptemp
+
+        tmptemp=1+tanh(height)
+
+        ttemp=tmptemp
+    end function
+
+    !compute pres
+
+    !using hydrostatic mass balance compute the integrated density
+
+    real function hydrodens(heights, hindex, npoints, deltah)
+        real, intent(in) :: deltah, heights(4096)
+        integer, intent(in) :: hindex, npoints
+        real :: psum,Hscale
+        integer :: i
+
+    !    tmp0=temp(heights(1))
+        psum=0.0
+
+        if (hindex.eq.npoints) then
+            Hscale=R*ttemp(heights(hindex))/(mu_mass*gs)
+    !        tmptemp=p0*tmp0/temp(heights(hindex))
+            psum=psum+rho0*exp(deltah/Hscale)
+    !         psum=deltah/Hscale
+        elseif (hindex.lt.npoints) then
+     !       tmptemp=p0*tmp0/temp(heights(hindex))
+            do i=npoints,hindex,-1
+                Hscale=R*ttemp(heights(i))/(mu_mass*gs)
+                psum=psum+deltah/Hscale
+            end do
+            psum=rho0*exp(psum)
+        endif
+        print*,'rhosum ',hindex,' ',psum
+        hydrodens=psum
+
+    end function
+
+
+
+! given height and pressure calculate the density
+! at that height use the ttemp function to compute the temperature
+!returns a single value
+
+!use the equation of state
+    real function dens( height, spres )
+        real, intent(in) :: height, spres
+        real :: tmpresult
+
+        ! parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
+        tmpresult= mu_mass*spres/(R*ttemp(height))
+        dens=tmpresult
+
+    end function
