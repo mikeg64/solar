@@ -67,7 +67,7 @@ module modbuildermod
     public :: mu_mass, R,fgamma,mumag
     public :: rho0, p0, gs
     public :: Tch, Tc, ytr, wtr
-    public :: writefile, temp, hydropres, dens, hydrodens, hydropres2, bruntvaisalla, genfield
+    public :: writefile, temp, hydropres, dens, hydrodens, hydropres2, bruntvaisalla
 
 
 private
@@ -277,20 +277,5 @@ subroutine writefile(height, dens, press, temp,bruntvas, nitems)
 
 end subroutine writefile
 
-       	![simparams, simgridinfo, simdata]=
-       	subroutine genfield(ssimparams, ssimgridinfo, ssimdata, fieldtype)
-
-
-
-            integer, intent(in) :: fieldtype
-       		type(simparams), intent(inout) :: ssimparams
-       		type(simgridinfo), intent(inout) :: ssimgridinfo
-       		type(simdata), intent(inout)  :: ssimdata
-
-
-
-
-
-       	end subroutine genfield
 
 end module

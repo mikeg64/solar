@@ -9,9 +9,20 @@ program createmodel
 !writing routine
 !https://github.com/mikeg64/smaug_realpmode/blob/master/matlab/generateinitialconfiguration/hdf5_and_gdf/writesac3D.m
 
-    use modbuildermod, only: writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla, genfield
+
+!todo  % complete selfsimilarity field generator genssfield%fieldbuildermod
+!todo  % complete sac output writer writesac3d%generalmod
+!todo  % check hydropres2 integrating pressure correctly hydropres2%modbuildermod
+!todo  % construction of initialisation routine check correct calling of typesmod
+!todo  % correct dynamic creation of routines - with arrays set to correct size need param.inc types.mod and initialisation routine
+!todo  % replace params.inc with correct use of namelists e.g. see
+!        https://github.com/mikeg2105/comp-sci/blob/master/gfortran/advanced/f95features/readnamelist.f90
+
+
+    use modbuildermod, only: writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla
     use typesmod
     use generalmod, only: writesac3d
+    use fieldbuildermod, only:  genssfield, genvecfield
 
 	implicit none
 
@@ -143,7 +154,7 @@ iniene=6840.0e0*consts%R*(2.3409724e-09)/consts%mu_therm/(consts%fgamma-1.0)
 
 lp1=lp;
 
-!heights, npoints, deltah, pres, dens
+!heights, npoints, deltah, pres, dens %modelbuildermod
 call hydropres2(h,nx3,h(2)-h(1), lp,ld)
 
 
@@ -163,12 +174,12 @@ call hydropres2(h,nx3,h(2)-h(1), lp,ld)
  end do
 
 
-! generate the field
+! generate the field % fieldbuildermod
+    call genssfield(params, gridinfo, sdata, ifieldtype)
 
 
-
-! write the final input file (ascii or binary)
-  call writesac3d( newfilename, params, gridinfo, sdata, consts )
+! write the final input file (ascii or binary) %generalmod
+    call writesac3d( newfilename, params, gridinfo, sdata, consts )
 
        	contains
 

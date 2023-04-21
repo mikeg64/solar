@@ -32,6 +32,10 @@
 !   solar gravity m/s^2
     real, parameter :: gs=274.0
 
+!   ifieldtype1 is self similar field
+!   http://solarwavetheory.blogspot.com/2013/11/solar-atmospheric-mhd-flux-tube.html
+    integer, parameter :: ifieldtype=1
+
 	integer :: ngx1=2
 	integer :: ngx2=2
 	integer :: ngx3=2
