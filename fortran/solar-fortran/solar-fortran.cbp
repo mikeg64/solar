@@ -23,8 +23,12 @@
 		<Unit filename="../athena/statbalancemod-original.f90" />
 		<Unit filename="../athena/statbalancemod.f90" />
 		<Unit filename="../createmodel.f90" />
+		<Unit filename="../modelbuilder/createmodel.f90" />
+		<Unit filename="../modelbuilder/fieldbuildermod.f90" />
 		<Unit filename="../modelbuilder/generalmod.f90" />
+		<Unit filename="../modelbuilder/modbuildermod.f90" />
 		<Unit filename="../modelbuilder/param.inc" />
+		<Unit filename="../modelbuilder/typesmod.f90" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
