@@ -2,6 +2,9 @@ program createmodel
 
 ! program to generate solar atmosphere configuration magnetohydrostatic equilibrium
 
+! Use the following python routine to generate an initial python routine
+!https://github.com/mikeg64/solar/blob/master/python/atmos_builder/buildatmos1.ipynb
+
 ! refer to
 !https://github.com/mikeg64/smaug_realpmode/blob/master/matlab/generateinitialconfiguration/generatefield_verttube.m
 
@@ -22,7 +25,7 @@ program createmodel
     use modbuildermod, only: writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla
     use typesmod
     use generalmod, only: writesac3d
-    use fieldbuildermod, only:  genssfield, genvecfield
+    use fieldbuildermod, only:  genssfield, genvecfield, hsbalancefield
 
 	implicit none
 
@@ -175,11 +178,13 @@ call hydropres2(h,nx3,h(2)-h(1), lp,ld)
 
 
 ! generate the field % fieldbuildermod
-    call genssfield(params, gridinfo, sdata, ifieldtype)
+call genssfield(params, gridinfo, sdata, ifieldtype)
 
+! rebalance the hydrostatic atmosphere pressure
+call hsbalancefield(params, gridinfo, sdata)
 
 ! write the final input file (ascii or binary) %generalmod
-    call writesac3d( newfilename, params, gridinfo, sdata, consts )
+call writesac3d( newfilename, params, gridinfo, sdata, consts )
 
        	contains
 

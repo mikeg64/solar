@@ -45,10 +45,10 @@
 
     integer :: ndim=3
     integer :: neqpar=7
-    integer :: nw=13
-    integer :: nx1=128
-    integer :: nx2=128
-    integer :: nx3=135   ! made same as size of input file
+    integer, parameter :: nw=13
+    integer, parameter :: nx1=128
+    integer, parameter :: nx2=128
+    integer, parameter :: nx3=135   ! made same as size of input file
 
 
     real :: rgamma=1.666667

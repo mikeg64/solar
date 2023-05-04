@@ -15,7 +15,7 @@ module typesmod
 	end type simgridinfo
 
 	type simdata
-		real w(128,128,135,16)
+		real, dimension(128,128,135,16) :: w
 	end type simdata
 
 	type simparams

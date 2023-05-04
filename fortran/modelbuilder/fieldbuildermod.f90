@@ -10,7 +10,7 @@ module fieldbuildermod
 
     include 'param.inc'
 
-    public :: genssfield, genvecfield
+    public :: genssfield, genvecfield, hsbalancefield
 
 
 private
@@ -77,7 +77,7 @@ contains
             end do
 
             do k=1,nx3
-                b0z(k)=par4((z(k)/sscale-z_shift),d_z,A);
+                b0z(k)=par4((z(k)/sscale-z_shift),d_z,A)
             end do
 
             bnmin=minval(b0z)
@@ -130,9 +130,9 @@ contains
                 tmpy=dbz(k)*x(i)/tmp
                 tmpz=dbz(k)*y(j)/tmp
 
-                ssimdata%w(1,j,k,14)=tmpx*fx(i,j,k)/sqmumag
-                ssimdata%w(1,j,k,15)=tmpy*fx(i,j,k)/sqmumag
-                ssimdata%w(1,j,k,16)=tmpz*fx(i,j,k)/sqmumag
+                ssimdata%w(i,j,k,14)=tmpx*fx(i,j,k)/sqmumag
+                ssimdata%w(i,j,k,15)=tmpy*fx(i,j,k)/sqmumag
+                ssimdata%w(i,j,k,16)=tmpz*fx(i,j,k)/sqmumag
 
 
 
@@ -185,6 +185,197 @@ contains
 
 
        	end subroutine genvecfield
+
+!       For magneto-hydrostatic balance
+!        see doi:10.1088/0004-637X/727/1/17
+!        https://iopscience.iop.org/article/10.1088/0004-637X/727/1/17
+       	subroutine hsbalancefield(ssimparams, ssimgridinfo, ssimdata)
+
+
+       		type(simparams), intent(inout) :: ssimparams
+       		type(simgridinfo), intent(inout) :: ssimgridinfo
+       		type(simdata), intent(inout)  :: ssimdata
+
+       		!nx1,nx2,nx3 in param.inc
+       		real, dimension(nx1) :: x
+       		real, dimension(nx2) :: y
+       		real, dimension(nx3) :: z, b0z, dbz
+       		real, dimension(nx1,nx2,nx3) :: bx, by, bz
+       		real, dimension(nx1,nx2,nx3) :: dbzdz, dbydz, dbydx, dbxdx
+     		real, dimension(nx1,nx2,nx3) :: dbxdz
+     		real, dimension(nx1,nx2,nx3) :: dbxdy
+     		real, dimension(nx1,nx2,nx3) :: dbydy
+            real, dimension(nx1,nx2,nx3) :: dbzdy
+            real, dimension(nx1,nx2,nx3) :: dbzdx
+    		real, dimension(nx1,nx2,nx3) :: bvarix, bvariy, bvari, dpdx, rho1
+    		real, dimension(nx1,nx2,nx3) :: bvaridz, bvaridz1, dbvardz, br
+    		real, dimension(nx1,nx2,nx3) :: bxby, dbxbydy, bxbz, dbxbzdz
+    		real, dimension(nx1,nx2,nx3) :: bybz, dbybzdy, dbxbydx, divb, f,g
+    		real, dimension(nx1,nx2,nx3) :: dbybzdz
+    		integer :: i,j,k
+    		real :: dx, dy,dz
+
+!   compute magnetostatics pressure correction
+            dbzdz=0.0d0
+            dbxdz=0.0d0
+            dbydz=0.0d0
+
+            dbzdx=0.0d0
+            dbxdx=0.0d0
+            dbydx=0.0d0
+
+            dbzdy=0.0d0
+            dbxdy=0.0d0
+            dbydy=0.0d0
+
+
+            Bvarix=0.0d0
+            Bvariy=0.0d0
+            Bvari=0.0d0
+
+            dpdx=0.0d0
+
+            rho1=0.0d0
+
+            Bvaridz=0.0d0
+            Bvaridz1=0.0d0
+            dBvardz=0.0d0
+            br=0.0d0
+
+            bxby=0.0d0
+            dbxbydy=0.0d0
+            bxbz=0.0d0
+            dbxbzdz=0.0d0
+            bxby=0.0d0
+            bybz=0.0d0
+            dbybzdy=0.0d0
+
+            dx=(xmax-xmin)/nx1
+            dy=(ymax-ymin)/nx2
+            dz=(zmax-zmin)/nx3
+
+            do i=1,nx1
+                x(i)=xmin+dx*(i-1)
+            end do
+
+            do j=1,nx2
+                y(j)=ymin+dy*(j-1)
+            end do
+
+
+            do k=1,nx3
+                z(k)=zmin+dz*(k-1)
+            end do
+
+!           do i=1,nx1
+!                do j=1,nx2
+!                    do k=1,nx3
+                        bx(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,14)
+                        by(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,15)
+                        bz(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,16)
+!                    end do
+!                end do
+!           end do
+
+
+            do k=1,nx3
+            do j=1,nx2
+                dbzdz(1:nx1,j,k)=deriv1(bz(1:nx1,j,k),x)
+            enddo
+            enddo
+
+            do k=1,nx3
+            do i=1,nx1
+             dbxdx(i,1:nx2,k)=deriv1(bx(i,1:nx2,k),y)
+            enddo
+            enddo
+
+            do j=1,nx2
+            do i=1,nx1
+             dbydy(i,j,1:nx3)=deriv1(by(i,j,1:nx3),z)
+            enddo
+            enddo
+
+            divb=dbzdz+dbxdx+dbydy
+
+
+!           %check b_field_vertical_tube.pro
+            bxby=bx*by
+            do j=1,nx2
+            do i=1,nx1
+             dbxbydy(i,j,1:nx3)=deriv1(bxby(i,j,1:nx3),z)
+            enddo
+            enddo
+
+
+!        %   print,'dBxBydy'
+            bxbz=bx*bz
+            do k=1,nx3
+            do j=1,nx2
+             dbxbzdz(1:nx1,j,k)=deriv1(bxbz(1:nx1,j,k),x)
+            enddo
+            enddo
+
+!            %;print,'dBxBzdz'
+            bxby=bx*by
+            do i=1,nx1
+            do k=1,nx3
+             dbxbydx(i,1:nx2,k)=deriv1(bxby(i,1:nx2,k),y)
+            enddo
+            enddo
+
+ !           %print,'dBxBydx'
+            bybz=by*bz
+            do j=1,nx2
+            do k=1,nx3
+             dbybzdz(1:nx1,j,k)=deriv1(bybz(1:nx1,j,k),x)
+            enddo
+            enddo
+
+
+
+
+
+
+
+
+
+
+       	end subroutine hsbalancefield
+
+       	function inte1(f,dx)
+
+            real, intent(in), dimension(:) :: f
+            real :: dx, res, inte1
+            integer :: i,nel
+
+            nel=size(f)
+
+!            if nsiz(1)>nsiz(2)
+!                nel=nsiz(1)
+!            else
+!                nel=nsiz(2)
+!            end
+
+            res=0.0
+            if (nel > 1) then
+                if (nel == 2) then
+                    res=dx*0.5*(f(2)+f(1))
+                end if
+
+                if (nel > 2) then
+                  do i=2,nel
+                      res=res+0.5*(f(i-1)+f(i))*dx
+                  enddo
+                endif
+            endif
+
+            inte1=res
+
+        end function
+
+
+
 
        	function deriv1(f,x)
 

@@ -29,6 +29,7 @@
 		<Unit filename="../modelbuilder/modbuildermod.f90" />
 		<Unit filename="../modelbuilder/param.inc" />
 		<Unit filename="../modelbuilder/typesmod.f90" />
+		<Unit filename="testarray.f90" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
