@@ -207,13 +207,13 @@ contains
      		real, dimension(nx1,nx2,nx3) :: dbydy
             real, dimension(nx1,nx2,nx3) :: dbzdy
             real, dimension(nx1,nx2,nx3) :: dbzdx
-    		real, dimension(nx1,nx2,nx3) :: bvarix, bvariy, bvari, dpdx, rho1
+    		real, dimension(nx1,nx2,nx3) :: bvarix, bvariy, bvari, dpdx, rho1, pres
     		real, dimension(nx1,nx2,nx3) :: bvaridz, bvaridz1, dbvardz, br
     		real, dimension(nx1,nx2,nx3) :: bxby, dbxbydy, bxbz, dbxbzdz
     		real, dimension(nx1,nx2,nx3) :: bybz, dbybzdy, dbxbydx, divb, f,g
     		real, dimension(nx1,nx2,nx3) :: dbybzdz
     		integer :: i,j,k
-    		real :: dx, dy,dz
+    		real :: dx, dy,dz, sumi, p_2
 
 !   compute magnetostatics pressure correction
             dbzdz=0.0d0
@@ -235,6 +235,7 @@ contains
 
             dpdx=0.0d0
 
+            pres=0.0d0
             rho1=0.0d0
 
             Bvaridz=0.0d0
@@ -332,12 +333,102 @@ contains
             enddo
             enddo
 
+!%************* BEGIN INTEGRATION ****************************
+            f=dbxbydy+dbxbzdz
+            g=dbxbydx+dbybzdz
+
+
+            do i=1,nx1
+
+            do k=1,nx3
+              do j=1,nx2
+               sumi=inte1(reshape(f(i,1:nx2,k),(/nx2/),y(2)-y(1));
+               bvarix(i,j,k)=sumi;
+             enddo
+            enddo
+
+            do j=1,nx2
+              do k=1,nx3
+               sumi=inte1(reshape(g(i,j,1:nx3),(/nx3/)),z(2)-z(1));
+               bvariy(i,j,k)=sumi;
+             enddo
+            enddo
+            write(*,*) i
+
+            enddo
+
+            bvari=((bvarix+bvariy)/2)-(bz*bz)/2
+
+            do j=1,nx2
+            do k=1,nx3
+             dpdz(1:nx1,j,k)=deriv1(bvari(1:nx1,j,k),z)
+            enddo
+            enddo
+
+            bxbybz=(bx*bx+by*by-bz*bz)/2
+
+            do j=1,nx2
+            do k=1,nx3
+             dbxbybzdz(1:nx1,j,k)=deriv1(bxbybz(1:nx1,j,k),z)
+            enddo
+            enddo
+
+
+            bxbz=bx*bz
+
+            do i=1,nx1
+            do k=1,nx3
+             dbxbzdx(i,1:nx2,k)=deriv1(bxbz(i,1:nx2,k),x)
+            enddo
+            enddo
+
+            bybz=by*bz
+
+            do i=1,nx1
+            do j=1,nx2
+             dbybzdy(i,j,1:nx3)=deriv1(bybz(i,j,1:nx3),y,3)
+            enddo
+            enddo
+
+            rho1=(dbxbybzdz-dbxbzdx-  dbybzdy+dpdz)/gs
+
+            rho1(1:nx1,1:nx2,1:nx3)=simdata%w(1:nx1,1:nx2,1:nx3,1)+rho1+simdata%w(1:nx1,1:nx2,1:nx3,10)
+            pres=bvari+simdata%w(1:nx1,1:nx2,1:nx3,5)*(fgamma-1.0d0)
+
+
+!%lower boundary
+
+            do i=4,2,-1
+              do j=1,nx2
+              do k=1,nx3
+                     p_2=rho1(i,j,k)*gs
+                     p(i-1,j,k) = (z(2)-z(1))*p_2+p(i,j,k)
+              enddo
+              enddo
+             enddo
+
+
+!%upper boundary
+
+            do i=nx1-2,nx1-1
+               do j=1,nx2
+               do k=1,nx3
+                       p_2=rho1(i,j,k)*gs
+                       p(i+1,j,k) = -(z(2)-z(1))*p_2+p(i,j,k)
+               enddo
+               enddo
+            enddo
 
 
 
 
-
-
+!%update the background energy and magnetic fields
+            simdata%w(1:nx1,1:nx2,1:nx3,8)=rho1(1:nx1,1:nx2,1:nx3)
+            simdata%w(1:nx1,1:nx2,1:nx3,7)=pres(1:nx1,1:nx2,1:nx3)/((fgamma-1.0d0))+ &
+                0.5d0*(bx(1:nx1,1:nx2,1:nx3)*bx(1:nx1,1:nx2,1:nx3) &
+                +bz(1:nx1,1:nx2,1:nx3)*bz(1:nx1,1:nx2,1:nx3)+by(1:nx1,1:nx2,1:nx3)*by(1:nx1,1:nx2,1:nx3))
+            simdata%w(1:nx1,1:nx2,1:nx3,9)=bx(1:nx1,1:nx2,1:nx3)
+            simdata%w(1:nx1,1:nx2,1:nx3,10)=bz(1:nx1,1:nx2,1:nx3)
 
 
 
