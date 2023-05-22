@@ -158,6 +158,7 @@ iniene=6840.0e0*consts%R*(2.3409724e-09)/consts%mu_therm/(consts%fgamma-1.0)
 lp1=lp;
 
 !heights, npoints, deltah, pres, dens %modelbuildermod
+! calculate the pressures from the input VALIIIc model data
 call hydropres2(h,nx3,h(2)-h(1), lp,ld)
 
 

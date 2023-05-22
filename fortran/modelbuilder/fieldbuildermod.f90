@@ -207,11 +207,12 @@ contains
      		real, dimension(nx1,nx2,nx3) :: dbydy
             real, dimension(nx1,nx2,nx3) :: dbzdy
             real, dimension(nx1,nx2,nx3) :: dbzdx
-    		real, dimension(nx1,nx2,nx3) :: bvarix, bvariy, bvari, dpdx, rho1, pres
+    		real, dimension(nx1,nx2,nx3) :: bvarix, bvariy, bvari, dpdz, rho1, pres
     		real, dimension(nx1,nx2,nx3) :: bvaridz, bvaridz1, dbvardz, br
     		real, dimension(nx1,nx2,nx3) :: bxby, dbxbydy, bxbz, dbxbzdz
     		real, dimension(nx1,nx2,nx3) :: bybz, dbybzdy, dbxbydx, divb, f,g
-    		real, dimension(nx1,nx2,nx3) :: dbybzdz
+    		real, dimension(nx1,nx2,nx3) :: dbybzdz, dbxbybzdz, dbxbzdx
+    		real, dimension(nx1,nx2,nx3) :: bxbybz
     		integer :: i,j,k
     		real :: dx, dy,dz, sumi, p_2
 
@@ -233,7 +234,7 @@ contains
             Bvariy=0.0d0
             Bvari=0.0d0
 
-            dpdx=0.0d0
+            dpdz=0.0d0
 
             pres=0.0d0
             rho1=0.0d0
@@ -250,6 +251,8 @@ contains
             bxby=0.0d0
             bybz=0.0d0
             dbybzdy=0.0d0
+
+            bxbybz=0.0d0
 
             dx=(xmax-xmin)/nx1
             dy=(ymax-ymin)/nx2
@@ -342,15 +345,15 @@ contains
 
             do k=1,nx3
               do j=1,nx2
-               sumi=inte1(reshape(f(i,1:nx2,k),(/nx2/),y(2)-y(1));
-               bvarix(i,j,k)=sumi;
+               sumi=inte1(reshape(f(i,1:nx2,k),(/nx2/)),y(2)-y(1))
+               bvarix(i,j,k)=sumi
              enddo
             enddo
 
             do j=1,nx2
               do k=1,nx3
-               sumi=inte1(reshape(g(i,j,1:nx3),(/nx3/)),z(2)-z(1));
-               bvariy(i,j,k)=sumi;
+               sumi=inte1(reshape(g(i,j,1:nx3),(/nx3/)),z(2)-z(1))
+               bvariy(i,j,k)=sumi
              enddo
             enddo
             write(*,*) i
@@ -386,14 +389,14 @@ contains
 
             do i=1,nx1
             do j=1,nx2
-             dbybzdy(i,j,1:nx3)=deriv1(bybz(i,j,1:nx3),y,3)
+             dbybzdy(i,j,1:nx3)=deriv1(bybz(i,j,1:nx3),y)
             enddo
             enddo
 
             rho1=(dbxbybzdz-dbxbzdx-  dbybzdy+dpdz)/gs
 
-            rho1(1:nx1,1:nx2,1:nx3)=simdata%w(1:nx1,1:nx2,1:nx3,1)+rho1+simdata%w(1:nx1,1:nx2,1:nx3,10)
-            pres=bvari+simdata%w(1:nx1,1:nx2,1:nx3,5)*(fgamma-1.0d0)
+            rho1(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,1)+rho1+ssimdata%w(1:nx1,1:nx2,1:nx3,10)
+            pres=bvari+ssimdata%w(1:nx1,1:nx2,1:nx3,5)*(fgamma-1.0d0)
 
 
 !%lower boundary
@@ -402,7 +405,7 @@ contains
               do j=1,nx2
               do k=1,nx3
                      p_2=rho1(i,j,k)*gs
-                     p(i-1,j,k) = (z(2)-z(1))*p_2+p(i,j,k)
+                     pres(i-1,j,k) = (z(2)-z(1))*p_2+pres(i,j,k)
               enddo
               enddo
              enddo
@@ -414,7 +417,7 @@ contains
                do j=1,nx2
                do k=1,nx3
                        p_2=rho1(i,j,k)*gs
-                       p(i+1,j,k) = -(z(2)-z(1))*p_2+p(i,j,k)
+                       pres(i+1,j,k) = -(z(2)-z(1))*p_2+pres(i,j,k)
                enddo
                enddo
             enddo
@@ -423,16 +426,16 @@ contains
 
 
 !%update the background energy and magnetic fields
-            simdata%w(1:nx1,1:nx2,1:nx3,8)=rho1(1:nx1,1:nx2,1:nx3)
-            simdata%w(1:nx1,1:nx2,1:nx3,7)=pres(1:nx1,1:nx2,1:nx3)/((fgamma-1.0d0))+ &
+            ssimdata%w(1:nx1,1:nx2,1:nx3,8)=rho1(1:nx1,1:nx2,1:nx3)
+            ssimdata%w(1:nx1,1:nx2,1:nx3,7)=pres(1:nx1,1:nx2,1:nx3)/((fgamma-1.0d0))+ &
                 0.5d0*(bx(1:nx1,1:nx2,1:nx3)*bx(1:nx1,1:nx2,1:nx3) &
                 +bz(1:nx1,1:nx2,1:nx3)*bz(1:nx1,1:nx2,1:nx3)+by(1:nx1,1:nx2,1:nx3)*by(1:nx1,1:nx2,1:nx3))
-            simdata%w(1:nx1,1:nx2,1:nx3,9)=bx(1:nx1,1:nx2,1:nx3)
-            simdata%w(1:nx1,1:nx2,1:nx3,10)=bz(1:nx1,1:nx2,1:nx3)
+            ssimdata%w(1:nx1,1:nx2,1:nx3,9)=bx(1:nx1,1:nx2,1:nx3)
+            ssimdata%w(1:nx1,1:nx2,1:nx3,10)=bz(1:nx1,1:nx2,1:nx3)
 
 
 
-       	end subroutine hsbalancefield
+       	endsubroutine hsbalancefield
 
        	function inte1(f,dx)
 

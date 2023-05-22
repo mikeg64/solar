@@ -172,6 +172,76 @@ subroutine hydropres2(heights, npoints, deltah, pres, dens)
 
 endsubroutine
 
+
+
+! this routine is currently the same as hydropres2
+! but it will be adapted to compute the parametric pressure and density profile
+! using the tanh function parametrisation
+subroutine hydropres1(heights, npoints, deltah, pres, dens)
+
+
+
+    real, intent(inout) :: pres(4096), dens(4096)
+    real, intent(in) :: deltah, heights(4096)
+    integer, intent(in) :: npoints
+    integer :: i
+    !6840
+    real :: iniene = 5840.d0*R*(0.00252e-1)/mu_thermal/(fgamma-1.0)
+    !real :: iniene = 6840.d0*R*(2.3409724e-09)/mu_thermal/(fgamma-1.0)
+    !real :: iniene = 12840.d0*R*(2.3409724e-09)/mu_thermal/(fgamma-1.0)
+    !real :: iniene = 231287.68d0*R*(1.09e-11)/mu_thermal/(fgamma-1.0)
+    real  :: p_1, p_2, comi
+
+
+
+!iniene=731191.34d0*8.31e3*(1.1806882e-11)/0.6d0/(eqpar(gamma_)-1.0)
+!iniene=731191.34d0*8.31e3*(1.1790001e-11)/0.6d0/(eqpar(gamma_)-1.0)
+! 1.6Mm
+!!!!!!iniene=6840.d0*R*(2.3409724e-09)/mu_thermal/(consts.fgamma-1.0);
+!iniene=6840.d0*8.31e3*(2.2139002e-09)/0.6d0/(eqpar(gamma_)-1.0)
+!iniene=731191.34d0*8.31e3*(4.5335481e-12)/0.6d0/(eqpar(gamma_)-1.0)
+
+
+
+    do i=1,npoints
+!       presg(i)=(consts.fgamma-1)*iniene;
+        pres(i)=(fgamma-1)*iniene
+    enddo
+
+
+
+!presg1=presg;
+
+    do i=npoints-1,1,-1
+        comi=-abs(heights(i+1)-heights(i))
+        pres(i)=pres(i+1)-dens(i)*comi*gs
+    enddo
+
+
+    do i=3,npoints-2
+        comi=-abs(heights(i+1)-heights(i))
+!     %densg(i)=densg(i)-(1.0/consts.ggg)*(  (1.0/(12*(rheight(i+1)-rheight(i)))) *(presg(i+2)-8*presg(i+1)+8*presg(i-1)-presg(i-2))     );
+        dens(i)=(1.0/gs)*(  (1.0/(12*(heights(i+1)-heights(i)))) *(pres(i+2)-8*pres(i+1)+8*pres(i-1)-pres(i-2))     )
+    enddo
+
+    do i=5,3,-1
+        p_1=pres(i+2)+8*pres(i+1)-8*pres(i-1)
+        p_2= -dens(i)*gs
+        pres(i-2)= -p_1-12.0*(heights(i)-heights(i-1))*p_2
+    enddo
+
+
+
+
+endsubroutine
+
+
+
+
+
+
+
+
 !compute bruntvaisalla frequency
 subroutine bruntvaisalla(heights, npoints, deltah, pres, dens, bruntvas)
 
@@ -217,27 +287,27 @@ endsubroutine
 real function hydrodens(heights, hindex, npoints, deltah)
     real, intent(in) :: deltah, heights(4096)
     integer, intent(in) :: hindex, npoints
-    real :: psum,Hscale
+    real :: rsum,Hscale
     integer :: i
 
 !    tmp0=temp(heights(1))
-    psum=0.0
+    rsum=0.0
 
     if (hindex.eq.npoints) then
         Hscale=R*temp(heights(hindex))/(mu_mass*gs)
 !        tmptemp=p0*tmp0/temp(heights(hindex))
-        psum=psum+rho0*exp(deltah/Hscale)
+        rsum=rsum+rho0*exp(deltah/Hscale)
 !         psum=deltah/Hscale
     elseif (hindex.lt.npoints) then
  !       tmptemp=p0*tmp0/temp(heights(hindex))
         do i=npoints,hindex,-1
             Hscale=R*temp(heights(i))/(mu_mass*gs)
-            psum=psum+deltah/Hscale
+            rsum=rsum+deltah/Hscale
         end do
-        psum=rho0*exp(psum)
+        rsum=rho0*exp(rsum)
     endif
-    print*,'rhosum ',hindex,' ',psum
-    hydrodens=psum
+    print*,'rhosum ',hindex,' ',rsum
+    hydrodens=rsum
 
 end function
 
