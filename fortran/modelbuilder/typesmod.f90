@@ -2,6 +2,24 @@
 module typesmod
     implicit none
 
+! labels for field items
+! rho 0
+! mom1 1
+! mom2 2
+! mom3 3
+! e    4
+! bx   5
+! by   6
+! bz   7
+! eb   8
+! rhob 9
+! bxb  10
+! byb  11
+! bzb  12
+
+! B[Tesla] = B[Gauss] x 10000 * root(mu)
+! B[Gauss] is sac units
+
     include 'param.inc'
 
     private

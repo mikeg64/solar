@@ -99,7 +99,7 @@ program createmodel
   ! columns must be as follows
   ! height temperature density pressure
   open(unit = 1, file = 'atmos1.txt',status='old', action='read', iostat=rstat)
-  do i = 1,nx3
+  do i = 1,nx1
       read(1,'(6X,d8.3,7x,d9.7,7x,d9.7,7x,d9.7)',iostat=rstat) height, ltt, ldens, lpres
       h(i)=height
       ld(i)=ldens
@@ -152,27 +152,27 @@ iniene=6840.0e0*consts%R*(2.3409724e-09)/consts%mu_therm/(consts%fgamma-1.0)
 
 
 !do i=1,nx1
-    lp(1:nx3)=(consts%fgamma-1.0d0)*iniene
+    lp(1:nx1)=(consts%fgamma-1.0d0)*iniene
 !end do
 
 lp1=lp;
 
 !heights, npoints, deltah, pres, dens %modelbuildermod
 ! calculate the pressures from the input VALIIIc model data
-call hydropres2(h,nx3,h(2)-h(1), lp,ld)
+call hydropres2(h,nx1,h(2)-h(1), lp,ld)
 
 
 !energg(i)=presg(i)/(consts.fgamma -1);
 !do i=1,nx1
-    energg(1:nx3)=lp(1:nx3)/(consts%fgamma-1.0d0)
+    energg(1:nx1)=lp(1:nx1)/(consts%fgamma-1.0d0)
 !end do
 
 ! rebuild the model
  do i=1,nx1
     do j=1,nx2
         do k=1,nx3
-            sdata%w(i,j,k,10)=ld(k)
-            sdata%w(i,j,k,9)=energg(k)
+            sdata%w(i,j,k,10)=ld(i)
+            sdata%w(i,j,k,9)=energg(i)
         end do
     end do
  end do

@@ -1,6 +1,7 @@
 module fieldbuildermod
 ! subroutines used to generate magnetic field configurations
-
+! based on original code at
+! https://github.com/mikeg64/sac_working/blob/master/mag_field/B_field_vertical_tube.pro
 
 !   ifieldtype1 is self similar field
 !   http://solarwavetheory.blogspot.com/2013/11/solar-atmospheric-mhd-flux-tube.html
@@ -31,9 +32,9 @@ contains
        		type(simdata), intent(inout)  :: ssimdata
 
        		!nx1,nx2,nx3 in param.inc
-       		real, dimension(nx1) :: x
+       		real, dimension(nx3) :: x
        		real, dimension(nx2) :: y
-       		real, dimension(nx3) :: z, b0z, dbz
+       		real, dimension(nx1) :: z, b0z, dbz
        		real, dimension(nx1,nx2,nx3) :: fx
 
             real :: Bmax = 0.15  !mag field Tesla
@@ -56,7 +57,9 @@ contains
 
 !Generate magnetic field configuration
 !simple fluxtube using self similarity and hydrostatic pressure correction
-
+! check against
+!https://github.com/mikeg64/smaug_realpmode/blob/master/matlab/ ...
+! ...  generateinitialconfiguration/generatefield_verttube.m
             fx=0.0d0
 
             dx=(xmax-xmin)/nx1
@@ -76,21 +79,21 @@ contains
                 z(k)=zmin+dz*(k-1)
             end do
 
-            do k=1,nx3
-                b0z(k)=par4((z(k)/sscale-z_shift),d_z,A)
+            do i=1,nx1
+                b0z(i)=par4((x(i)/sscale-z_shift),d_z,A)
             end do
 
             bnmin=minval(b0z)
             bnmax=maxval(b0z)
 
-            do i=1,nx3
+            do i=1,nx1
                 b0z(i)=((Bmax-Bmin)/(bnmax-bnmin))*(b0z(i)-bnmin)+Bmin
             end do
 
     b0z=b0z/maxval(b0z)
     b0z=Ab0z*b0z+b0z_top
 
-    dbz=deriv1(b0z,z)
+    dbz=deriv1(b0z,x)
 
 
 !Generate field
@@ -98,7 +101,7 @@ contains
     do i=1,nx1
         do j=1,nx2
             do k=1,nx3
-                tmp=b0z(k)*sqrt(x(i)*x(i)+y(j)*y(j))
+                tmp=b0z(i)*sqrt(z(k)*z(k)+y(j)*y(j))
                 tmp=par4(tmp,f0,A)
                 fres=tmp*tmp
                 fx(i,j,k) = fres
@@ -126,9 +129,9 @@ contains
 !% by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
                 tmp=sqrt(x(i)*x(i)+y(j)*y(j))
 
-                tmpx=b0z(k)/tmp
-                tmpy=dbz(k)*x(i)/tmp
-                tmpz=dbz(k)*y(j)/tmp
+                tmpx=b0z(i)/tmp
+                tmpy=dbz(i)*y(j)/tmp
+                tmpz=dbz(i)*z(k)/tmp
 
                 ssimdata%w(i,j,k,14)=tmpx*fx(i,j,k)/sqmumag
                 ssimdata%w(i,j,k,15)=tmpy*fx(i,j,k)/sqmumag
@@ -285,18 +288,24 @@ contains
             do k=1,nx3
             do j=1,nx2
                 dbzdz(1:nx1,j,k)=deriv1(bz(1:nx1,j,k),x)
+                dbxdz(1:nx1,j,k)=deriv1(bx(1:nx1,j,k),x)
+                dbydz(1:nx1,j,k)=deriv1(by(1:nx1,j,k),x)
             enddo
             enddo
 
             do k=1,nx3
             do i=1,nx1
              dbxdx(i,1:nx2,k)=deriv1(bx(i,1:nx2,k),y)
+             dbzdx(i,1:nx2,k)=deriv1(bz(i,1:nx2,k),y)
+             dbydx(i,1:nx2,k)=deriv1(by(i,1:nx2,k),y)
             enddo
             enddo
 
             do j=1,nx2
             do i=1,nx1
              dbydy(i,j,1:nx3)=deriv1(by(i,j,1:nx3),z)
+             dbzdy(i,j,1:nx3)=deriv1(bz(i,j,1:nx3),z)
+             dbxdy(i,j,1:nx3)=deriv1(bx(i,j,1:nx3),z)
             enddo
             enddo
 
