@@ -30,7 +30,7 @@
 !   pressure and density taken fromVALIIIc data
     real, parameter :: rho0=5.48d-12,p0=2.7865d-4
 !   solar gravity m/s^2
-    real, parameter :: gs=274.0
+    real, parameter :: gs=-274.0
 
 !   ifieldtype1 is self similar field
 !   http://solarwavetheory.blogspot.com/2013/11/solar-atmospheric-mhd-flux-tube.html
@@ -46,7 +46,7 @@
     integer :: ndim=3
     integer :: neqpar=7
     integer, parameter :: nw=13
-    integer, parameter :: nx1=135
+    integer, parameter :: nx1=128
     integer, parameter :: nx2=128
     integer, parameter :: nx3=128   ! made same as size of input file
 

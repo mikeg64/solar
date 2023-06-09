@@ -90,8 +90,8 @@ contains
                 b0z(i)=((Bmax-Bmin)/(bnmax-bnmin))*(b0z(i)-bnmin)+Bmin
             end do
 
-    b0z=b0z/maxval(b0z)
-    b0z=Ab0z*b0z+b0z_top
+  !  b0z=b0z/maxval(b0z)
+  !  b0z=Ab0z*b0z+b0z_top
 
     dbz=deriv1(b0z,x)
 
@@ -277,9 +277,9 @@ contains
 !           do i=1,nx1
 !                do j=1,nx2
 !                    do k=1,nx3
-                        bx(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,14)
-                        by(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,15)
-                        bz(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,16)
+                        bz(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,9)+ssimdata%w(1:nx1,1:nx2,1:nx3,14)
+                        bx(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,10)+ssimdata%w(1:nx1,1:nx2,1:nx3,15)
+                        by(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,11)+ssimdata%w(1:nx1,1:nx2,1:nx3,16)
 !                    end do
 !                end do
 !           end do
@@ -295,9 +295,9 @@ contains
 
             do k=1,nx3
             do i=1,nx1
-             dbxdx(i,1:nx2,k)=deriv1(bx(i,1:nx2,k),y)
-             dbzdx(i,1:nx2,k)=deriv1(bz(i,1:nx2,k),y)
-             dbydx(i,1:nx2,k)=deriv1(by(i,1:nx2,k),y)
+                dbxdx(i,1:nx2,k)=deriv1(bx(i,1:nx2,k),y)
+                dbzdx(i,1:nx2,k)=deriv1(bz(i,1:nx2,k),y)
+                dbydx(i,1:nx2,k)=deriv1(by(i,1:nx2,k),y)
             enddo
             enddo
 
@@ -373,7 +373,7 @@ contains
 
             do j=1,nx2
             do k=1,nx3
-             dpdz(1:nx1,j,k)=deriv1(bvari(1:nx1,j,k),z)
+             dpdz(1:nx1,j,k)=deriv1(bvari(1:nx1,j,k),x)
             enddo
             enddo
 
@@ -381,7 +381,7 @@ contains
 
             do j=1,nx2
             do k=1,nx3
-             dbxbybzdz(1:nx1,j,k)=deriv1(bxbybz(1:nx1,j,k),z)
+             dbxbybzdz(1:nx1,j,k)=deriv1(bxbybz(1:nx1,j,k),x)
             enddo
             enddo
 
@@ -390,7 +390,7 @@ contains
 
             do i=1,nx1
             do k=1,nx3
-             dbxbzdx(i,1:nx2,k)=deriv1(bxbz(i,1:nx2,k),x)
+             dbxbzdx(i,1:nx2,k)=deriv1(bxbz(i,1:nx2,k),y)
             enddo
             enddo
 
@@ -398,14 +398,14 @@ contains
 
             do i=1,nx1
             do j=1,nx2
-             dbybzdy(i,j,1:nx3)=deriv1(bybz(i,j,1:nx3),y)
+             dbybzdy(i,j,1:nx3)=deriv1(bybz(i,j,1:nx3),z)
             enddo
             enddo
 
             rho1=(dbxbybzdz-dbxbzdx-  dbybzdy+dpdz)/gs
 
-            rho1(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,1)+rho1+ssimdata%w(1:nx1,1:nx2,1:nx3,10)
-            pres=bvari+ssimdata%w(1:nx1,1:nx2,1:nx3,5)*(fgamma-1.0d0)
+            rho1(1:nx1,1:nx2,1:nx3)=ssimdata%w(1:nx1,1:nx2,1:nx3,4)+rho1+ssimdata%w(1:nx1,1:nx2,1:nx3,13)
+            pres=bvari+ssimdata%w(1:nx1,1:nx2,1:nx3,8)*(fgamma-1.0d0)
 
 
 !%lower boundary
@@ -414,7 +414,7 @@ contains
               do j=1,nx2
               do k=1,nx3
                      p_2=rho1(i,j,k)*gs
-                     pres(i-1,j,k) = (z(2)-z(1))*p_2+pres(i,j,k)
+                     pres(i-1,j,k) = (x(2)-x(1))*p_2+pres(i,j,k)
               enddo
               enddo
              enddo
@@ -426,7 +426,7 @@ contains
                do j=1,nx2
                do k=1,nx3
                        p_2=rho1(i,j,k)*gs
-                       pres(i+1,j,k) = -(z(2)-z(1))*p_2+pres(i,j,k)
+                       pres(i+1,j,k) = -(x(2)-x(1))*p_2+pres(i,j,k)
                enddo
                enddo
             enddo
@@ -435,12 +435,16 @@ contains
 
 
 !%update the background energy and magnetic fields
-            ssimdata%w(1:nx1,1:nx2,1:nx3,8)=rho1(1:nx1,1:nx2,1:nx3)
-            ssimdata%w(1:nx1,1:nx2,1:nx3,7)=pres(1:nx1,1:nx2,1:nx3)/((fgamma-1.0d0))+ &
+           ssimdata%w(1:nx1,1:nx2,1:nx3,4)=0
+           ssimdata%w(1:nx1,1:nx2,1:nx3,8)=0
+
+            ssimdata%w(1:nx1,1:nx2,1:nx3,13)=rho1(1:nx1,1:nx2,1:nx3)
+            ssimdata%w(1:nx1,1:nx2,1:nx3,12)=pres(1:nx1,1:nx2,1:nx3)/((fgamma-1.0d0))+ &
                 0.5d0*(bx(1:nx1,1:nx2,1:nx3)*bx(1:nx1,1:nx2,1:nx3) &
                 +bz(1:nx1,1:nx2,1:nx3)*bz(1:nx1,1:nx2,1:nx3)+by(1:nx1,1:nx2,1:nx3)*by(1:nx1,1:nx2,1:nx3))
-            ssimdata%w(1:nx1,1:nx2,1:nx3,9)=bx(1:nx1,1:nx2,1:nx3)
-            ssimdata%w(1:nx1,1:nx2,1:nx3,10)=bz(1:nx1,1:nx2,1:nx3)
+            ssimdata%w(1:nx1,1:nx2,1:nx3,14)=bz(1:nx1,1:nx2,1:nx3)
+            ssimdata%w(1:nx1,1:nx2,1:nx3,15)=bx(1:nx1,1:nx2,1:nx3)
+            ssimdata%w(1:nx1,1:nx2,1:nx3,16)=by(1:nx1,1:nx2,1:nx3)
 
 
 

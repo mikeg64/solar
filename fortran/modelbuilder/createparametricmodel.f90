@@ -1,4 +1,4 @@
-program createmodel
+program createparametricmodel
 
 ! program to generate solar atmosphere configuration magnetohydrostatic equilibrium
 
@@ -35,7 +35,7 @@ program createmodel
     real :: h(4096), ld(4096), ltta(4096), lp(4096), lp1(4096),energg(4096)
 
     real :: iniene ! initial energy at photosphere obtained from VALIIc
-    integer :: i,j,k
+    integer :: ii,i,j,k
 
 
 
@@ -88,78 +88,41 @@ program createmodel
     lp1=0.0d0
     energg=0.0d0
 
-  !read the input file with the scale distances
-  ! create an atmospheric profile
-  ! Open file for unformmated output using the inquired record length
-  !use interpolation https://docs.scipy.org/doc/scipy/tutorial/interpolate/1D.html
-  ! use original VALIIIc data set to generate the correct atmosphere profile
-  !e.g. see https://github.com/mikeg64/solar/blob/master/matlab/solatmoswaves/atmos.csv
-  !
-  ! number of rows must be same as nx3
-  ! columns must be as follows
-  ! height temperature density pressure
-  open(unit = 1, file = 'atmos1.txt',status='old', action='read', iostat=rstat)
-  do i = 1,nx1
-      read(1,'(6X,d8.3,7x,d9.7,7x,d9.7,7x,d9.7)',iostat=rstat) height, ltt, ldens, lpres
-      h(i)=height
-      ld(i)=ldens
-      ltta(i)=ltt
-      lp(i)=lpres
-      print *, height, ldens, ltt, lpres
-  end do
-  !read(1,3(1X, F10.0)) height, logdens, logtt
-  close(unit = 1)
+    height=xmin
+    deltah=(xmax-xmin)/nx1
+    do i=1,nx1
+        !calculate height
+        h(i)=height
+        ! calculate temperature
+        ltta(i)=temp(h(i))
+        !move to next height
+        height=height+deltah
+    enddo
 
-    print *, newfilename
+    do i=1,nx1
+        !sdens(i)=dens(sh(i),spres(i))
+        !ii=1+nx1-i
+        ii=i
+        ld(ii)=hydrodens(h, ii, nx1, deltah)
+    enddo
 
 
 
 
-
-!compute correct pressure for gravitationally stratified atmosphere
-
-!compute initial energy (at photosphere or temperature minimum)
-!mu_thermal=0.6d0;
-!R=8.31e3;
-
-! pressure=temp*R*density/((mu_thermal))
-!parrVALMc=rhoarrVALMc*TarrVALMc*R/mu
-!iniene=6840.d0*8.31e3*(2.3409724e-09)/0.6d0/(eqpar(gamma_)-1.0)
-
- !iniene=731191.34d0*8.31e3*(1.1806882e-11)/0.6d0/(eqpar(gamma_)-1.0)
-
- !iniene=731191.34d0*8.31e3*(1.1790001e-11)/0.6d0/(eqpar(gamma_)-1.0)
-
- ! 1.6Mm
-
-iniene=6840.0e0*consts%R*(2.3409724e-09)/consts%mu_therm/(consts%fgamma-1.0)
-
- !iniene=6840.d0*8.31e3*(2.2139002e-09)/0.6d0/(eqpar(gamma_)-1.0)
-
- !iniene=731191.34d0*8.31e3*(4.5335481e-12)/0.6d0/(eqpar(gamma_)-1.0)
-
-
- do i=1,nx1
-    do j=1,nx2
-        do k=1,nx3
-            sdata%w(i,j,k,13)=ld(k)
-            sdata%w(i,j,k,12)=iniene
-        end do
-    end do
- end do
-
-! use energy to get pthermal
-
-
-!do i=1,nx1
-    lp(1:nx1)=(consts%fgamma-1.0d0)*iniene
-!end do
-
-lp1=lp;
 
 !heights, npoints, deltah, pres, dens %modelbuildermod
 ! calculate the pressures from the input VALIIIc model data
-call hydropres2(h,nx1,h(2)-h(1), lp,ld)
+!call hydropres2(h,nx1,h(2)-h(1), lp,ld)
+
+
+    do i=1,nx1
+        !sdens(i)=dens(sh(i),spres(i))
+        !ii=1+nx1-i
+        ii=i
+        lp(ii)=hydropres(h, ii, nx1, deltah)
+    enddo
+
+
 
 
 !energg(i)=presg(i)/(consts.fgamma -1);
@@ -177,6 +140,7 @@ call hydropres2(h,nx1,h(2)-h(1), lp,ld)
     end do
  end do
 
+!TODO write coordinates to sdata w(...1) w(...1) w(...1) etc
 
 ! generate the field % fieldbuildermod
 call genssfield(params, gridinfo, sdata, ifieldtype)
@@ -193,7 +157,7 @@ call writesac3d( newfilename, params, gridinfo, sdata, consts )
 
 
 
-end program createmodel
+end program createparametricmodel
 
 
 

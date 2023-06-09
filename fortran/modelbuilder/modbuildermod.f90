@@ -50,9 +50,9 @@ module modbuildermod
 ! adiabatic gas parameter and the magnetic permeablity
     real, parameter :: fgamma=1.66666667e0,mumag=4*pi/1.0e7
 !   density kg/m^3
-!    real, parameter :: rho0=2.34d-4, p0=9228.6447
+!    real, parameter :: rho0=2.34d-4, p0=9228.6447 or rho0=5.48d-12
 !   pressure and density taken fromVALIIIc data
-    real, parameter :: rho0=5.48d-12,p0=2.7865d-4
+    real, parameter :: rho0=2.34d-4,p0=2.7865d-4
 !   solar gravity m/s^2
     real, parameter :: gs=274.0
 
@@ -81,7 +81,6 @@ real function temp( height )
     real :: tmptemp
 
     tmptemp=1+tanh((height-ytr)/wtr)
-
     temp=Tch+((Tc-Tch)/2.0)*tmptemp
 end function
 
@@ -96,21 +95,26 @@ real function hydropres(heights, hindex, npoints, deltah)
 
 !    tmp0=temp(heights(1))
     psum=0.0
+    p0=rho0*R*temp(heights(1))/mu_gass
 
-    if (hindex.eq.npoints) then
+
+
+    if (hindex.eq.1) then
         Hscale=R*temp(heights(hindex))/(mu_mass*gs)
 !        tmptemp=p0*tmp0/temp(heights(hindex))
-        psum=psum+p0*exp(deltah/Hscale)
-    elseif (hindex.lt.npoints) then
+        psum=psum+p0*exp(-deltah/Hscale)
+!         psum=deltah/Hscale
+    elseif (hindex.le.npoints) then
  !       tmptemp=p0*tmp0/temp(heights(hindex))
-        do i=npoints,hindex,-1
+        do i=1,hindex,1
             Hscale=R*temp(heights(i))/(mu_mass*gs)
-            psum=psum+deltah/Hscale
+            rsum=rsum+deltah/Hscale
         end do
-        psum=p0*exp(psum)
+        psum=p0*exp(-rsum)
     endif
     print*,'psum ',hindex,' ',psum
     hydropres=psum
+
 
 end function
 
@@ -293,18 +297,18 @@ real function hydrodens(heights, hindex, npoints, deltah)
 !    tmp0=temp(heights(1))
     rsum=0.0
 
-    if (hindex.eq.npoints) then
+    if (hindex.eq.1) then
         Hscale=R*temp(heights(hindex))/(mu_mass*gs)
 !        tmptemp=p0*tmp0/temp(heights(hindex))
-        rsum=rsum+rho0*exp(deltah/Hscale)
+        rsum=rsum+(deltah/Hscale)
 !         psum=deltah/Hscale
-    elseif (hindex.lt.npoints) then
+    elseif (hindex.le.npoints) then
  !       tmptemp=p0*tmp0/temp(heights(hindex))
-        do i=npoints,hindex,-1
+        do i=1,hindex,1
             Hscale=R*temp(heights(i))/(mu_mass*gs)
             rsum=rsum+deltah/Hscale
         end do
-        rsum=rho0*exp(rsum)
+        rsum=rho0*(T0/temp(heights(hindex)))*exp(rsum)
     endif
     print*,'rhosum ',hindex,' ',rsum
     hydrodens=rsum
