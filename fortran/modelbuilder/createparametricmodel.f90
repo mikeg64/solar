@@ -22,7 +22,7 @@ program createparametricmodel
 !        https://github.com/mikeg2105/comp-sci/blob/master/gfortran/advanced/f95features/readnamelist.f90
 
 
-    use modbuildermod, only: writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla
+    use modbuildermod, only: writefile, hydropres, hydrodens, dens, hydropres2, bruntvaisalla, temp
     use typesmod
     use generalmod, only: writesac3d
     use fieldbuildermod, only:  genssfield, genvecfield, hsbalancefield
@@ -31,7 +31,7 @@ program createparametricmodel
 
     include 'param.inc'
 
-    real :: height, ldens, ltt, lpres   !parameters read from file a updated
+    real :: height, ldens, ltt, lpres, deltah   !parameters read from file a updated
     real :: h(4096), ld(4096), ltta(4096), lp(4096), lp1(4096),energg(4096)
 
     real :: iniene ! initial energy at photosphere obtained from VALIIc

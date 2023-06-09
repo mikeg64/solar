@@ -90,27 +90,27 @@ end function
 real function hydropres(heights, hindex, npoints, deltah)
     real, intent(in) :: deltah, heights(4096)
     integer, intent(in) :: hindex, npoints
-    real :: psum,Hscale
+    real :: psum,Hscale,p0c
     integer :: i
 
 !    tmp0=temp(heights(1))
     psum=0.0
-    p0=rho0*R*temp(heights(1))/mu_gass
+    p0c=rho0*R*temp(heights(1))/mu_mass
 
 
 
     if (hindex.eq.1) then
         Hscale=R*temp(heights(hindex))/(mu_mass*gs)
 !        tmptemp=p0*tmp0/temp(heights(hindex))
-        psum=psum+p0*exp(-deltah/Hscale)
+        psum=psum+p0c*exp(-deltah/Hscale)
 !         psum=deltah/Hscale
     elseif (hindex.le.npoints) then
  !       tmptemp=p0*tmp0/temp(heights(hindex))
         do i=1,hindex,1
             Hscale=R*temp(heights(i))/(mu_mass*gs)
-            rsum=rsum+deltah/Hscale
+            psum=psum+deltah/Hscale
         end do
-        psum=p0*exp(-rsum)
+        psum=p0c*exp(-psum)
     endif
     print*,'psum ',hindex,' ',psum
     hydropres=psum
@@ -291,12 +291,12 @@ endsubroutine
 real function hydrodens(heights, hindex, npoints, deltah)
     real, intent(in) :: deltah, heights(4096)
     integer, intent(in) :: hindex, npoints
-    real :: rsum,Hscale
+    real :: rsum,Hscale,T0
     integer :: i
 
 !    tmp0=temp(heights(1))
     rsum=0.0
-
+    T0=temp(heights(1))
     if (hindex.eq.1) then
         Hscale=R*temp(heights(hindex))/(mu_mass*gs)
 !        tmptemp=p0*tmp0/temp(heights(hindex))
