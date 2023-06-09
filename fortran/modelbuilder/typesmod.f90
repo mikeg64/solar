@@ -26,7 +26,7 @@ module typesmod
     public simgridinfo, simdata, simparams, mconsts
 
 	type simgridinfo
-		integer ndimensions
+		integer ndimensions(3)
         !%grid_dimensions=64*ones(3,1);
         integer grid_dimensions(3)
         integer grid_left_index(3)
