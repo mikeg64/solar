@@ -49,7 +49,7 @@
     integer, parameter :: nx1=32
     integer, parameter :: nx2=32
     integer, parameter :: nx3=32   ! made same as size of input file
-
+    character (len=30), parameter :: snewfilename='3D_128_4Mm_asc.ini'
     character(100) :: suniqueidentifier = 'parametricmodel'
     real :: rgamma=1.666667
     real :: adiab=1.0

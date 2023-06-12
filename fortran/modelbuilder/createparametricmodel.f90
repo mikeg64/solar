@@ -39,7 +39,7 @@ program createparametricmodel
 
 
 
-	character (len=30), parameter :: newfilename='3D_128_4Mm_asc.ini'
+	character (len=30) :: newfilename=snewfilename
 
 	type (mconsts)::consts
     type (simgridinfo) :: gridinfo
@@ -98,6 +98,7 @@ program createparametricmodel
         h(i)=height
         ! calculate temperature
         ltta(i)=temp(h(i))
+        write(*,*) height, ltta(i)
         !move to next height
         height=height+deltah
     enddo
@@ -140,8 +141,8 @@ program createparametricmodel
             sdata%w(i,j,k,1)=xmin+dx*i
             sdata%w(i,j,k,2)=ymin+dy*j
             sdata%w(i,j,k,3)=zmin+dz*k
-            sdata%w(i,j,k,12)=ld(i)
-            sdata%w(i,j,k,13)=energg(i)
+            sdata%w(i,j,k,13)=ld(i)
+            sdata%w(i,j,k,12)=energg(i)
         end do
     end do
  end do
@@ -152,7 +153,7 @@ program createparametricmodel
 call genssfield(params, gridinfo, sdata, ifieldtype)
 
 ! rebalance the hydrostatic atmosphere pressure
-!call hsbalancefield(params, gridinfo, sdata)
+call hsbalancefield(params, gridinfo, sdata)
 
 ! write the final input file (ascii or binary) %generalmod
 call writesac3d( newfilename, params, gridinfo, sdata, consts )

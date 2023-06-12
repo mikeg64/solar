@@ -44,7 +44,7 @@ module modbuildermod
 
     real, parameter :: pi=4.*atan(1.0)
     real, parameter :: mu_mass=2.2d0          !0.6d0
-    real, parameter :: R=8.31e3
+    real, parameter :: R=8.31d3
     real, parameter :: mu_thermal = 0.6
 
 ! adiabatic gas parameter and the magnetic permeablity
@@ -95,6 +95,7 @@ real function hydropres(heights, hindex, npoints, deltah)
 
 !    tmp0=temp(heights(1))
     psum=0.0
+
     p0c=rho0*R*temp(heights(1))/mu_mass
 
 
@@ -295,6 +296,7 @@ real function hydrodens(heights, hindex, npoints, deltah)
     integer :: i
 
 !    tmp0=temp(heights(1))
+
     rsum=0.0
     T0=temp(heights(1))
     if (hindex.eq.1) then
@@ -308,9 +310,10 @@ real function hydrodens(heights, hindex, npoints, deltah)
             Hscale=R*temp(heights(i))/(mu_mass*gs)
             rsum=rsum+deltah/Hscale
         end do
-        rsum=rho0*(T0/temp(heights(hindex)))*exp(rsum)
+
     endif
-    print*,'rhosum ',hindex,' ',rsum
+    rsum=rho0*(T0/temp(heights(hindex)))*exp(-rsum)
+    print*,'rhosum ',R,mu_mass,hindex,' ',rsum
     hydrodens=rsum
 
 end function
