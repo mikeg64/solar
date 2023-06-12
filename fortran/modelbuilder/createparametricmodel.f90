@@ -33,7 +33,7 @@ program createparametricmodel
 
     real :: height, ldens, ltt, lpres, deltah   !parameters read from file a updated
     real :: h(4096), ld(4096), ltta(4096), lp(4096), lp1(4096),energg(4096)
-
+    real :: dx,dy,dz
     real :: iniene ! initial energy at photosphere obtained from VALIIc
     integer :: ii,i,j,k
 
@@ -63,7 +63,7 @@ program createparametricmodel
     gridinfo%grid_dimensions(2)= nx2
     gridinfo%grid_dimensions(3)= nx3
     gridinfo%ndimensions = ndim
-
+    params%uniqueidentifier = suniqueidentifier
     params%adiab=adiab
     params%dimensionality=ndim
     params%domain_left_edge(1)=xmin
@@ -90,6 +90,9 @@ program createparametricmodel
 
     height=xmin
     deltah=(xmax-xmin)/nx1
+    dx=(xmax-xmin)/nx1
+    dy=(ymax-ymin)/nx2
+    dz=(zmax-zmin)/nx3
     do i=1,nx1
         !calculate height
         h(i)=height
@@ -134,8 +137,11 @@ program createparametricmodel
  do i=1,nx1
     do j=1,nx2
         do k=1,nx3
-            sdata%w(i,j,k,13)=ld(i)
-            sdata%w(i,j,k,12)=energg(i)
+            sdata%w(i,j,k,1)=xmin+dx*i
+            sdata%w(i,j,k,2)=ymin+dy*j
+            sdata%w(i,j,k,3)=zmin+dz*k
+            sdata%w(i,j,k,12)=ld(i)
+            sdata%w(i,j,k,13)=energg(i)
         end do
     end do
  end do
@@ -146,7 +152,7 @@ program createparametricmodel
 call genssfield(params, gridinfo, sdata, ifieldtype)
 
 ! rebalance the hydrostatic atmosphere pressure
-call hsbalancefield(params, gridinfo, sdata)
+!call hsbalancefield(params, gridinfo, sdata)
 
 ! write the final input file (ascii or binary) %generalmod
 call writesac3d( newfilename, params, gridinfo, sdata, consts )

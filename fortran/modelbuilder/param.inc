@@ -46,11 +46,11 @@
     integer :: ndim=3
     integer :: neqpar=7
     integer, parameter :: nw=13
-    integer, parameter :: nx1=128
-    integer, parameter :: nx2=128
-    integer, parameter :: nx3=128   ! made same as size of input file
+    integer, parameter :: nx1=32
+    integer, parameter :: nx2=32
+    integer, parameter :: nx3=32   ! made same as size of input file
 
-
+    character(100) :: suniqueidentifier = 'parametricmodel'
     real :: rgamma=1.666667
     real :: adiab=1.0
     real :: eta=0

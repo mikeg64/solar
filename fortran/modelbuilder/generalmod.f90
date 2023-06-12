@@ -68,8 +68,8 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
 
                   !it
                 !fprintf(fid,'%d %f %d %d %d\n',simparams.current_iteration, simparams.current_time, simgridinfo.ndimensions,7, 13);
-                  write(1,'(i6, 2X, f20.14, 2X, i6, 2X, i6, 2X, i6, 2X, i6, 2X, i6)') &
-                   ssimparams%currentiteration, ssimparams%currenttime, nx1, nx2, nx3, 7, 13
+                  write(1,'(i6, 2X, f20.14, 2X, i6, 2X, i6, 2X, i6)') &
+                   ssimparams%currentiteration, ssimparams%currenttime, ssimgridinfo%ndimensions, 7, 13
 
 
 !        gd=simgridinfo.grid_dimensions;
@@ -78,9 +78,9 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
                    ssimgridinfo%grid_dimensions(1), ssimgridinfo%grid_dimensions(2), ssimgridinfo%grid_dimensions(3)
 
 !        fprintf(fid,'%f %f %f %f %f %d %d\n',simparams.gamma,simparams.eta,simparams.adiab,simparams.gravity0,simparams.gravity1,simparams.gravity2,0,0);
-                  write(1,'(f20.14, 2X, f20.14, 2X, f20.14, 2X, f20.14, 2X, f20.14, 2X, i6, 2X, i6)') &
+                  write(1,'(f20.14, 2X, f20.14, 2X, f20.14, 2X, f20.14, 2X, f20.14, 2X, f20.14, 2X, f20.14, 2X, f20.14)') &
                    ssimparams%fgamma, ssimparams%eta, ssimparams%adiab, &
-                   ssimparams%gravity0, ssimparams%gravity1, ssimparams%gravity2, 0, 0
+                   ssimparams%gravity0, ssimparams%gravity1, ssimparams%gravity2, 0.0d0, 0.0d0
 
 
 !        fprintf(fid,'x y z rho mx my mz e bx by bz gamma eta g1 g2 g3\n');
@@ -91,24 +91,24 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
                     do j1=1,nx2
                         do k1=1,nx3
 
-                            x=ssimparams%domain_left_edge(1)+(i1-1)*dx1
-                            y=ssimparams%domain_left_edge(2)+(j1-1)*dx2
-                            z=ssimparams%domain_left_edge(3)+(k1-1)*dx3
+                            x=ssimdata%w(i1,j1,k1,1)
+                            y=ssimdata%w(i1,j1,k1,2)
+                            z=ssimdata%w(i1,j1,k1,3)
 
-                            rho=ssimdata%w(i1,j1,k1,1)
-                            mx=ssimdata%w(i1,j1,k1,2)
-                            my=ssimdata%w(i1,j1,k1,3)
-                            mz=ssimdata%w(i1,j1,k1,4)
-                            e=ssimdata%w(i1,j1,k1,5)
-                            bx=ssimdata%w(i1,j1,k1,6)
-                            by=ssimdata%w(i1,j1,k1,7)
-                            bz=ssimdata%w(i1,j1,k1,8)
-                            eb=ssimdata%w(i1,j1,k1,9)
-                            rhob=ssimdata%w(i1,j1,k1,10)
-                            b1b=ssimdata%w(i1,j1,k1,11)
-                            b2b=ssimdata%w(i1,j1,k1,12)
-                            b3b=ssimdata%w(i1,j1,k1,13)
-                            write(1,'(16(f20.14, 2X))') &
+                            rho=ssimdata%w(i1,j1,k1,4)
+                            mx=ssimdata%w(i1,j1,k1,5)
+                            my=ssimdata%w(i1,j1,k1,6)
+                            mz=ssimdata%w(i1,j1,k1,7)
+                            e=ssimdata%w(i1,j1,k1,8)
+                            bx=ssimdata%w(i1,j1,k1,9)
+                            by=ssimdata%w(i1,j1,k1,10)
+                            bz=ssimdata%w(i1,j1,k1,11)
+                            eb=ssimdata%w(i1,j1,k1,12)
+                            rhob=ssimdata%w(i1,j1,k1,13)
+                            b1b=ssimdata%w(i1,j1,k1,14)
+                            b2b=ssimdata%w(i1,j1,k1,15)
+                            b3b=ssimdata%w(i1,j1,k1,16)
+                            write(1,'(3(f20.4, 2X),13(f20.14, 2X))') &
                             x,y,z,rho,mx,my,mz,e,bx,by,bz,eb,rhob,b1b,b2b,b3b
 
                          end do
