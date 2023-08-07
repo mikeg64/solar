@@ -108,7 +108,7 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
                             b1b=ssimdata%w(i1,j1,k1,14)
                             b2b=ssimdata%w(i1,j1,k1,15)
                             b3b=ssimdata%w(i1,j1,k1,16)
-                            write(1,'(3(d20.4, 2X),13(d22.6, 2X))') &
+                            write(1,'(3(f20.8, 2X),13(f22.12, 2X))') &
                             x,y,z,rho,mx,my,mz,e,bx,by,bz,eb,rhob,b1b,b2b,b3b
 
                          end do

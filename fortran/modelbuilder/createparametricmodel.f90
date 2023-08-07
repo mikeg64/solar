@@ -158,6 +158,18 @@ call hsbalancefield(params, gridinfo, sdata)
 ! write the final input file (ascii or binary) %generalmod
 call writesac3d( newfilename, params, gridinfo, sdata, consts )
 
+j=nx2/2
+k=nx3/2
+
+write(*,*) 'Energy vals'
+write(*,*) ' height, energy, rho'
+do i=1,nx1
+            write(*,*) sdata%w(i,j,k,1), sdata%w(i,j,k,12), sdata%w(i,j,k,13)
+end do
+
+
+
+
        	contains
 
 

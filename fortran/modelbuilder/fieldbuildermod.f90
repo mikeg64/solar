@@ -37,19 +37,19 @@ contains
        		real, dimension(nx1) :: z, b0z, dbz
        		real, dimension(nx1,nx2,nx3) :: fx
 
-            real :: Bmax = 0.15  !mag field Tesla
+            real :: Bmax = 0.005  !0.005 !0.15  !mag field Tesla
             !Bmin=0.0006d0  ; %mag field Tesla
-            real :: Bmin = 0.0002  !mag field Tesla
-            real :: d_z = 1.5 !width of Gaussian in Mm
+            real :: Bmin = 0.0002 !0.0002  !mag field Tesla
+            real :: d_z = 0.15 !1.5 !width of Gaussian in Mm
             real :: z_shift = 0.0 !shift in Mm
             real :: A = 0.45 !amplitude
             real :: sscale = 1.0e6
             real :: b0z_top = 0.08
             real :: f0 = 2.0d6 !tube opening factor
             real :: Ab0z = 20.d0 !bz - amplitude
-            real :: xr = 0.1d6
-            real :: yr = 0.1d6
-            real :: b0zz = 0.001d0
+            real :: xr = 0.15d6
+            real :: yr = 0.15d6
+            real :: b0zz = 0.001   !0.001d0
 
             real :: dx,dy,dz
             real :: bnmin, bnmax,f, fres, tmp, xfmax, tmpx, tmpy, tmpz, sqmumag
@@ -217,7 +217,7 @@ contains
     		real, dimension(nx1,nx2,nx3) :: dbybzdz, dbxbybzdz, dbxbzdx
     		real, dimension(nx1,nx2,nx3) :: bxbybz
     		integer :: i,j,k
-    		real :: dx, dy,dz, sumi, p_2
+    		real :: dx, dy,dz, sumi, p_2, emin, rhomin, lowval
 
 !   compute magnetostatics pressure correction
             dbzdz=0.0d0
@@ -445,6 +445,41 @@ contains
             ssimdata%w(1:nx1,1:nx2,1:nx3,14)=bz(1:nx1,1:nx2,1:nx3)
             ssimdata%w(1:nx1,1:nx2,1:nx3,15)=bx(1:nx1,1:nx2,1:nx3)
             ssimdata%w(1:nx1,1:nx2,1:nx3,16)=by(1:nx1,1:nx2,1:nx3)
+
+
+           emin=1.0d99
+           rhomin=1.0d99
+           lowval=1.0d-12
+!          get min energy which is gt  0
+           do i=1,nx1
+                do j=1,nx2
+                    do k=1,nx3
+                        if ( (ssimdata%w(i,j,k,12) .gt. 0.0d0) &
+                            .and. (ssimdata%w(i,j,k,12) .lt. emin)) then
+                            emin=ssimdata%w(i,j,k,12)
+                        end if
+                    if ( (ssimdata%w(i,j,k,13) .gt. 0.0d0) &
+                        .and. (ssimdata%w(i,j,k,13) .lt. rhomin)) then
+                            rhomin=ssimdata%w(i,j,k,13)
+                        end if
+                    enddo
+                enddo
+            enddo
+
+
+!          set negative values to the minimum use floor function
+           do i=1,nx1
+                do j=1,nx2
+                    do k=1,nx3
+                        if ( ssimdata%w(i,j,k,12) .lt. 0.0d0 ) then
+                            ssimdata%w(i,j,k,12)=emin
+                        end if
+                        if ( ssimdata%w(i,j,k,13) .lt. 0.0d0 ) then
+                            ssimdata%w(i,j,k,13)=rhomin
+                        end if
+                    enddo
+                enddo
+            enddo
 
 
 

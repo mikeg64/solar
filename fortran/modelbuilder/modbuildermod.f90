@@ -52,7 +52,11 @@ module modbuildermod
 !   density kg/m^3
 !    real, parameter :: rho0=2.34d-4, p0=9228.6447 or rho0=5.48d-12
 !   pressure and density taken fromVALIIIc data
-    real, parameter :: rho0=2.34d-4,p0=2.7865d-4
+!    real, parameter :: rho0=2.34d-4,p0=2.7865d-4
+!    real, parameter :: rho0=4.68d-4,p0=2.7865d-4
+    real, parameter :: rho0=1.17d-4,p0=2.7865d-4
+!    real, parameter :: rho0=0.885d-4,p0=2.7865d-4
+!    real, parameter :: rho0=0.00017d-4,p0=2.2865d-4
 !   solar gravity m/s^2
     real, parameter :: gs=274.0
 
