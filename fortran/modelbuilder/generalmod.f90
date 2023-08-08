@@ -91,23 +91,23 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
                     do j1=1,nx2
                         do k1=1,nx3
 
-                            x=ssimdata%w(i1,j1,k1,1)
-                            y=ssimdata%w(i1,j1,k1,2)
-                            z=ssimdata%w(i1,j1,k1,3)
+                            x=real(ssimdata%w(i1,j1,k1,1))
+                            y=real(ssimdata%w(i1,j1,k1,2))
+                            z=real(ssimdata%w(i1,j1,k1,3))
 
-                            rho=ssimdata%w(i1,j1,k1,4)
-                            mx=ssimdata%w(i1,j1,k1,5)
-                            my=ssimdata%w(i1,j1,k1,6)
-                            mz=ssimdata%w(i1,j1,k1,7)
-                            e=ssimdata%w(i1,j1,k1,8)
-                            bx=ssimdata%w(i1,j1,k1,9)
-                            by=ssimdata%w(i1,j1,k1,10)
-                            bz=ssimdata%w(i1,j1,k1,11)
-                            eb=ssimdata%w(i1,j1,k1,12)
-                            rhob=ssimdata%w(i1,j1,k1,13)
-                            b1b=ssimdata%w(i1,j1,k1,14)
-                            b2b=ssimdata%w(i1,j1,k1,15)
-                            b3b=ssimdata%w(i1,j1,k1,16)
+                            rho=real(ssimdata%w(i1,j1,k1,4))
+                            mx=real(ssimdata%w(i1,j1,k1,5))
+                            my=real(ssimdata%w(i1,j1,k1,6))
+                            mz=real(ssimdata%w(i1,j1,k1,7))
+                            e=real(ssimdata%w(i1,j1,k1,8))
+                            bx=real(ssimdata%w(i1,j1,k1,9))
+                            by=real(ssimdata%w(i1,j1,k1,10))
+                            bz=real(ssimdata%w(i1,j1,k1,11))
+                            eb=real(ssimdata%w(i1,j1,k1,12))
+                            rhob=real(ssimdata%w(i1,j1,k1,13))
+                            b1b=real(ssimdata%w(i1,j1,k1,14))
+                            b2b=real(ssimdata%w(i1,j1,k1,15))
+                            b3b=real(ssimdata%w(i1,j1,k1,16))
                             write(1,'(3(f20.8, 2X),13(f22.12, 2X))') &
                             x,y,z,rho,mx,my,mz,e,bx,by,bz,eb,rhob,b1b,b2b,b3b
 

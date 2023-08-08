@@ -37,15 +37,15 @@ contains
        		real, dimension(nx1) :: z, b0z, dbz
        		real, dimension(nx1,nx2,nx3) :: fx
 
-            real :: Bmax = 0.005  !0.005 !0.15  !mag field Tesla
+            real :: Bmax = 0.05  !0.005 !0.15  !mag field Tesla
             !Bmin=0.0006d0  ; %mag field Tesla
-            real :: Bmin = 0.0002 !0.0002  !mag field Tesla
+            real :: Bmin = 0.001 !0.0002  !mag field Tesla
             real :: d_z = 0.15 !1.5 !width of Gaussian in Mm
             real :: z_shift = 0.0 !shift in Mm
             real :: A = 0.45 !amplitude
             real :: sscale = 1.0e6
             real :: b0z_top = 0.08
-            real :: f0 = 2.0d6 !tube opening factor
+            real :: f0 = 2.0d6 !2.0d6tube opening factor
             real :: Ab0z = 20.d0 !bz - amplitude
             real :: xr = 0.15d6
             real :: yr = 0.15d6
@@ -71,12 +71,12 @@ contains
             end do
 
             do j=1,nx2
-                y(j)=ymin+dy*(j-1)
+                y(j)=ymin+dy*(j-1)-2.0d6
             end do
 
 
             do k=1,nx3
-                z(k)=zmin+dz*(k-1)
+                z(k)=zmin+dz*(k-1)-2.0d6
             end do
 
             do i=1,nx1
@@ -127,11 +127,11 @@ contains
 !% bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 !% bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 !% by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
-                tmp=sqrt(x(i)*x(i)+y(j)*y(j))
+                tmp=sqrt(z(k)*z(k)+y(j)*y(j))
 
                 tmpx=b0z(i)/tmp
-                tmpy=dbz(i)*y(j)/tmp
-                tmpz=dbz(i)*z(k)/tmp
+                tmpy=dbz(i)*(y(j))/tmp
+                tmpz=dbz(i)*(z(k))/tmp
 
                 ssimdata%w(i,j,k,14)=tmpx*fx(i,j,k)/sqmumag
                 ssimdata%w(i,j,k,15)=tmpy*fx(i,j,k)/sqmumag
@@ -156,6 +156,7 @@ contains
 
             end do
         end do
+        write(*,*) b0z(i), ssimdata%w(i,16,16,14),tmp,fx(i,16,16)
     end do
 
 
