@@ -37,7 +37,7 @@ contains
        		real, dimension(nx1) :: z, b0z, dbz
        		real, dimension(nx1,nx2,nx3) :: fx
 
-            real :: Bmax = 0.05  !0.005 !0.15  !mag field Tesla
+            real :: Bmax = 0.01  !0.005 !0.15  !mag field Tesla
             !Bmin=0.0006d0  ; %mag field Tesla
             real :: Bmin = 0.001 !0.0002  !mag field Tesla
             real :: d_z = 0.15 !1.5 !width of Gaussian in Mm
