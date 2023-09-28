@@ -32,55 +32,51 @@ contains
        		type(simdata), intent(inout)  :: ssimdata
 
        		!nx1,nx2,nx3 in param.inc
-       		real, dimension(nx3) :: x
+       		real, dimension(nx1) :: x
        		real, dimension(nx2) :: y
-       		real, dimension(nx1) :: z, b0z, dbz
+       		real, dimension(nx3) :: z, b0z, dbz
        		real, dimension(nx1,nx2,nx3) :: fx
-
-            real :: Bmax = 0.01  !0.005 !0.15  !mag field Tesla
+            real xp, yp, zp
+            real :: Bmax = 0.005  !0.005 !0.15  !mag field Tesla
             !Bmin=0.0006d0  ; %mag field Tesla
-            real :: Bmin = 0.001 !0.0002  !mag field Tesla
+            real :: Bmin = 0.0002 !0.0002  !mag field Tesla
             real :: d_z = 0.15 !1.5 !width of Gaussian in Mm
-            real :: z_shift = 0.0 !shift in Mm
-            real :: A = 0.45 !amplitude
+            real :: z_shift = 0.0 !sh0ift in Mm
+            real :: xshift =0.0
+            real :: yshift = 0.0d6
+            real :: zshift = 0.0d6
+            real :: A = 0.0045 !amplitude
             real :: sscale = 1.0e6
             real :: b0z_top = 0.08
             real :: f0 = 2.0d6 !2.0d6tube opening factor
             real :: Ab0z = 20.d0 !bz - amplitude
-            real :: xr = 0.15d6
-            real :: yr = 0.15d6
+            real :: xr = 2.0d6
+            real :: yr = 2.0d6
             real :: b0zz = 0.001   !0.001d0
+            real :: R2 = 0.5e6
 
-            real :: dx,dy,dz
+            real :: dx,dy,dz,tmp1
             real :: bnmin, bnmax,f, fres, tmp, xfmax, tmpx, tmpy, tmpz, sqmumag
             integer :: i,j,k
+            integer :: ip, jp, kp
 
 !Generate magnetic field configuration
 !simple fluxtube using self similarity and hydrostatic pressure correction
 ! check against
 !https://github.com/mikeg64/smaug_realpmode/blob/master/matlab/ ...
 ! ...  generateinitialconfiguration/generatefield_verttube.m
-            fx=0.0d0
+            fx=1.0d0
 
             dx=(xmax-xmin)/nx1
             dy=(ymax-ymin)/nx2
             dz=(zmax-zmin)/nx3
 
+ 
+            jp=nx2/2
+            kp=nx3/2
             do i=1,nx1
-                x(i)=xmin+dx*(i-1)
-            end do
-
-            do j=1,nx2
-                y(j)=ymin+dy*(j-1)-2.0d6
-            end do
-
-
-            do k=1,nx3
-                z(k)=zmin+dz*(k-1)-2.0d6
-            end do
-
-            do i=1,nx1
-                b0z(i)=par4((x(i)/sscale-z_shift),d_z,A)
+                xp=ssimdata%w(i,jp,kp,1)-xshift
+                b0z(i)=par4((xp/sscale-z_shift),d_z,A)
             end do
 
             bnmin=minval(b0z)
@@ -92,7 +88,9 @@ contains
 
   !  b0z=b0z/maxval(b0z)
   !  b0z=Ab0z*b0z+b0z_top
-
+    do i=1,nx1
+        x(i)=xmin+dx*(i-1)-xshift
+    end do
     dbz=deriv1(b0z,x)
 
 
@@ -101,24 +99,33 @@ contains
     do i=1,nx1
         do j=1,nx2
             do k=1,nx3
-                tmp=b0z(i)*sqrt(z(k)*z(k)+y(j)*y(j))
-                tmp=par4(tmp,f0,A)
-                fres=tmp*tmp
-                fx(i,j,k) = fres
 
-!                %f=b0z(i)*sqrt((y(j)).^2+(z(k)).^2);
-!                %xf(i,j,k)=(par4(f,f0,0.5)).^2;
+                yp=ssimdata%w(i,j,k,2)-yshift
+                zp=ssimdata%w(i,j,k,3)-zshift
+
+                 tmp1=sqrt(zp*zp+yp*yp)/R2
+ !                tmp1=par4(tmp,f0,A)
+                 fres=-tmp1*tmp1
+                 fx(i,j,k) = exp( fres)
+
+! !                %f=b0z(i)*sqrt((y(j)).^2+(z(k)).^2);
+! !                %xf(i,j,k)=(par4(f,f0,0.5)).^2;
 
 !                f=(y(j).^2+z(k).^2)./R2;
 !                xf(i,j,k)=exp(-f);
-            end do
-        end do
-    end do
+             end do
+         end do
+     end do
 
-    xfmax=maxval(fx)
-    fx=fx/xfmax
+!     xfmax=maxval(fx)
+!     fx=fx/xfmax
 
     sqmumag=sqrt(mumag)
+ 
+    write(*,*) sqmumag,xfmax,bnmax,bnmin,Bmax,Bmin
+    write(*,*) 'final'
+!    fx=1
+
 
     do i=1,nx1
         do j=1,nx2
@@ -127,15 +134,24 @@ contains
 !% bz(i,j,k)=bz(i,j,k)+(b0z(i)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 !% bx(i,j,k)=bx(i,j,k)-(dbz(i)*(x(j)-ybp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k));
 !% by(i,j,k)=by(i,j,k)-dbz(i)*(y(k)-zbp)/sqrt((x(j)-ybp).^2+(y(k)-zbp).^2)*xf(i,j,k);
-                tmp=sqrt(z(k)*z(k)+y(j)*y(j))
 
-                tmpx=b0z(i)/tmp
-                tmpy=dbz(i)*(y(j))/tmp
-                tmpz=dbz(i)*(z(k))/tmp
+                xp=ssimdata%w(i,j,k,1)
+                yp=ssimdata%w(i,j,k,2)-yshift
+                zp=ssimdata%w(i,j,k,3)-zshift
+                tmp=sqrt(zp*zp+yp*yp)
 
-                ssimdata%w(i,j,k,14)=tmpx*fx(i,j,k)/sqmumag
-                ssimdata%w(i,j,k,15)=tmpy*fx(i,j,k)/sqmumag
-                ssimdata%w(i,j,k,16)=tmpz*fx(i,j,k)/sqmumag
+                if( i .eq. 5 .and. k .eq. 32) then
+                    write(*,*) 'j', j, 'tmp', tmp, 'y', y(j)
+                endif
+
+                tmpx=b0z(i)*tmp/R2
+                tmpy=dbz(i)*(yp)
+                tmpz=dbz(i)*(zp)
+!                tmpx=0.0
+                 ssimdata%w(i,j,k,14)=tmpx*fx(i,j,k)/sqmumag               
+!                ssimdata%w(i,j,k,14)=tmpx*fx(i,j,k)/sqmumag
+!                ssimdata%w(i,j,k,15)=tmpy*fx(i,j,k)/sqmumag
+!                ssimdata%w(i,j,k,16)=tmpz*fx(i,j,k)/sqmumag
 
 
 
@@ -156,9 +172,9 @@ contains
 
             end do
         end do
-        write(*,*) b0z(i), ssimdata%w(i,16,16,14),tmp,fx(i,16,16)
+        write(*,*) b0z(i), ssimdata%w(i,32,32,14),tmp,fx(i,32,32)
     end do
-
+    write(*,*) nx1,nx2,nx3,xmax,ymax,zmax
 
 ! calculate hydrostatic pressure update
 
@@ -546,6 +562,7 @@ contains
 
         real function par4(x,x0,A)
             real, intent(in) :: x, x0, A
+            
             !  [res]=par4(x,x0,A)
             par4=A*exp(-x/(x0))
 

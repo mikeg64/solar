@@ -87,9 +87,9 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
                     write(1,*) 'x y z rho mx my mz e bx by bz gamma eta g1 g2 g3'
 
                 !write the fields for each location
-                 do i1=1,nx1
+                 do k1=1,nx3
                     do j1=1,nx2
-                        do k1=1,nx3
+                        do i1=1,nx1
 
                             x=real(ssimdata%w(i1,j1,k1,1))
                             y=real(ssimdata%w(i1,j1,k1,2))
@@ -108,9 +108,13 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
                             b1b=real(ssimdata%w(i1,j1,k1,14))
                             b2b=real(ssimdata%w(i1,j1,k1,15))
                             b3b=real(ssimdata%w(i1,j1,k1,16))
-!                            write(1,'(3(f20.8, 2X),13(f22.12, 2X))') &
-                            write(1,*) &
+!                            write(1,'(3(f24.8, 1X),13(f24.12, 1X))') &
+!                            x,y,z,rho,mx,my,mz,e,bx,by,bz,eb,rhob,b1b,b2b,b3b
+                            write(1,'(3(e15.7),13(e15.7))') &
                             x,y,z,rho,mx,my,mz,e,bx,by,bz,eb,rhob,b1b,b2b,b3b
+
+                            !                            write(1,*) &
+!                            x,y,z,rho,mx,my,mz,e,bx,by,bz,eb,rhob,b1b,b2b,b3b
 
                          end do
                     end do
@@ -118,6 +122,22 @@ subroutine writesac3d( newfilename,   ssimparams, ssimgridinfo, ssimdata, smcons
 
 
               close(unit = 1)
+
+ !             do k1=1,nx1
+ !               do j1=1,nx2
+ !                   do i1=1,nx1
+ !                       z=real(ssimdata%w(k1,32,32,3))
+ !                       eb=real(ssimdata%w(k1,32,32,12))
+ !                       rhob=real(ssimdata%w(k1,32,32,13))
+ !                       b1b=real(ssimdata%w(k1,32,32,14))
+ !                       b2b=real(ssimdata%w(k1,32,32,15))
+ !                       b3b=real(ssimdata%w(k1,32,32,16))                                                
+ !                       write(*,*) z,eb, rhob,b1b,b2b,b3b
+
+ !                   end do
+ !               end do
+ !           end do
+
 
 end subroutine writesac3d
 
